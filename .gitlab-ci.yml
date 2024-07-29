@@ -41,3 +41,5 @@ pages:
       - .public
   only:
     - main
+  pages:
+    path: .public
