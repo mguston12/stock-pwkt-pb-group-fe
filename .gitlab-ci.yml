@@ -15,9 +15,12 @@ build:
   stage: build
   script:
     - npm run build
+    - echo "Contents of build directory:"
+    - ls -la build/  # Debugging: List files in the build directory
   artifacts:
     paths:
       - build
+    expire_in: 1 hour
   only:
     - main
 
@@ -25,7 +28,9 @@ pages:
   stage: deploy
   script:
     - mkdir .public
-    - cp -r build/* .public/
+    - cp -r build/* .public/  # Copy build contents to .public
+    - echo "Contents of .public directory:"
+    - ls -la .public/  # Debugging: List files in the .public directory
   artifacts:
     paths:
       - .public
