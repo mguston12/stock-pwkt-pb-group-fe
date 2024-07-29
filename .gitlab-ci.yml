@@ -1,4 +1,4 @@
-image: node:14
+image: node:18
 
 stages:
   - build
@@ -14,9 +14,14 @@ before_script:
 build:
   stage: build
   script:
+    - echo "Running build command..."
     - npm run build
-    - echo "Contents of build directory:"
-    - ls -la build/  # Debugging: List files in the build directory
+    - echo "Current working directory:"
+    - pwd
+    - echo "Listing contents of the working directory:"
+    - ls -la
+    - echo "Listing contents of the build directory:"
+    - ls -la build
   artifacts:
     paths:
       - build
@@ -28,9 +33,9 @@ pages:
   stage: deploy
   script:
     - mkdir .public
-    - cp -r build/* .public/  # Copy build contents to .public
-    - echo "Contents of .public directory:"
-    - ls -la .public/  # Debugging: List files in the .public directory
+    - cp -r build/* .public/
+    - echo "Listing contents of .public directory:"
+    - ls -la .public
   artifacts:
     paths:
       - .public
