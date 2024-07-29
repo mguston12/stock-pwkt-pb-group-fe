@@ -14,12 +14,7 @@ before_script:
 build:
   stage: build
   script:
-    - echo "Running build command..."
     - npm run build
-    - echo "Current working directory:"
-    - pwd
-    - echo "Listing contents of the build directory:"
-    - ls -la build
   artifacts:
     paths:
       - build
@@ -30,11 +25,8 @@ build:
 pages:
   stage: deploy
   script:
-    - echo "Copying build files to the public directory..."
     - mkdir -p public
     - cp -r build/* public/
-    - echo "Listing contents of the public directory:"
-    - ls -la public
   artifacts:
     paths:
       - public
