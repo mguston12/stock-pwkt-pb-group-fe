@@ -30,16 +30,13 @@ build:
 pages:
   stage: deploy
   script:
-    - echo "Creating .public directory..."
-    - mkdir .public
-    - echo "Copying files to .public directory..."
-    - cp -r build/* .public/
-    - echo "Listing contents of .public directory:"
-    - ls -la .public
+    - echo "Copying build files to the public directory..."
+    - mkdir -p public
+    - cp -r build/* public/
+    - echo "Listing contents of the public directory:"
+    - ls -la public
   artifacts:
     paths:
-      - .public
+      - public
   only:
     - main
-  pages:
-    path: .public
