@@ -1,4 +1,4 @@
-image: mcr.microsoft.com/windows/nanoserver:1809
+image: node:18
 
 stages:
   - build
@@ -19,7 +19,7 @@ build:
     - echo "Current working directory:"
     - pwd
     - echo "Listing contents of the build directory:"
-    - Get-ChildItem -Path build -Force
+    - ls -la build
   artifacts:
     paths:
       - build
@@ -31,11 +31,11 @@ pages:
   stage: deploy
   script:
     - echo "Creating .public directory..."
-    - New-Item -Path .public -ItemType Directory -Force
+    - mkdir .public
     - echo "Copying files to .public directory..."
-    - Copy-Item -Path build\* -Destination .public\ -Recurse
+    - cp -r build/* .public/
     - echo "Listing contents of .public directory:"
-    - Get-ChildItem -Path .public -Force
+    - ls -la .public
   artifacts:
     paths:
       - .public
