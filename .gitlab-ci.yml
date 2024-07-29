@@ -18,8 +18,6 @@ build:
     - npm run build
     - echo "Current working directory:"
     - pwd
-    - echo "Listing contents of the working directory:"
-    - ls -la
     - echo "Listing contents of the build directory:"
     - ls -la build
   artifacts:
@@ -32,7 +30,9 @@ build:
 pages:
   stage: deploy
   script:
+    - echo "Creating .public directory..."
     - mkdir .public
+    - echo "Copying files to .public directory..."
     - cp -r build/* .public/
     - echo "Listing contents of .public directory:"
     - ls -la .public
