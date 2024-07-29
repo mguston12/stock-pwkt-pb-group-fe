@@ -43,11 +43,7 @@ export default defineConfig(() => {
       port: 3000,
       server: {
         proxy: {
-          '/api': {
-            target: 'https://gitlab.com',
-            changeOrigin: true,
-            rewrite: (path) => path.replace(/^\/api/, ''),
-          },
+          '/api': 'http://192.168.88.70:8080',
         },
       },
     },

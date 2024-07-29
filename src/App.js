@@ -39,7 +39,9 @@ const App = () => {
             </>
           ) : (
             <>
-              <Route path="*" element={<DefaultLayout />} />
+             <Route path="/" element={<DefaultLayout />} />
+              <Route path="/dashboard" element={<DefaultLayout />} /> {/* Ensure this route is defined */}
+              <Route path="*" element={<Page404 />} />
             </>
           )}
         </Routes>
