@@ -1,0 +1,33 @@
+image: node:14
+
+stages:
+  - build
+  - deploy
+
+cache:
+  paths:
+    - node_modules/
+
+before_script:
+  - npm install
+
+build:
+  stage: build
+  script:
+    - npm run build
+  artifacts:
+    paths:
+      - build
+  only:
+    - main
+
+pages:
+  stage: deploy
+  script:
+    - mkdir .public
+    - cp -r build/* .public
+  artifacts:
+    paths:
+      - .public
+  only:
+    - main
