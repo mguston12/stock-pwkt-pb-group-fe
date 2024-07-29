@@ -52,7 +52,7 @@ const CreateCustomer = () => {
       no_telp: nomorTelepon,
       updated_by: userID,
     }
-    var url = `http://localhost:8080/customers/create`
+    var url = `http://http://192.168.88.70:8080:8080/customers/create`
 
     axios
       .post(url, obj)

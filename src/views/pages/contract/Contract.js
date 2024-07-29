@@ -46,7 +46,7 @@ const Sekretariat = () => {
 
   const GetContracts = () => {
     setIsLoading(true)
-    const url = `http://localhost:8080/contracts?company=${selectedCompany.value}&page=${currentPage}&length=${itemsPerPage}`
+    const url = `http://http://192.168.88.70:8080:8080/contracts?company=${selectedCompany.value}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
       .get(url)
@@ -70,7 +70,7 @@ const Sekretariat = () => {
 
   const SearchContract = () => {
     setIsLoading(true)
-    const url = `http://localhost:8080/contracts?keyword=${inputSearch}&company=${selectedCompany.value}&page=${currentPage}&length=${itemsPerPage}`
+    const url = `http://http://192.168.88.70:8080:8080/contracts?keyword=${inputSearch}&company=${selectedCompany.value}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
       .get(url)

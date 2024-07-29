@@ -84,7 +84,7 @@ const DetailContract = () => {
 
   const GetListCustomersByCompany = () => {
     setIsLoading(true)
-    const url = `http://localhost:8080/customers?company=${selectedCompany.value}`
+    const url = `http://http://192.168.88.70:8080:8080/customers?company=${selectedCompany.value}`
 
     axios
       .get(url)
@@ -104,7 +104,7 @@ const DetailContract = () => {
 
   const GetContractDetailByID = () => {
     setIsLoading(true)
-    const url = `http://localhost:8080/contracts/detail?company=${selectedCompany.value}&kontrak=${contractNumber}`
+    const url = `http://http://192.168.88.70:8080:8080/contracts/detail?company=${selectedCompany.value}&kontrak=${contractNumber}`
 
     axios
       .get(url)
@@ -126,7 +126,7 @@ const DetailContract = () => {
 
   const GetListBanks = () => {
     setIsLoading(true)
-    const url = `http://localhost:8080/banks`
+    const url = `http://http://192.168.88.70:8080:8080/banks`
 
     axios
       .get(url)
@@ -146,7 +146,7 @@ const DetailContract = () => {
 
   const printContract = () => {
     setIsLoading(true)
-    const url = `http://localhost:8080/contracts/print?company=${selectedCompany.value}&kontrak=${contractDetail.no_kontrak}`
+    const url = `http://http://192.168.88.70:8080:8080/contracts/print?company=${selectedCompany.value}&kontrak=${contractDetail.no_kontrak}`
 
     axios
       .get(url, { responseType: 'blob' })
@@ -156,7 +156,10 @@ const DetailContract = () => {
         )
         const link = document.createElement('a')
         link.href = urlblob
-        link.setAttribute('download', `Kontrak_${contractDetail.no_kontrak}.pdf`)
+        link.setAttribute(
+          'download',
+          `Kontrak_${contractDetail.no_kontrak}-${contractDetail.customer_name}.pdf`,
+        )
         document.body.appendChild(link)
         link.click()
         setIsLoading(false)
@@ -286,7 +289,9 @@ const DetailContract = () => {
                     <CTableHeaderCell className="text-center">OC Color</CTableHeaderCell>
                     <CTableHeaderCell className="text-center">Periode Awal</CTableHeaderCell>
                     <CTableHeaderCell className="text-center">Periode Akhir</CTableHeaderCell>
-                    <CTableHeaderCell className="text-center" width="20%">Penempatan</CTableHeaderCell>
+                    <CTableHeaderCell className="text-center" width="20%">
+                      Penempatan
+                    </CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>

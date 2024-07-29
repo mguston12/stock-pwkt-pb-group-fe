@@ -61,7 +61,7 @@ const Sekretariat = () => {
 
   const GetCustomers = () => {
     setIsLoading(true)
-    const url = `http://localhost:8080/customers?company=${selectedCompany.value}&page=${currentPage}&length=${itemsPerPage}`
+    const url = `http://http://192.168.88.70:8080:8080/customers?company=${selectedCompany.value}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
       .get(url)
@@ -84,7 +84,7 @@ const Sekretariat = () => {
 
   const SearchCustomer = () => {
     setIsLoading(true)
-    const url = `http://localhost:8080/customers?keyword=${inputSearch}&company=${selectedCompany.value}&page=${currentPage}&length=${itemsPerPage}`
+    const url = `http://http://192.168.88.70:8080:8080/customers?keyword=${inputSearch}&company=${selectedCompany.value}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
       .get(url)
@@ -129,7 +129,7 @@ const Sekretariat = () => {
       no_telp: singleData.no_telp,
       updated_by: userID,
     }
-    var url = `http://localhost:8080/customers/update`
+    var url = `http://http://192.168.88.70:8080:8080/customers/update`
 
     axios
       .put(url, obj)

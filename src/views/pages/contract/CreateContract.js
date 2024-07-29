@@ -92,7 +92,7 @@ const CreateContract = () => {
 
   const GetListCustomersByCompany = () => {
     setIsLoading(true)
-    const url = `http://localhost:8080/customers?company=${selectedCompany.value}`
+    const url = `http://http://192.168.88.70:8080:8080/customers?company=${selectedCompany.value}`
 
     axios
       .get(url)
@@ -112,7 +112,7 @@ const CreateContract = () => {
 
   const GetContractNumber = () => {
     setIsLoading(true)
-    const url = `http://localhost:8080/contracts/counter?company=${selectedCompany.value}`
+    const url = `http://http://192.168.88.70:8080:8080/contracts/counter?company=${selectedCompany.value}`
 
     axios
       .get(url)
@@ -132,7 +132,7 @@ const CreateContract = () => {
 
   const GetListBanks = () => {
     setIsLoading(true)
-    const url = `http://localhost:8080/banks`
+    const url = `http://http://192.168.88.70:8080:8080/banks`
 
     axios
       .get(url)
@@ -162,7 +162,7 @@ const CreateContract = () => {
       updated_by: userID,
       details: listMesin,
     }
-    var url = `http://localhost:8080/contracts/create`
+    var url = `http://http://192.168.88.70:8080:8080/contracts/create`
 
     axios
       .post(url, obj)
