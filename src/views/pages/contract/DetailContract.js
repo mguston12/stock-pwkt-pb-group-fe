@@ -84,7 +84,7 @@ const DetailContract = () => {
 
   const GetListCustomersByCompany = () => {
     setIsLoading(true)
-    const url = `http://192.168.88.70:8080/customers?company=${selectedCompany.value}`
+    const url = `http://192.168.88.58:8080/customers?company=${selectedCompany.value}`
 
     axios
       .get(url)
@@ -104,7 +104,7 @@ const DetailContract = () => {
 
   const GetContractDetailByID = () => {
     setIsLoading(true)
-    const url = `http://192.168.88.70:8080/contracts/detail?company=${selectedCompany.value}&kontrak=${contractNumber}`
+    const url = `http://192.168.88.58:8080/contracts/detail?company=${selectedCompany.value}&kontrak=${contractNumber}`
 
     axios
       .get(url)
@@ -126,7 +126,7 @@ const DetailContract = () => {
 
   const GetListBanks = () => {
     setIsLoading(true)
-    const url = `http://192.168.88.70:8080/banks`
+    const url = `http://192.168.88.58:8080/banks`
 
     axios
       .get(url)
@@ -146,7 +146,7 @@ const DetailContract = () => {
 
   const printContract = () => {
     setIsLoading(true)
-    const url = `http://192.168.88.70:8080/contracts/print?company=${selectedCompany.value}&kontrak=${contractDetail.no_kontrak}`
+    const url = `http://192.168.88.58:8080/contracts/print?company=${selectedCompany.value}&kontrak=${contractDetail.no_kontrak}`
 
     axios
       .get(url, { responseType: 'blob' })

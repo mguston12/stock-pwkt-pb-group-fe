@@ -43,7 +43,7 @@ export default defineConfig(() => {
       port: 3000,
       server: {
         proxy: {
-          '/api': 'http://192.168.88.70:8080',
+          '/api': 'http://192.168.88.58:8080',
         },
       },
     },
