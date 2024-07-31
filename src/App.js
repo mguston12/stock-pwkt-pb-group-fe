@@ -14,8 +14,6 @@ const Page404 = React.lazy(() => import('./views/pages/page404/Page404'));
 const Page500 = React.lazy(() => import('./views/pages/page500/Page500'));
 
 
-const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
-
 const App = () => {
   const storedTheme = useSelector((state) => state.theme);
   const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
@@ -42,7 +40,6 @@ const App = () => {
             </>
           ) : (
             <>
-             <Route path="/dashboard" element={<Dashboard />} />
              <Route path="/*" element={<DefaultLayout />} />
             </>
           )}
