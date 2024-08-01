@@ -52,7 +52,7 @@ const CreateCustomer = () => {
       no_telp: nomorTelepon,
       updated_by: userID,
     }
-    var url = `http://192.168.88.250:8080/customers/create`
+    var url = `https://f9af-180-252-163-217.ngrok-free.app/customers/create`
 
     axios
       .post(url, obj)

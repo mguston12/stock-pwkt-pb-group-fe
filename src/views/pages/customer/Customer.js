@@ -61,7 +61,7 @@ const Sekretariat = () => {
 
   const GetCustomers = () => {
     setIsLoading(true)
-    const url = `http://192.168.88.250:8080/customers?company=${selectedCompany.value}&page=${currentPage}&length=${itemsPerPage}`
+    const url = `https://f9af-180-252-163-217.ngrok-free.app/customers?company=${selectedCompany.value}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
       .get(url)
@@ -84,7 +84,7 @@ const Sekretariat = () => {
 
   const SearchCustomer = () => {
     setIsLoading(true)
-    const url = `http://192.168.88.250:8080/customers?keyword=${inputSearch}&company=${selectedCompany.value}&page=${currentPage}&length=${itemsPerPage}`
+    const url = `https://f9af-180-252-163-217.ngrok-free.app/customers?keyword=${inputSearch}&company=${selectedCompany.value}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
       .get(url)
@@ -129,7 +129,7 @@ const Sekretariat = () => {
       no_telp: singleData.no_telp,
       updated_by: userID,
     }
-    var url = `http://192.168.88.250:8080/customers/update`
+    var url = `https://f9af-180-252-163-217.ngrok-free.app/customers/update`
 
     axios
       .put(url, obj)
