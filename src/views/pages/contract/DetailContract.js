@@ -84,7 +84,7 @@ const DetailContract = () => {
 
   const GetListCustomersByCompany = () => {
     setIsLoading(true)
-    const url = `https://f9af-180-252-163-217.ngrok-free.app/customers?company=${selectedCompany.value}`
+    const url = `http://192.168.88.250:8080/customers?company=${selectedCompany.value}`
 
     axios
       .get(url)
@@ -104,7 +104,7 @@ const DetailContract = () => {
 
   const GetContractDetailByID = () => {
     setIsLoading(true)
-    const url = `https://f9af-180-252-163-217.ngrok-free.app/contracts/detail?company=${selectedCompany.value}&kontrak=${contractNumber}`
+    const url = `http://192.168.88.250:8080/contracts/detail?company=${selectedCompany.value}&kontrak=${contractNumber}`
 
     axios
       .get(url)
@@ -126,7 +126,7 @@ const DetailContract = () => {
 
   const GetListBanks = () => {
     setIsLoading(true)
-    const url = `https://f9af-180-252-163-217.ngrok-free.app/banks`
+    const url = `http://192.168.88.250:8080/banks`
 
     axios
       .get(url)
@@ -146,7 +146,7 @@ const DetailContract = () => {
 
   const printContract = () => {
     setIsLoading(true)
-    const url = `https://f9af-180-252-163-217.ngrok-free.app/contracts/print?company=${selectedCompany.value}&kontrak=${contractDetail.no_kontrak}`
+    const url = `http://192.168.88.250:8080/contracts/print?company=${selectedCompany.value}&kontrak=${contractDetail.no_kontrak}`
 
     axios
       .get(url, { responseType: 'blob' })
@@ -292,6 +292,7 @@ const DetailContract = () => {
                     <CTableHeaderCell className="text-center" width="20%">
                       Penempatan
                     </CTableHeaderCell>
+                    <CTableHeaderCell className="text-center">Status</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
@@ -312,6 +313,17 @@ const DetailContract = () => {
                         {moment(item.periode_akhir).format('DD MMM YYYY')}
                       </CTableDataCell>
                       <CTableDataCell>{item.penempatan}</CTableDataCell>
+                      <CTableDataCell>
+                        <CButton
+                          className={
+                            item.active_yn === 'Y'
+                              ? 'btn btn-success btn-sm text-white'
+                              : 'btn btn-danger btn-sm text-white'
+                          }
+                        >
+                          {item.active_yn === 'Y' ? 'Aktif' : 'Tidak Aktif'}
+                        </CButton>
+                      </CTableDataCell>
                     </CTableRow>
                   ))}
                 </CTableBody>

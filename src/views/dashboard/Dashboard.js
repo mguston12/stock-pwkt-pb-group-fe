@@ -55,7 +55,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     setIsLoading(true)
-    const url = `https://f9af-180-252-163-217.ngrok-free.app/companies`
+    const url = `http://192.168.88.250:8080/companies`
 
     axios
       .get(url)

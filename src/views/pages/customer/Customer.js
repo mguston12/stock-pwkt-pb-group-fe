@@ -52,16 +52,22 @@ const Sekretariat = () => {
   }, [])
 
   useEffect(() => {
-    if (selectedCompany === '' || selectedCompany === undefined) {
+    if (selectedCompany.value === '' || selectedCompany.value === undefined) {
       setModalOpen(true)
     } else {
       GetCustomers()
     }
-  }, [selectedCompany])
+  }, [selectedCompany, currentPage])
+
+  useEffect(() => {
+    if (inputSearch.trim() !== '') {
+      SearchCustomer()
+    }
+  }, [currentPage])
 
   const GetCustomers = () => {
     setIsLoading(true)
-    const url = `https://f9af-180-252-163-217.ngrok-free.app/customers?company=${selectedCompany.value}&page=${currentPage}&length=${itemsPerPage}`
+    const url = `http://192.168.88.250:8080/customers?company=${selectedCompany.value}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
       .get(url)
@@ -84,7 +90,7 @@ const Sekretariat = () => {
 
   const SearchCustomer = () => {
     setIsLoading(true)
-    const url = `https://f9af-180-252-163-217.ngrok-free.app/customers?keyword=${inputSearch}&company=${selectedCompany.value}&page=${currentPage}&length=${itemsPerPage}`
+    const url = `http://192.168.88.250:8080/customers?keyword=${inputSearch}&company=${selectedCompany.value}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
       .get(url)
@@ -129,7 +135,7 @@ const Sekretariat = () => {
       no_telp: singleData.no_telp,
       updated_by: userID,
     }
-    var url = `https://f9af-180-252-163-217.ngrok-free.app/customers/update`
+    var url = `http://192.168.88.250:8080/customers/update`
 
     axios
       .put(url, obj)
@@ -160,14 +166,6 @@ const Sekretariat = () => {
     if (newPage < 1 || newPage > totalPage) return // Prevent out-of-bounds page numbers
     setCurrentPage(newPage)
   }
-
-  useEffect(() => {
-    if (inputSearch.trim() !== '') {
-      SearchCustomer()
-    } else {
-      GetCustomers()
-    }
-  }, [currentPage])
 
   const renderPaginationItems = () => {
     const pages = []

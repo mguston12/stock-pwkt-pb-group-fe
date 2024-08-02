@@ -35,18 +35,14 @@ const Sekretariat = () => {
   }, [])
 
   useEffect(() => {
-    if (selectedCompany !== '' || selectedCompany !== undefined) {
+    if (selectedCompany.value !== '' || selectedCompany.value !== undefined) {
       GetContracts()
     }
   }, [selectedCompany, currentPage])
 
-  useEffect(() => {
-    console.log('total', totalPage)
-  }, [totalPage])
-
   const GetContracts = () => {
     setIsLoading(true)
-    const url = `https://f9af-180-252-163-217.ngrok-free.app/contracts?company=${selectedCompany.value}&page=${currentPage}&length=${itemsPerPage}`
+    const url = `http://192.168.88.250:8080/contracts?company=${selectedCompany.value}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
       .get(url)
@@ -70,7 +66,7 @@ const Sekretariat = () => {
 
   const SearchContract = () => {
     setIsLoading(true)
-    const url = `https://f9af-180-252-163-217.ngrok-free.app/contracts?keyword=${inputSearch}&company=${selectedCompany.value}&page=${currentPage}&length=${itemsPerPage}`
+    const url = `http://192.168.88.250:8080/contracts?keyword=${inputSearch}&company=${selectedCompany.value}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
       .get(url)

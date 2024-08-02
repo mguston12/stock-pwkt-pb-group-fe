@@ -92,7 +92,7 @@ const CreateContract = () => {
 
   const GetListCustomersByCompany = () => {
     setIsLoading(true)
-    const url = `https://f9af-180-252-163-217.ngrok-free.app/customers?company=${selectedCompany.value}`
+    const url = `http://192.168.88.250:8080/customers?company=${selectedCompany.value}`
 
     axios
       .get(url)
@@ -112,7 +112,7 @@ const CreateContract = () => {
 
   const GetContractNumber = () => {
     setIsLoading(true)
-    const url = `https://f9af-180-252-163-217.ngrok-free.app/contracts/counter?company=${selectedCompany.value}`
+    const url = `http://192.168.88.250:8080/contracts/counter?company=${selectedCompany.value}`
 
     axios
       .get(url)
@@ -132,7 +132,7 @@ const CreateContract = () => {
 
   const GetListBanks = () => {
     setIsLoading(true)
-    const url = `https://f9af-180-252-163-217.ngrok-free.app/banks`
+    const url = `http://192.168.88.250:8080/banks`
 
     axios
       .get(url)
@@ -162,7 +162,7 @@ const CreateContract = () => {
       updated_by: userID,
       details: listMesin,
     }
-    var url = `https://f9af-180-252-163-217.ngrok-free.app/contracts/create`
+    var url = `http://192.168.88.250:8080/contracts/create`
 
     axios
       .post(url, obj)
