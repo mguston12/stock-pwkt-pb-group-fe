@@ -26,24 +26,14 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 import ReactSelect from 'react-select'
 import moment from 'moment'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 const DetailContract = () => {
   const [selectedCompany, setSelectedCompany] = useState('')
-  const [listCustomer, setListCustomer] = useState([])
-  const [listCustomerTransformed, setListCustomerTransformed] = useState([])
-  const [listBank, setListBank] = useState([])
-  const [listBankTransformed, setListBankTransformed] = useState([])
-  const [listMesin, setListMesin] = useState([])
-
   const [isLoading, setIsLoading] = useState(false)
-
-  const [selectedCustomer, setSelectedCustomer] = useState('')
-  const [selectedBank, setSelectedBank] = useState('')
   const [contractNumber, setContractNumber] = useState('')
   const [contractDetail, setContractDetail] = useState('')
-
-  const [tanggalBuat, setTanggalBuat] = useState('')
+  const [listMesin, setListMesin] = useState([])
 
   let { no_kontrak } = useParams()
   useEffect(() => {
@@ -59,48 +49,10 @@ const DetailContract = () => {
   }, [])
 
   useEffect(() => {
-    if (listCustomer.length !== 0 && listBank.length !== 0) {
-      const transformedList = listCustomer.map((obj) => ({
-        value: obj,
-        label: obj.nama_customer,
-      }))
-      setListCustomerTransformed(transformedList)
-
-      const transformedList2 = listBank.map((obj) => ({
-        value: obj,
-        label: obj.bank_name,
-      }))
-      setListBankTransformed(transformedList2)
-    }
-  }, [listCustomer, listBank])
-
-  useEffect(() => {
     if (selectedCompany !== '') {
-      GetListCustomersByCompany()
-      GetListBanks()
       GetContractDetailByID()
     }
   }, [selectedCompany])
-
-  const GetListCustomersByCompany = () => {
-    setIsLoading(true)
-    const url = `http://192.168.88.250:8080/customers?company=${selectedCompany.value}`
-
-    axios
-      .get(url)
-      .then((response) => {
-        setIsLoading(false)
-        if (response.data.data !== null) {
-          setListCustomer(response.data.data)
-        } else {
-          setListCustomer([])
-        }
-      })
-      .catch((error) => {
-        alert(error.message)
-        setIsLoading(false)
-      })
-  }
 
   const GetContractDetailByID = () => {
     setIsLoading(true)
@@ -110,32 +62,11 @@ const DetailContract = () => {
       .get(url)
       .then((response) => {
         setIsLoading(false)
-        console.log(response)
         if (response.data.data !== null) {
           setContractDetail(response.data.data)
           setListMesin(response.data.data.details)
         } else {
           setContractDetail([])
-        }
-      })
-      .catch((error) => {
-        alert(error.message)
-        setIsLoading(false)
-      })
-  }
-
-  const GetListBanks = () => {
-    setIsLoading(true)
-    const url = `http://192.168.88.250:8080/banks`
-
-    axios
-      .get(url)
-      .then((response) => {
-        setIsLoading(false)
-        if (response.data.data !== null) {
-          setListBank(response.data.data)
-        } else {
-          setListBank([])
         }
       })
       .catch((error) => {
@@ -158,7 +89,7 @@ const DetailContract = () => {
         link.href = urlblob
         link.setAttribute(
           'download',
-          `Kontrak_${contractDetail.no_kontrak}-${contractDetail.customer_name}.pdf`,
+          `Kontrak_${contractDetail.no_kontrak}-${contractDetail.nama_customer}.pdf`,
         )
         document.body.appendChild(link)
         link.click()
@@ -178,14 +109,22 @@ const DetailContract = () => {
             <CCol>
               <span style={{ fontSize: '20px', fontWeight: 'bold' }}>Buat Kontrak Baru</span>
             </CCol>
+
             <CCol>
               <CButton
                 className="btn btn-block btn-info text-white"
                 style={{ float: 'right' }}
                 onClick={() => printContract()}
               >
-                Print
+                Buat PDF
               </CButton>
+              <Link
+                to={`/contract/edit/${no_kontrak}`}
+                className="btn btn-block btn-warning text-white"
+                style={{ float: 'right', marginRight: '10px' }}
+              >
+                Ubah
+              </Link>
             </CCol>
           </CRow>
         </CCardHeader>
@@ -292,7 +231,7 @@ const DetailContract = () => {
                     <CTableHeaderCell className="text-center" width="20%">
                       Penempatan
                     </CTableHeaderCell>
-                    <CTableHeaderCell className="text-center">Status</CTableHeaderCell>
+                    {/* <CTableHeaderCell className="text-center">Status</CTableHeaderCell> */}
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
@@ -313,7 +252,7 @@ const DetailContract = () => {
                         {moment(item.periode_akhir).format('DD MMM YYYY')}
                       </CTableDataCell>
                       <CTableDataCell>{item.penempatan}</CTableDataCell>
-                      <CTableDataCell>
+                      {/* <CTableDataCell>
                         <CButton
                           className={
                             item.active_yn === 'Y'
@@ -323,7 +262,7 @@ const DetailContract = () => {
                         >
                           {item.active_yn === 'Y' ? 'Aktif' : 'Tidak Aktif'}
                         </CButton>
-                      </CTableDataCell>
+                      </CTableDataCell> */}
                     </CTableRow>
                   ))}
                 </CTableBody>
@@ -354,6 +293,100 @@ const DetailContract = () => {
               <CForm>
                 <CFormLabel style={{ fontWeight: 'bold' }}>Atas Nama</CFormLabel>
                 <CFormInput value={contractDetail.atas_nama} disabled></CFormInput>
+              </CForm>
+            </CCol>
+          </CRow>
+        </CCardBody>
+      </CCard>
+      <CCard className="mt-3 mb-5">
+        <CCardHeader style={{ fontSize: '20px', fontWeight: 'bold' }}>Data Lainnya</CCardHeader>
+        <CCardBody>
+          <CRow>
+            <CCol>
+              <CFormLabel style={{ fontWeight: 'bold', marginTop: '7px' }}>
+                Deposit{' '}
+                <span style={{ color: 'red', fontSize: '12px' }}>
+                  [Jika tidak ada deposit, isi dengan 0]
+                </span>
+              </CFormLabel>
+            </CCol>
+            <CCol md={1} style={{ fontWeight: 'bold', textAlign: 'end', marginTop: '7px' }}>
+              Rp.
+            </CCol>
+            <CCol md={6}>
+              <CFormInput value={contractDetail.deposit} disabled></CFormInput>
+            </CCol>
+          </CRow>
+          <CRow className="mt-3">
+            <CCol>
+              <CFormLabel style={{ fontWeight: 'bold', marginTop: '7px' }}>
+                Denda 1% (Pasal 3)
+                <span style={{ color: 'red', fontSize: '12px', marginLeft: '5px' }}>
+                  [Pilih YA / TIDAK]
+                </span>
+              </CFormLabel>
+            </CCol>
+            <CCol md={6}>
+              <CFormInput
+                value={contractDetail.denda_satupersenyn === 'Y' ? 'YA' : 'TIDAK'}
+                disabled
+              ></CFormInput>
+            </CCol>
+          </CRow>
+          <hr></hr>
+          <CRow className="mt-3">
+            <CCol>
+              <CForm>
+                <CFormLabel style={{ fontWeight: 'bold', marginTop: '7px', fontSize: '20px' }}>
+                  Cara Pembayaran
+                </CFormLabel>
+              </CForm>
+            </CCol>
+            {/* <CCol>
+              <CForm>
+                <CFormInput value={contractDetail.payment_id} disabled></CFormInput>
+              </CForm>
+            </CCol> */}
+          </CRow>
+          <CRow className="mt-3">
+            <CCol>
+              <CForm>
+                <CFormLabel style={{ fontWeight: 'bold', marginTop: '7px' }}>
+                  Paling Lambat
+                </CFormLabel>
+              </CForm>
+            </CCol>
+            <CCol>
+              <CForm>
+                <CFormInput value={`${contractDetail.paling_lambat} Hari`} disabled></CFormInput>
+              </CForm>
+            </CCol>
+          </CRow>
+          <CRow className="mt-3">
+            <CCol>
+              <CForm>
+                <CFormLabel style={{ fontWeight: 'bold', marginTop: '7px' }}>
+                  Melunasi Dalam Waktu
+                </CFormLabel>
+              </CForm>
+            </CCol>
+            <CCol>
+              <CForm>
+                <CFormInput value={`${contractDetail.melunasi} Hari`} disabled></CFormInput>
+              </CForm>
+            </CCol>
+          </CRow>
+          <CRow className="mt-3">
+            <CCol>
+              <CForm>
+                <CFormLabel style={{ fontWeight: 'bold', marginTop: '7px' }}>
+                  Tertunda lebih dari
+                </CFormLabel>
+              </CForm>
+            </CCol>
+            <CCol>
+              <CForm>
+                <CFormInput value={`${contractDetail.tertunda} Hari`} disabled></CFormInput>
               </CForm>
             </CCol>
           </CRow>

@@ -23,9 +23,9 @@ const Login = () => {
   const [password, setPassword] = useState('')
 
   const login = () => {
-    if (username === 'admin' && password === 'Sekre#2024') {
+    if (username === 'sekre' && password === 'Sekre#2024') {
       sessionStorage.setItem('isLoggedIn', true)
-      sessionStorage.setItem('user', 'admin')
+      sessionStorage.setItem('user', 'sekre')
       window.location.replace('/dashboard')
     } else {
       toast.error('Gagal melakukan login', {

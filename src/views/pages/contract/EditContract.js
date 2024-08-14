@@ -1,4 +1,4 @@
-import { cilCheckCircle, cilPencil, cilPlus, cilTrash, cilXCircle } from '@coreui/icons'
+import { cilCheckCircle, cilPencil, cilPlus, cilTrash, cilX, cilXCircle } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import {
   CButton,
@@ -7,7 +7,6 @@ import {
   CCardHeader,
   CCol,
   CForm,
-  CFormCheck,
   CFormInput,
   CFormLabel,
   CFormTextarea,
@@ -27,17 +26,20 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 import ReactSelect from 'react-select'
 import moment from 'moment'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
-const CreateContract = () => {
+const EditContract = () => {
   const [selectedCompany, setSelectedCompany] = useState('')
   const [listCustomer, setListCustomer] = useState([])
   const [listCustomerTransformed, setListCustomerTransformed] = useState([])
   const [listBank, setListBank] = useState([])
   const [listBankTransformed, setListBankTransformed] = useState([])
-  const [listMesin, setListMesin] = useState([])
   const [listPaymentMethod, setListPaymentMethod] = useState([])
   const [listPaymentMethodTransformed, setListPaymentMethodTransformed] = useState([])
+
+  const [listMesin, setListMesin] = useState([])
+  const [contractDetail, setContractDetail] = useState('')
+  const [contractNumber, setContractNumber] = useState('')
 
   const [isLoading, setIsLoading] = useState(false)
   const [modalResponseIsOpen, setModalResponseIsOpen] = useState(false)
@@ -47,7 +49,6 @@ const CreateContract = () => {
   const [selectedCustomer, setSelectedCustomer] = useState('')
   const [selectedBank, setSelectedBank] = useState('')
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('')
-  const [contractNumber, setContractNumber] = useState('')
   const [modalAddIsOpen, setModalAddIsOpen] = useState(false)
   const [modalEditIsOpen, setModalEditIsOpen] = useState(false)
   const [indexToEdit, setIndexToEdit] = useState('')
@@ -58,8 +59,6 @@ const CreateContract = () => {
     value: 'Y',
     label: 'YA',
   })
-
-  const [checked, setChecked] = useState(false)
 
   const [qtyMesin, setQtyMesin] = useState(1)
   const [tipeMesin, setTipeMesin] = useState('')
@@ -77,6 +76,69 @@ const CreateContract = () => {
   useEffect(() => {
     setSelectedCompany(JSON.parse(decodeURIComponent(sessionStorage.getItem('PT'))))
   }, [])
+
+  let { no_kontrak } = useParams()
+  useEffect(() => {
+    if (no_kontrak !== '') {
+      var number = no_kontrak.split('-')
+
+      setContractNumber(number[0])
+    }
+  }, [no_kontrak])
+
+  const GetContractDetailByID = () => {
+    setIsLoading(true)
+    const url = `http://192.168.88.250:8080/contracts/detail?company=${selectedCompany.value}&kontrak=${contractNumber}`
+
+    axios
+      .get(url)
+      .then((response) => {
+        setIsLoading(false)
+        console.log(response)
+        if (response.data.data !== null) {
+          setContractDetail(response.data.data)
+          setContractNumber(response.data.data.no_kontrak)
+          setTanggalBuat(response.data.data.tanggal_buat)
+          setSelectedCustomer({
+            value: {
+              id_customer: response.data.data.id_customer,
+              nama_customer: response.data.data.nama_customer,
+              alamat_customer: response.data.data.alamat_customer,
+              pic: response.data.data.pic,
+              penandatangan: response.data.data.penandatangan,
+              no_telp: response.data.data.no_telp,
+              jabatan: response.data.data.jabatan,
+            },
+            label: response.data.data.nama_customer,
+          })
+          setSelectedBank({
+            value: {
+              bank_id: response.data.data.bank_id,
+              bank_name: response.data.data.bank_name,
+              nomor_rekening: response.data.data.nomor_rekening,
+              atas_nama: response.data.data.atas_nama,
+            },
+            label: response.data.data.bank_name,
+          })
+          setSelectedPaymentMethod({
+            value: {
+              payment_id: response.data.data.payment_id,
+              paling_lambat: response.data.data.paling_lambat,
+              melunasi: response.data.data.melunasi,
+              tertunda: response.data.data.tertunda,
+            },
+            label: `Paling Lambat : ${response.data.data.paling_lambat} Hari - Melunasi : ${response.data.data.melunasi} Hari - Tertunda : ${response.data.data.tertunda} Hari`,
+          })
+          setListMesin(response.data.data.details || [])
+        } else {
+          setContractDetail([])
+        }
+      })
+      .catch((error) => {
+        alert(error.message)
+        setIsLoading(false)
+      })
+  }
 
   useEffect(() => {
     if (listCustomer.length !== 0 && listBank.length !== 0 && listPaymentMethod.length !== 0) {
@@ -101,17 +163,16 @@ const CreateContract = () => {
   }, [listCustomer, listBank, listPaymentMethod])
 
   useEffect(() => {
-    setIsLoading(true)
-
     if (selectedCompany !== '') {
       GetListCustomersByCompany()
       GetListBanks()
-      GetContractNumber()
+      GetContractDetailByID()
       GetListPaymentMethod()
     }
   }, [selectedCompany])
 
   const GetListCustomersByCompany = () => {
+    setIsLoading(true)
     const url = `http://192.168.88.250:8080/customers?company=${selectedCompany.value}`
 
     axios
@@ -130,27 +191,8 @@ const CreateContract = () => {
       })
   }
 
-  const GetContractNumber = () => {
-    const url = `http://192.168.88.250:8080/contracts/counter?company=${selectedCompany.value}`
-
-    axios
-      .get(url)
-      .then((response) => {
-        if (response.data.data !== null) {
-          setContractNumber(response.data.data)
-          setIsLoading(false)
-        } else {
-          setContractNumber([])
-          setIsLoading(false)
-        }
-      })
-      .catch((error) => {
-        alert(error.message)
-        setIsLoading(false)
-      })
-  }
-
   const GetListBanks = () => {
+    setIsLoading(true)
     const url = `http://192.168.88.250:8080/banks`
 
     axios
@@ -188,7 +230,7 @@ const CreateContract = () => {
       })
   }
 
-  function createContract() {
+  function EditContract() {
     setIsLoading(true)
     var obj = {
       no_kontrak: contractNumber,
@@ -196,14 +238,13 @@ const CreateContract = () => {
       company_id: parseInt(selectedCompany.value),
       id_customer: selectedCustomer.value.id_customer,
       bank_id: selectedBank.value.bank_id,
-      payment_id: parseInt(selectedPaymentMethod.value.payment_id),
+      payment_id: selectedPaymentMethod.value.payment_id,
       deposit: parseFloat(deposit),
-      denda_satupersenyn: dendaSatuPersenYN.value,
       active_yn: 'Y',
       updated_by: userID,
       details: listMesin,
     }
-    var url = `http://192.168.88.250:8080/contracts/create`
+    var url = `http://192.168.88.250:8080/contracts/update`
 
     axios
       .post(url, obj)
@@ -232,7 +273,7 @@ const CreateContract = () => {
 
   const handleModal = () => {
     setModalAddIsOpen(true)
-    setQtyMesin('1 (satu)')
+    setQtyMesin(1)
     setTipeMesin('')
     setSpeed('')
     setHargaSewa(0)
@@ -241,14 +282,13 @@ const CreateContract = () => {
     setFreeCopyColor(0)
     setOverCopyColor(0)
     setPeriodeAwal(new Date())
-    setPeriodeAkhir(new Date().setDate(new Date().getDate() + 364))
-    setChecked(false)
+    setPeriodeAkhir(new Date())
   }
 
   const handleModalAdd = () => {
     var tempList = [...listMesin]
     var tempObj = {
-      quantity: qtyMesin,
+      quantity: parseInt(qtyMesin),
       tipe_mesin: tipeMesin,
       speed: speed,
       harga_sewa: parseFloat(hargaSewa),
@@ -280,8 +320,8 @@ const CreateContract = () => {
       setOverCopy(data.over_copy)
       setFreeCopyColor(data.free_copy_color)
       setOverCopyColor(data.over_copy_color)
-      setPeriodeAwal(data.periode_awal_string)
-      setPeriodeAkhir(data.periode_akhir_string)
+      setPeriodeAwal(data.periode_awal)
+      setPeriodeAkhir(data.periode_akhir)
       setPenempatan(data.penempatan)
     } else if (type === 'change') {
       var tempList = [...listMesin]
@@ -317,22 +357,13 @@ const CreateContract = () => {
     setListMesin(tempList)
   }
 
-  const handleCheck = (checked) => {
-    setChecked(checked)
-    if (checked === true && selectedCustomer !== '') {
-      setPenempatan(selectedCustomer.value.alamat_customer)
-    } else {
-      setPenempatan('')
-    }
-  }
-
   return (
     <>
       <CCard>
         <CCardHeader style={{ fontSize: '20px', fontWeight: 'bold' }}>
           <CRow>
             <CCol>
-              <span style={{ fontSize: '20px', fontWeight: 'bold' }}>Buat Kontrak Baru</span>
+              <span style={{ fontSize: '20px', fontWeight: 'bold' }}>Ubah Kontrak</span>
             </CCol>
             <CCol>
               <CButton
@@ -340,13 +371,11 @@ const CreateContract = () => {
                   tanggalBuat === '' ||
                   selectedCustomer === '' ||
                   selectedBank === '' ||
-                  listMesin.length === 0 ||
-                  selectedPaymentMethod === '' ||
-                  dendaSatuPersenYN === ''
+                  listMesin.length === 0
                 }
                 className="btn btn-block btn-info text-white"
                 style={{ float: 'right' }}
-                onClick={() => createContract()}
+                onClick={() => EditContract()}
               >
                 Simpan
               </CButton>
@@ -366,18 +395,17 @@ const CreateContract = () => {
             <CCol>
               <CForm>
                 <CFormLabel style={{ fontWeight: 'bold' }}>NOMOR KONTRAK</CFormLabel>
-                <CFormInput value={contractNumber} disabled />
+                <CFormInput
+                  value={contractNumber}
+                  onChange={(e) => setContractNumber(e.target.value)}
+                />
               </CForm>
             </CCol>
             <CCol>
               <CForm>
-                <CFormLabel style={{ fontWeight: 'bold' }}>
-                  TANGGAL BUAT{' '}
-                  <span style={{ color: 'red', fontSize: '11px' }}>
-                    [contoh : Rabu, Dua Januari Dua Ribu Sembilan Belas (02-01-2019)]
-                  </span>
-                </CFormLabel>
+                <CFormLabel style={{ fontWeight: 'bold' }}>TANGGAL BUAT</CFormLabel>
                 <CFormInput
+                  value={tanggalBuat}
                   onChange={(e) => setTanggalBuat(e.target.value)}
                   placeholder="Input Tanggal Buat..."
                 />
@@ -395,6 +423,7 @@ const CreateContract = () => {
                 <CFormLabel style={{ fontWeight: 'bold' }}>CUSTOMER</CFormLabel>
                 <ReactSelect
                   options={listCustomerTransformed}
+                  value={selectedCustomer}
                   onChange={(e) => setSelectedCustomer(e)}
                   isSearchable={true}
                   placeholder="Tekan dan Pilih Customer..."
@@ -470,95 +499,66 @@ const CreateContract = () => {
               <CTable striped bordered hover responsive>
                 <CTableHead>
                   <CTableRow>
-                    <CTableHeaderCell className="text-center" style={{ alignContent: 'center' }}>
-                      Qty
-                    </CTableHeaderCell>
-                    <CTableHeaderCell className="text-center" style={{ alignContent: 'center' }}>
-                      Tipe Mesin
-                    </CTableHeaderCell>
-                    <CTableHeaderCell className="text-center" style={{ alignContent: 'center' }}>
-                      Speed
-                    </CTableHeaderCell>
-                    <CTableHeaderCell className="text-center" style={{ alignContent: 'center' }}>
-                      Harga Sewa
-                    </CTableHeaderCell>
-                    <CTableHeaderCell className="text-center" style={{ alignContent: 'center' }}>
-                      Free Copy
-                    </CTableHeaderCell>
-                    <CTableHeaderCell className="text-center" style={{ alignContent: 'center' }}>
-                      Over Copy
-                    </CTableHeaderCell>
-                    <CTableHeaderCell className="text-center" style={{ alignContent: 'center' }}>
-                      Free Copy Color
-                    </CTableHeaderCell>
-                    <CTableHeaderCell className="text-center" style={{ alignContent: 'center' }}>
-                      Over Copy Color
-                    </CTableHeaderCell>
-                    <CTableHeaderCell className="text-center" style={{ alignContent: 'center' }}>
-                      Periode Awal
-                    </CTableHeaderCell>
-                    <CTableHeaderCell className="text-center" style={{ alignContent: 'center' }}>
-                      Periode Akhir
-                    </CTableHeaderCell>
-                    <CTableHeaderCell className="text-center" style={{ alignContent: 'center' }}>
-                      Penempatan
-                    </CTableHeaderCell>
-                    <CTableHeaderCell
-                      className="text-center"
-                      style={{ alignContent: 'center' }}
-                      width="10%"
-                    >
+                    <CTableHeaderCell className="text-center">Qty</CTableHeaderCell>
+                    <CTableHeaderCell className="text-center">Tipe Mesin</CTableHeaderCell>
+                    <CTableHeaderCell className="text-center">Speed</CTableHeaderCell>
+                    <CTableHeaderCell className="text-center">Harga Sewa</CTableHeaderCell>
+                    <CTableHeaderCell className="text-center">Free Copy</CTableHeaderCell>
+                    <CTableHeaderCell className="text-center">Over Copy</CTableHeaderCell>
+                    <CTableHeaderCell className="text-center">Free Copy Color</CTableHeaderCell>
+                    <CTableHeaderCell className="text-center">Over Copy Color</CTableHeaderCell>
+                    <CTableHeaderCell className="text-center">Periode Awal</CTableHeaderCell>
+                    <CTableHeaderCell className="text-center">Periode Akhir</CTableHeaderCell>
+                    <CTableHeaderCell className="text-center">Penempatan</CTableHeaderCell>
+                    <CTableHeaderCell className="text-center" width="10%">
                       Action
                     </CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
-                  {listMesin.map((item, index) => (
-                    <CTableRow
-                      key={index}
-                      className="text-center"
-                      style={{ alignContent: 'center' }}
-                    >
-                      <CTableDataCell>{item.quantity}</CTableDataCell>
-                      <CTableDataCell>{item.tipe_mesin}</CTableDataCell>
-                      <CTableDataCell>{item.speed}</CTableDataCell>
-                      <CTableDataCell>Rp {item.harga_sewa}</CTableDataCell>
-                      <CTableDataCell>{item.free_copy}</CTableDataCell>
-                      <CTableDataCell>Rp {item.over_copy}</CTableDataCell>
-                      <CTableDataCell>{item.free_copy_color}</CTableDataCell>
-                      <CTableDataCell>Rp {item.over_copy_color}</CTableDataCell>
-                      <CTableDataCell>
-                        {moment(item.periode_awal_string).format('DD MMM YYYY')}
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        {moment(item.periode_akhir_string).format('DD MMM YYYY')}
-                      </CTableDataCell>
-                      <CTableDataCell>{item.penempatan}</CTableDataCell>
-                      <CTableDataCell>
-                        <CButton
-                          className={'btn-sm btn-warning '}
-                          style={{ color: 'white' }}
-                          onClick={() => handleModalEdit(item, 'open', index)}
-                        >
-                          <CIcon icon={cilPencil}></CIcon>
-                        </CButton>
-                        <CButton
-                          className={'btn-sm btn-danger'}
-                          style={{ color: 'white', marginLeft: '5px' }}
-                          onClick={() => removeFromList(index)}
-                        >
-                          <CIcon icon={cilTrash}></CIcon>
-                        </CButton>
-                      </CTableDataCell>
-                    </CTableRow>
-                  ))}
+                  {listMesin &&
+                    listMesin.map((item, index) => (
+                      <CTableRow key={index} className="text-center">
+                        <CTableDataCell>{item.quantity}</CTableDataCell>
+                        <CTableDataCell>{item.tipe_mesin}</CTableDataCell>
+                        <CTableDataCell>{item.speed}</CTableDataCell>
+                        <CTableDataCell>Rp {item.harga_sewa}</CTableDataCell>
+                        <CTableDataCell>{item.free_copy}</CTableDataCell>
+                        <CTableDataCell>Rp {item.over_copy}</CTableDataCell>
+                        <CTableDataCell>{item.free_copy_color}</CTableDataCell>
+                        <CTableDataCell>Rp {item.over_copy_color}</CTableDataCell>
+                        <CTableDataCell>
+                          {moment(item.periode_awal).format('DD MMM YYYY')}
+                        </CTableDataCell>
+                        <CTableDataCell>
+                          {moment(item.periode_akhir).format('DD MMM YYYY')}
+                        </CTableDataCell>
+                        <CTableDataCell>{item.penempatan}</CTableDataCell>
+                        <CTableDataCell>
+                          <CButton
+                            className={'btn-sm btn-warning '}
+                            style={{ color: 'white' }}
+                            onClick={() => handleModalEdit(item, 'open', index)}
+                          >
+                            <CIcon icon={cilPencil}></CIcon>
+                          </CButton>
+                          <CButton
+                            className={'btn-sm btn-danger'}
+                            style={{ color: 'white', marginLeft: '5px' }}
+                            onClick={() => removeFromList(index)}
+                          >
+                            <CIcon icon={cilTrash}></CIcon>
+                          </CButton>
+                        </CTableDataCell>
+                      </CTableRow>
+                    ))}
                 </CTableBody>
               </CTable>
             </CCol>
           </CRow>
         </CCardBody>
       </CCard>
-      <CCard className="mt-3">
+      <CCard className="mt-3 mb-5">
         <CCardHeader style={{ fontSize: '20px', fontWeight: 'bold' }}>Data Bank</CCardHeader>
         <CCardBody>
           <CRow>
@@ -567,6 +567,7 @@ const CreateContract = () => {
                 <CFormLabel style={{ fontWeight: 'bold' }}>BANK</CFormLabel>
                 <ReactSelect
                   options={listBankTransformed}
+                  value={selectedBank}
                   onChange={(e) => setSelectedBank(e)}
                   isSearchable={true}
                   placeholder="Tekan dan Pilih Customer..."
@@ -664,7 +665,7 @@ const CreateContract = () => {
           </CRow>
         </CCardBody>
       </CCard>
-      {/* MODAL CREATE CONTRACT*/}
+      {/* MODAL ADD LIST MESIN*/}
       <CModal size="lg" alignment="center" visible={modalAddIsOpen} backdrop="static">
         <CModalBody style={{ justifyContent: 'center' }}>
           <CFormLabel style={{ fontWeight: 'bold', fontSize: '20px', paddingTop: '8px' }}>
@@ -674,17 +675,15 @@ const CreateContract = () => {
           <CRow className="mt-3">
             <CCol>
               <CForm>
-                <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
-                  Quantity <span style={{ color: 'red', fontSize: '11px' }}></span>
-                </CFormLabel>
+                <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>Quantity</CFormLabel>
               </CForm>
             </CCol>
             <CCol>
               <CFormInput
                 value={qtyMesin}
-                min={1}
-                type="number"
                 onChange={(e) => setQtyMesin(e.target.value)}
+                type="number"
+                min={1}
               ></CFormInput>
             </CCol>
           </CRow>
@@ -838,26 +837,11 @@ const CreateContract = () => {
           </CRow>
           <CRow className="mt-3">
             <CCol>
-              <CRow>
-                <CForm>
-                  <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
-                    Penempatan
-                  </CFormLabel>
-                </CForm>
-              </CRow>
-              <CRow>
-                <CFormCheck
-                  style={{
-                    marginLeft: '5px',
-                    height: '17px',
-                    width: '17px',
-                    marginRight: '10px',
-                  }}
-                  checked={checked}
-                  onClick={() => handleCheck(!checked)}
-                  label="Samakan Seperti Alamat Customer"
-                />
-              </CRow>
+              <CForm>
+                <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
+                  Penempatan
+                </CFormLabel>
+              </CForm>
             </CCol>
             <CCol>
               <CFormTextarea
@@ -889,7 +873,7 @@ const CreateContract = () => {
           </CButton>
         </CModalFooter>
       </CModal>
-      {/* MODAL CREATE CONTRACT */}
+      {/* MODAL ADD LIST MESIN */}
 
       {/* MODAL EDIT LIST MESIN*/}
       <CModal size="lg" alignment="center" visible={modalEditIsOpen} backdrop="static">
@@ -1170,4 +1154,4 @@ const CreateContract = () => {
     </>
   )
 }
-export default CreateContract
+export default EditContract

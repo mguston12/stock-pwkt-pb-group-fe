@@ -1,12 +1,7 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
-import {
-  CSidebar,
-  CSidebarBrand,
-  CSidebarFooter,
-  CSidebarHeader,
-} from '@coreui/react'
+import { CFormLabel, CSidebar, CSidebarBrand, CSidebarFooter, CSidebarHeader } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 
 import { AppSidebarNav } from './AppSidebarNav'
@@ -34,15 +29,12 @@ const AppSidebar = () => {
       }}
     >
       <CSidebarHeader className="border-bottom">
-        <CSidebarBrand to="/">
-          <CIcon customClassName="sidebar-brand-full" icon={logo} height={32} />
-          <CIcon customClassName="sidebar-brand-narrow" icon={sygnet} height={32} />
+        <CSidebarBrand to="/" style={{ textAlign: 'center', fontSize: '24px', fontWeight: 'bold' }}>
+          <CFormLabel>Sekretariat X</CFormLabel>
         </CSidebarBrand>
       </CSidebarHeader>
       <AppSidebarNav items={navigation} />
-      <CSidebarFooter className="border-top d-none d-lg-flex">
-      
-      </CSidebarFooter>
+      <CSidebarFooter className="border-top d-none d-lg-flex"></CSidebarFooter>
     </CSidebar>
   )
 }

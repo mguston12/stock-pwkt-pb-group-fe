@@ -3,13 +3,17 @@ import {
   CButton,
   CCard,
   CCardBody,
-  CCardFooter,
   CCardHeader,
   CCol,
   CFormInput,
+  CFormLabel,
+  CModal,
+  CModalBody,
+  CModalFooter,
   CPagination,
   CPaginationItem,
   CRow,
+  CSpinner,
   CTable,
   CTableBody,
   CTableDataCell,
@@ -24,67 +28,67 @@ const Sekretariat = () => {
   const [listContract, setListContract] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [inputSearch, setInputSearch] = useState('')
-  const [selectedCompany, setSelectedCompany] = useState('')
+  const [selectedCompany, setSelectedCompany] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPage, setTotalPage] = useState(1)
   const itemsPerPage = 5
   const maxVisiblePages = 3
 
   useEffect(() => {
-    setSelectedCompany(JSON.parse(decodeURIComponent(sessionStorage.getItem('PT'))))
+    const company = JSON.parse(decodeURIComponent(sessionStorage.getItem('PT')))
+    setSelectedCompany(company)
   }, [])
 
   useEffect(() => {
-    if (selectedCompany.value !== '' || selectedCompany.value !== undefined) {
-      GetContracts()
+    if (selectedCompany?.value) {
+      GetContracts(1)
     }
-  }, [selectedCompany, currentPage])
+  }, [selectedCompany])
 
-  const GetContracts = () => {
-    setIsLoading(true)
-    const url = `http://192.168.88.250:8080/contracts?company=${selectedCompany.value}&page=${currentPage}&length=${itemsPerPage}`
+  const GetContracts = (page) => {
+    if (selectedCompany) {
+      setIsLoading(true)
+      const url = `http://192.168.88.250:8080/contracts?company=${selectedCompany.value}&page=${page}&length=${itemsPerPage}`
 
-    axios
-      .get(url)
-      .then((response) => {
-        console.log(response)
-        setIsLoading(false)
-        if (response.data.data !== null) {
-          setListContract(response.data.data)
-          setTotalPage(response.data.metadata)
-        } else {
+      axios
+        .get(url)
+        .then((response) => {
+          setIsLoading(false)
+          const { data, metadata } = response.data
+          setListContract(data || [])
+          setTotalPage(metadata || 1)
+        })
+        .catch((error) => {
+          console.error(error)
+          alert('Error fetching contracts: ' + error.message)
+          setIsLoading(false)
           setListContract([])
           setTotalPage(1)
-        }
-      })
-      .catch((error) => {
-        alert(error.message)
-        setIsLoading(false)
-        setTotalPage(1)
-      })
+        })
+    }
   }
 
   const SearchContract = () => {
-    setIsLoading(true)
-    const url = `http://192.168.88.250:8080/contracts?keyword=${inputSearch}&company=${selectedCompany.value}&page=${currentPage}&length=${itemsPerPage}`
+    if (selectedCompany) {
+      setIsLoading(true)
+      const url = `http://192.168.88.250:8080/contracts?keyword=${inputSearch}&company=${selectedCompany.value}&page=${page}&length=${itemsPerPage}`
 
-    axios
-      .get(url)
-      .then((response) => {
-        if (response.data.data !== null) {
-          setListContract(response.data.data)
-          setTotalPage(response.data.metadata)
-        } else {
+      axios
+        .get(url)
+        .then((response) => {
+          const { data, metadata } = response.data
+          setListContract(data || [])
+          setTotalPage(metadata || 1)
+          setIsLoading(false)
+        })
+        .catch((error) => {
+          console.error(error)
+          alert('Error searching contracts: ' + error.message)
+          setIsLoading(false)
           setListContract([])
           setTotalPage(1)
-        }
-        setIsLoading(false)
-      })
-      .catch((error) => {
-        alert(error.message)
-        setTotalPage(1)
-        setIsLoading(false)
-      })
+        })
+    }
   }
 
   const handleKeyDown = (e) => {
@@ -98,10 +102,10 @@ const Sekretariat = () => {
 
     setCurrentPage(newPage)
 
-    if (inputSearch.trim() !== '') {
-      SearchContract()
+    if (inputSearch.trim()) {
+      SearchContract(newPage)
     } else {
-      GetContracts()
+      GetContracts(newPage)
     }
   }
 
@@ -155,10 +159,10 @@ const Sekretariat = () => {
         </CRow>
       </CCardHeader>
       <CCardBody>
-        {listContract.length === 0 && (
+        {listContract.length === 0 && !isLoading && (
           <CCol style={{ textAlign: 'center' }}>Maaf Data Tidak Ditemukan</CCol>
         )}
-        {listContract.length !== 0 && (
+        {listContract.length > 0 && (
           <CCol>
             <CTable striped bordered hover responsive>
               <CTableHead>
@@ -197,7 +201,6 @@ const Sekretariat = () => {
                   Previous
                 </CPaginationItem>
                 {renderPaginationItems()}
-
                 <CPaginationItem
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === totalPage}
@@ -209,6 +212,46 @@ const Sekretariat = () => {
           </CCol>
         )}
       </CCardBody>
+      {/* MODAL LOADING*/}
+      <CModal size="xl" alignment="center" visible={isLoading} backdrop="static">
+        <CModalBody
+          style={{
+            textAlign: 'center',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingBottom: '1px',
+          }}
+        >
+          <CFormLabel
+            style={{
+              fontWeight: 'bold',
+              fontSize: '1rem',
+            }}
+          >
+            Mohon Tunggu...
+          </CFormLabel>
+        </CModalBody>
+        <CModalFooter
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            border: '0px',
+            paddingTop: '0px',
+          }}
+        >
+          <CSpinner
+            size="sm"
+            color="success"
+            style={{
+              width: '4rem',
+              height: '4rem',
+            }}
+          />
+        </CModalFooter>
+      </CModal>
+      {/* MODAL LOADING */}
     </CCard>
   )
 }
