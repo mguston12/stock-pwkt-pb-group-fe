@@ -160,7 +160,7 @@ const Bank = () => {
     <CCard style={{ width: '100%' }}>
       <CCardHeader style={{ fontSize: '20px', fontWeight: 'bold' }}>
         <CRow>
-          <CCol>List Bank</CCol>
+          <CCol>List Semua Bank</CCol>
           <CCol>
             <CButton
               style={{ float: 'right' }}

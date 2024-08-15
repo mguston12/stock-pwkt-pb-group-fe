@@ -68,7 +68,7 @@ const Sekretariat = () => {
     }
   }
 
-  const SearchContract = () => {
+  const SearchContract = (page) => {
     if (selectedCompany) {
       setIsLoading(true)
       const url = `http://192.168.88.250:8080/contracts?keyword=${inputSearch}&company=${selectedCompany.value}&page=${page}&length=${itemsPerPage}`

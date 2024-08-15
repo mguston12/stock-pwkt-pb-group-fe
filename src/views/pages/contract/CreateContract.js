@@ -151,7 +151,7 @@ const CreateContract = () => {
   }
 
   const GetListBanks = () => {
-    const url = `http://192.168.88.250:8080/banks`
+    const url = `http://192.168.88.250:8080/banks/filter?company=${selectedCompany.value}`
 
     axios
       .get(url)
