@@ -47,10 +47,9 @@ const _nav = [
       },
       {
         component: CNavItem,
-        name: 'Kontrak Habis Dalam 30 Hari',
-        to: '/customer',
+        name: 'Kontrak Habis Bulan Depan',
+        to: '/expiredsoon',
         icon: <CIcon icon={cilAvTimer} customClassName="nav-icon" />,
-        hidden: true,
       },
     ],
   },
