@@ -232,7 +232,7 @@ const CreateContract = () => {
 
   const handleModal = () => {
     setModalAddIsOpen(true)
-    setQtyMesin('1 (satu)')
+    setQtyMesin(1)
     setTipeMesin('')
     setSpeed('')
     setHargaSewa(0)
