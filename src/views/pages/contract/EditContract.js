@@ -64,10 +64,10 @@ const EditContract = () => {
   const [tipeMesin, setTipeMesin] = useState('')
   const [speed, setSpeed] = useState('')
   const [hargaSewa, setHargaSewa] = useState(0)
-  const [freeCopy, setFreeCopy] = useState(0)
-  const [overCopy, setOverCopy] = useState(0)
-  const [freeCopyColor, setFreeCopyColor] = useState(0)
-  const [overCopyColor, setOverCopyColor] = useState(0)
+  const [freeCopy, setFreeCopy] = useState('')
+  const [overCopy, setOverCopy] = useState('')
+  const [freeCopyColor, setFreeCopyColor] = useState('')
+  const [overCopyColor, setOverCopyColor] = useState('')
   const [periodeAwal, setPeriodeAwal] = useState(new Date())
   const [periodeAkhir, setPeriodeAkhir] = useState(new Date())
   const [penempatan, setPenempatan] = useState('')
@@ -277,10 +277,10 @@ const EditContract = () => {
     setTipeMesin('')
     setSpeed('')
     setHargaSewa(0)
-    setFreeCopy(0)
-    setOverCopy(0)
-    setFreeCopyColor(0)
-    setOverCopyColor(0)
+    setFreeCopy("")
+    setOverCopy("")
+    setFreeCopyColor("")
+    setOverCopyColor("")
     setPeriodeAwal(new Date())
     setPeriodeAkhir(new Date())
   }
@@ -292,10 +292,10 @@ const EditContract = () => {
       tipe_mesin: tipeMesin,
       speed: speed,
       harga_sewa: parseFloat(hargaSewa),
-      free_copy: parseInt(freeCopy),
-      over_copy: parseFloat(overCopy),
-      free_copy_color: parseInt(freeCopyColor),
-      over_copy_color: parseFloat(overCopyColor),
+      free_copy: freeCopy,
+      over_copy: overCopy,
+      free_copy_color: freeCopyColor,
+      over_copy_color: overCopyColor,
       periode_awal_string: moment(periodeAwal).format('YYYY-MM-DD'),
       periode_akhir_string: moment(periodeAkhir).format('YYYY-MM-DD'),
       penempatan: penempatan,
@@ -330,10 +330,10 @@ const EditContract = () => {
         tipe_mesin: tipeMesin,
         speed: speed,
         harga_sewa: parseFloat(hargaSewa),
-        free_copy: parseInt(freeCopy),
-        over_copy: parseFloat(overCopy),
-        free_copy_color: parseInt(freeCopyColor),
-        over_copy_color: parseFloat(overCopyColor),
+        free_copy: freeCopy,
+        over_copy: overCopy,
+        free_copy_color: freeCopyColor,
+        over_copy_color: overCopyColor,
         periode_awal_string: moment(periodeAwal).format('YYYY-MM-DD'),
         periode_akhir_string: moment(periodeAkhir).format('YYYY-MM-DD'),
         penempatan: penempatan,
@@ -524,9 +524,9 @@ const EditContract = () => {
                         <CTableDataCell>{item.speed}</CTableDataCell>
                         <CTableDataCell>Rp {item.harga_sewa}</CTableDataCell>
                         <CTableDataCell>{item.free_copy}</CTableDataCell>
-                        <CTableDataCell>Rp {item.over_copy}</CTableDataCell>
+                        <CTableDataCell>{item.over_copy}</CTableDataCell>
                         <CTableDataCell>{item.free_copy_color}</CTableDataCell>
-                        <CTableDataCell>Rp {item.over_copy_color}</CTableDataCell>
+                        <CTableDataCell>{item.over_copy_color}</CTableDataCell>
                         <CTableDataCell>
                           {moment(item.periode_awal).format('DD MMM YYYY')}
                         </CTableDataCell>
@@ -735,33 +735,39 @@ const EditContract = () => {
           <CRow className="mt-3">
             <CCol>
               <CForm>
-                <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>Free Copy</CFormLabel>
+                <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
+                  Free Copy
+                  <span style={{ color: 'red', fontSize: '11px', marginLeft: '10px' }}>
+                    [contoh : 1500 copy]
+                  </span>
+                </CFormLabel>
               </CForm>
             </CCol>
             <CCol>
               <CFormInput
                 value={freeCopy}
                 onChange={(e) => setFreeCopy(e.target.value)}
-                min={0}
-                type="number"
               ></CFormInput>
             </CCol>
           </CRow>
           <CRow className="mt-3">
-            <CCol md={5}>
+            <CCol md={6}>
               <CForm>
-                <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>Over Copy</CFormLabel>
+                <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
+                  Over Copy{' '}
+                  <span style={{ color: 'red', fontSize: '11px', marginLeft: '10px' }}>
+                    [contoh : Rp 80/copy]
+                  </span>
+                </CFormLabel>
               </CForm>
             </CCol>
-            <CCol style={{ fontWeight: 'bold', paddingTop: '8px' }} md={1}>
+            {/* <CCol style={{ fontWeight: 'bold', paddingTop: '8px' }} md={1}>
               <span style={{ float: 'right' }}>Rp</span>
-            </CCol>
+            </CCol> */}
             <CCol>
               <CFormInput
                 value={overCopy}
                 onChange={(e) => setOverCopy(e.target.value)}
-                min={0}
-                type="number"
               ></CFormInput>
             </CCol>
           </CRow>
@@ -770,6 +776,9 @@ const EditContract = () => {
               <CForm>
                 <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
                   Free Copy Color
+                  <span style={{ color: 'red', fontSize: '11px', marginLeft: '10px' }}>
+                    [contoh : 1500 copy]
+                  </span>
                 </CFormLabel>
               </CForm>
             </CCol>
@@ -777,28 +786,27 @@ const EditContract = () => {
               <CFormInput
                 value={freeCopyColor}
                 onChange={(e) => setFreeCopyColor(e.target.value)}
-                min={0}
-                type="number"
               ></CFormInput>
             </CCol>
           </CRow>
           <CRow className="mt-3">
-            <CCol md={5}>
+            <CCol md={6}>
               <CForm>
                 <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
-                  Over Copy Color
+                  Over Copy Color{' '}
+                  <span style={{ color: 'red', fontSize: '11px', marginLeft: '10px' }}>
+                    [contoh : Rp 80/copy]
+                  </span>
                 </CFormLabel>
               </CForm>
             </CCol>
-            <CCol style={{ fontWeight: 'bold', paddingTop: '8px' }} md={1}>
+            {/* <CCol style={{ fontWeight: 'bold', paddingTop: '8px' }} md={1}>
               <span style={{ float: 'right' }}>Rp</span>
-            </CCol>
+            </CCol> */}
             <CCol>
               <CFormInput
                 value={overCopyColor}
                 onChange={(e) => setOverCopyColor(e.target.value)}
-                min={0}
-                type="number"
               ></CFormInput>
             </CCol>
           </CRow>
@@ -945,33 +953,39 @@ const EditContract = () => {
           <CRow className="mt-3">
             <CCol>
               <CForm>
-                <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>Free Copy</CFormLabel>
+                <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
+                  Free Copy
+                  <span style={{ color: 'red', fontSize: '11px', marginLeft: '10px' }}>
+                    [contoh : 1500 copy]
+                  </span>
+                </CFormLabel>
               </CForm>
             </CCol>
             <CCol>
               <CFormInput
                 value={freeCopy}
                 onChange={(e) => setFreeCopy(e.target.value)}
-                min={0}
-                type="number"
               ></CFormInput>
             </CCol>
           </CRow>
           <CRow className="mt-3">
-            <CCol md={5}>
+            <CCol md={6}>
               <CForm>
-                <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>Over Copy</CFormLabel>
+                <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
+                  Over Copy{' '}
+                  <span style={{ color: 'red', fontSize: '11px', marginLeft: '10px' }}>
+                    [contoh : Rp 80/copy]
+                  </span>
+                </CFormLabel>
               </CForm>
             </CCol>
-            <CCol style={{ fontWeight: 'bold', paddingTop: '8px' }} md={1}>
+            {/* <CCol style={{ fontWeight: 'bold', paddingTop: '8px' }} md={1}>
               <span style={{ float: 'right' }}>Rp</span>
-            </CCol>
+            </CCol> */}
             <CCol>
               <CFormInput
                 value={overCopy}
                 onChange={(e) => setOverCopy(e.target.value)}
-                min={0}
-                type="number"
               ></CFormInput>
             </CCol>
           </CRow>
@@ -980,6 +994,9 @@ const EditContract = () => {
               <CForm>
                 <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
                   Free Copy Color
+                  <span style={{ color: 'red', fontSize: '11px', marginLeft: '10px' }}>
+                    [contoh : 1500 copy]
+                  </span>
                 </CFormLabel>
               </CForm>
             </CCol>
@@ -987,28 +1004,27 @@ const EditContract = () => {
               <CFormInput
                 value={freeCopyColor}
                 onChange={(e) => setFreeCopyColor(e.target.value)}
-                min={0}
-                type="number"
               ></CFormInput>
             </CCol>
           </CRow>
           <CRow className="mt-3">
-            <CCol md={5}>
+            <CCol md={6}>
               <CForm>
                 <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
-                  Over Copy Color
+                  Over Copy Color{' '}
+                  <span style={{ color: 'red', fontSize: '11px', marginLeft: '10px' }}>
+                    [contoh : Rp 80/copy]
+                  </span>
                 </CFormLabel>
               </CForm>
             </CCol>
-            <CCol style={{ fontWeight: 'bold', paddingTop: '8px' }} md={1}>
+            {/* <CCol style={{ fontWeight: 'bold', paddingTop: '8px' }} md={1}>
               <span style={{ float: 'right' }}>Rp</span>
-            </CCol>
+            </CCol> */}
             <CCol>
               <CFormInput
                 value={overCopyColor}
                 onChange={(e) => setOverCopyColor(e.target.value)}
-                min={0}
-                type="number"
               ></CFormInput>
             </CCol>
           </CRow>
