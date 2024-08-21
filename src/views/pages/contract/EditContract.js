@@ -99,6 +99,7 @@ const EditContract = () => {
           setContractDetail(response.data.data)
           setContractNumber(response.data.data.no_kontrak)
           setTanggalBuat(response.data.data.tanggal_buat)
+          setDeposit(response.data.data.deposit)
           setSelectedCustomer({
             value: {
               id_customer: response.data.data.id_customer,
@@ -277,10 +278,10 @@ const EditContract = () => {
     setTipeMesin('')
     setSpeed('')
     setHargaSewa(0)
-    setFreeCopy("")
-    setOverCopy("")
-    setFreeCopyColor("")
-    setOverCopyColor("")
+    setFreeCopy('')
+    setOverCopy('')
+    setFreeCopyColor('')
+    setOverCopyColor('')
     setPeriodeAwal(new Date())
     setPeriodeAkhir(new Date())
   }
@@ -738,7 +739,7 @@ const EditContract = () => {
                 <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
                   Free Copy
                   <span style={{ color: 'red', fontSize: '11px', marginLeft: '10px' }}>
-                    [contoh : 1500 copy]
+                    [contoh : 1.500 copy]
                   </span>
                 </CFormLabel>
               </CForm>
@@ -777,7 +778,7 @@ const EditContract = () => {
                 <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
                   Free Copy Color
                   <span style={{ color: 'red', fontSize: '11px', marginLeft: '10px' }}>
-                    [contoh : 1500 copy]
+                    [contoh : 1.500 copy]
                   </span>
                 </CFormLabel>
               </CForm>
@@ -956,7 +957,7 @@ const EditContract = () => {
                 <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
                   Free Copy
                   <span style={{ color: 'red', fontSize: '11px', marginLeft: '10px' }}>
-                    [contoh : 1500 copy]
+                    [contoh : 1.500 copy]
                   </span>
                 </CFormLabel>
               </CForm>
@@ -995,7 +996,7 @@ const EditContract = () => {
                 <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
                   Free Copy Color
                   <span style={{ color: 'red', fontSize: '11px', marginLeft: '10px' }}>
-                    [contoh : 1500 copy]
+                    [contoh : 1.500 copy]
                   </span>
                 </CFormLabel>
               </CForm>

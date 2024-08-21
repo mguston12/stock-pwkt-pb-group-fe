@@ -739,7 +739,7 @@ const CreateContract = () => {
                 <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
                   Free Copy
                   <span style={{ color: 'red', fontSize: '11px', marginLeft: '10px' }}>
-                    [contoh : 1500 copy]
+                    [contoh : 1.500 copy]
                   </span>
                 </CFormLabel>
               </CForm>
@@ -778,7 +778,7 @@ const CreateContract = () => {
                 <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
                   Free Copy Color
                   <span style={{ color: 'red', fontSize: '11px', marginLeft: '10px' }}>
-                    [contoh : 1500 copy]
+                    [contoh : 1.500 copy]
                   </span>
                 </CFormLabel>
               </CForm>
@@ -972,7 +972,7 @@ const CreateContract = () => {
                 <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
                   Free Copy
                   <span style={{ color: 'red', fontSize: '11px', marginLeft: '10px' }}>
-                    [contoh : 1500 copy]
+                    [contoh : 1.500 copy]
                   </span>
                 </CFormLabel>
               </CForm>
@@ -1011,7 +1011,7 @@ const CreateContract = () => {
                 <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
                   Free Copy Color
                   <span style={{ color: 'red', fontSize: '11px', marginLeft: '10px' }}>
-                    [contoh : 1500 copy]
+                    [contoh : 1.500 copy]
                   </span>
                 </CFormLabel>
               </CForm>
