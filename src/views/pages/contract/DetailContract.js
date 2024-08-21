@@ -242,9 +242,9 @@ const DetailContract = () => {
                       <CTableDataCell>{item.speed}</CTableDataCell>
                       <CTableDataCell>Rp {item.harga_sewa}</CTableDataCell>
                       <CTableDataCell>{item.free_copy}</CTableDataCell>
-                      <CTableDataCell>Rp {item.over_copy}</CTableDataCell>
+                      <CTableDataCell>{item.over_copy}</CTableDataCell>
                       <CTableDataCell>{item.free_copy_color}</CTableDataCell>
-                      <CTableDataCell>Rp {item.over_copy_color}</CTableDataCell>
+                      <CTableDataCell>{item.over_copy_color}</CTableDataCell>
                       <CTableDataCell>
                         {moment(item.periode_awal).format('DD MMM YYYY')}
                       </CTableDataCell>
