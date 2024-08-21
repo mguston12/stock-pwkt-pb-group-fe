@@ -321,8 +321,16 @@ const EditContract = () => {
       setOverCopy(data.over_copy)
       setFreeCopyColor(data.free_copy_color)
       setOverCopyColor(data.over_copy_color)
-      setPeriodeAwal(data.periode_awal)
-      setPeriodeAkhir(data.periode_akhir)
+      if (data.periode_awal_string === '') {
+        setPeriodeAwal(data.periode_awal)
+      } else {
+        setPeriodeAwal(data.periode_awal_string)
+      }
+      if (data.periode_akhir_string === '') {
+        setPeriodeAkhir(data.periode_akhir)
+      } else {
+        setPeriodeAkhir(data.periode_akhir_string)
+      }
       setPenempatan(data.penempatan)
     } else if (type === 'change') {
       var tempList = [...listMesin]
@@ -528,12 +536,24 @@ const EditContract = () => {
                         <CTableDataCell>{item.over_copy}</CTableDataCell>
                         <CTableDataCell>{item.free_copy_color}</CTableDataCell>
                         <CTableDataCell>{item.over_copy_color}</CTableDataCell>
-                        <CTableDataCell>
-                          {moment(item.periode_awal).format('DD MMM YYYY')}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {moment(item.periode_akhir).format('DD MMM YYYY')}
-                        </CTableDataCell>
+                        {item.periode_akhir_string === '' ? (
+                          <CTableDataCell>
+                            {moment(item.periode_awal).format('DD MMM YYYY')}
+                          </CTableDataCell>
+                        ) : (
+                          <CTableDataCell>
+                            {moment(item.periode_awal_string).format('DD MMM YYYY')}
+                          </CTableDataCell>
+                        )}
+                        {item.periode_akhir_string === '' ? (
+                          <CTableDataCell>
+                            {moment(item.periode_akhir).format('DD MMM YYYY')}
+                          </CTableDataCell>
+                        ) : (
+                          <CTableDataCell>
+                            {moment(item.periode_akhir_string).format('DD MMM YYYY')}
+                          </CTableDataCell>
+                        )}
                         <CTableDataCell>{item.penempatan}</CTableDataCell>
                         <CTableDataCell>
                           <CButton
