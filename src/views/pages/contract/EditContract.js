@@ -234,6 +234,7 @@ const EditContract = () => {
   function EditContract() {
     setIsLoading(true)
     var obj = {
+      id_header: contractDetail.id_header,
       no_kontrak: contractNumber,
       tanggal_buat: tanggalBuat,
       company_id: parseInt(selectedCompany.value),
