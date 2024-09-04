@@ -55,15 +55,19 @@ const Sekretariat = () => {
     if (selectedCompany.value === '' || selectedCompany.value === undefined) {
       setModalOpen(true)
     } else {
-      GetCustomers()
+      if (inputSearch.trim() === '') {
+        GetCustomers()
+      } else {
+        SearchCustomer()
+      }
     }
   }, [selectedCompany, currentPage])
 
-  useEffect(() => {
-    if (inputSearch.trim() !== '') {
-      SearchCustomer()
-    }
-  }, [currentPage])
+  // useEffect(() => {
+  //   if (inputSearch.trim() !== '') {
+  //     SearchCustomer()
+  //   }
+  // }, [currentPage])
 
   const GetCustomers = () => {
     setIsLoading(true)

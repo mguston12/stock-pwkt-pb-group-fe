@@ -40,15 +40,21 @@ const Sekretariat = () => {
   }, [])
 
   useEffect(() => {
-    if (selectedCompany?.value) {
-      GetContracts(1)
-    }
-  }, [selectedCompany])
+    console.log(selectedCompany)
 
-  const GetContracts = (page) => {
+    if (selectedCompany !== null) {
+      if (inputSearch.trim() === '') {
+        GetContracts()
+      } else {
+        SearchContract()
+      }
+    }
+  }, [selectedCompany, currentPage])
+
+  const GetContracts = () => {
     if (selectedCompany) {
       setIsLoading(true)
-      const url = `http://192.168.88.250:8080/contracts?company=${selectedCompany.value}&page=${page}&length=${itemsPerPage}`
+      const url = `http://192.168.88.250:8080/contracts?company=${selectedCompany.value}&page=${currentPage}&length=${itemsPerPage}`
 
       axios
         .get(url)
@@ -68,10 +74,10 @@ const Sekretariat = () => {
     }
   }
 
-  const SearchContract = (page) => {
+  const SearchContract = () => {
     if (selectedCompany) {
       setIsLoading(true)
-      const url = `http://192.168.88.250:8080/contracts?keyword=${inputSearch}&company=${selectedCompany.value}&page=${page}&length=${itemsPerPage}`
+      const url = `http://192.168.88.250:8080/contracts?keyword=${inputSearch}&company=${selectedCompany.value}&page=${currentPage}&length=${itemsPerPage}`
 
       axios
         .get(url)
@@ -93,20 +99,14 @@ const Sekretariat = () => {
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
+      setCurrentPage(1)
       SearchContract()
     }
   }
 
   const handlePageChange = (newPage) => {
     if (newPage < 1 || newPage > totalPage) return // Prevent out-of-bounds page numbers
-
     setCurrentPage(newPage)
-
-    if (inputSearch.trim()) {
-      SearchContract(newPage)
-    } else {
-      GetContracts(newPage)
-    }
   }
 
   const renderPaginationItems = () => {
@@ -201,6 +201,7 @@ const Sekretariat = () => {
                   Previous
                 </CPaginationItem>
                 {renderPaginationItems()}
+
                 <CPaginationItem
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === totalPage}
