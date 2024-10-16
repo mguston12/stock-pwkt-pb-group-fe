@@ -32,6 +32,13 @@ const Bank = () => {
   const [nomorRekening, setNomorRekening] = useState('')
   const [atasNama, setAtasNama] = useState('')
   const [idBank, setIDBank] = useState('')
+  
+  const [selectedCompany, setSelectedCompany] = useState(null)
+
+  useEffect(() => {
+    const company = JSON.parse(decodeURIComponent(sessionStorage.getItem('PT')))
+    setSelectedCompany(company)
+  }, [])
 
   useEffect(() => {
     GetBanks()
@@ -82,6 +89,7 @@ const Bank = () => {
       bank_name: namaBank,
       nomor_rekening: nomorRekening,
       atas_nama: atasNama,
+      company_id: parseInt(selectedCompany.value),
     }
     var url = `http://192.168.88.250:8080/banks/create`
 

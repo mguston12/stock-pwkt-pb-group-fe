@@ -105,7 +105,7 @@ const Dashboard = () => {
               </CCol>
             </CCardFooter>
           </CCard>
-        </CCol>
+        </CCol>][]
         <CCol md={3}></CCol>
       </CRow>
 
