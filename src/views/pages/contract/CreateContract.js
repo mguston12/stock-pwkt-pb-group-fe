@@ -248,7 +248,7 @@ const CreateContract = () => {
   const handleModalAdd = () => {
     var tempList = [...listMesin]
     var tempObj = {
-      quantity: qtyMesin,
+      quantity: parseInt(qtyMesin),
       tipe_mesin: tipeMesin,
       speed: speed,
       harga_sewa: parseFloat(hargaSewa),
