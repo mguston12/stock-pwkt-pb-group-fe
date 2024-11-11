@@ -242,6 +242,7 @@ const EditContract = () => {
       bank_id: selectedBank.value.bank_id,
       payment_id: selectedPaymentMethod.value.payment_id,
       deposit: parseFloat(deposit),
+      denda_satupersenyn: dendaSatuPersenYN.value,
       active_yn: 'Y',
       updated_by: userID,
       details: listMesin,
