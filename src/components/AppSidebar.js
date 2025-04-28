@@ -30,7 +30,7 @@ const AppSidebar = () => {
     >
       <CSidebarHeader className="border-bottom">
         <CSidebarBrand to="/" style={{ textAlign: 'center', fontSize: '24px', fontWeight: 'bold' }}>
-          <CFormLabel>Sekretariat X</CFormLabel>
+          <CFormLabel>Stock X</CFormLabel>
         </CSidebarBrand>
       </CSidebarHeader>
       <AppSidebarNav items={navigation} />

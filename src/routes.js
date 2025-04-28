@@ -2,36 +2,49 @@ import React from 'react'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 
-const Contract = React.lazy(() => import('./views/pages/contract/Contract'))
-const DetailContract = React.lazy(() => import('./views/pages/contract/DetailContract'))
-const CreateContract = React.lazy(() => import('./views/pages/contract/CreateContract'))
-const EditContract = React.lazy(() => import('./views/pages/contract/EditContract'))
-const ExpiredSoon = React.lazy(() => import('./views/pages/contract/ExpiredSoon'))
+const Machine = React.lazy(() => import('./views/pages/machine/Machine'))
+const DetailMachine = React.lazy(() => import('./views/pages/machine/DetailMachine'))
+
+const Sparepart = React.lazy(() => import('./views/pages/sparepart/Sparepart'))
+
+const Request = React.lazy(() => import('./views/pages/request/Request'))
+
+const Teknisi = React.lazy(()=> import('./views/pages/teknisi/Teknisi'))
+const DetailTeknisi = React.lazy(() => import('./views/pages/teknisi/DetailTeknisi'))
 
 const Customer = React.lazy(() => import('./views/pages/customer/Customer'))
 const CreateCustomer = React.lazy(() => import('./views/pages/customer/CreateCustomer'))
 
-const Bank = React.lazy(() => import('./views/pages/bank/Bank'))
+const BarcodeScanner = React.lazy(() => import('./views/pages/barcodescanner/barcodescanner'))
+
+const SetPassword = React.lazy(()=> import('./views/pages/setpassword/SetPassword'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard, exact: true },
 
-  { path: '/contract', name: 'Kontrak', element: Contract, exact: true },
+  { path: '/machine', name: 'Machine', element: Machine, exact: true },
   {
-    path: '/contract/detail/:no_kontrak',
-    name: 'Detail Kontrak',
-    element: DetailContract,
+    path: '/machine/detail/:id_machine',
+    name: 'Detail Mesin',
+    element: DetailMachine,
     exact: true,
   },
-  { path: '/contract/edit/:no_kontrak', name: 'Ubah Kontrak', element: EditContract, exact: true },
-  { path: '/contract/create', name: 'Buat Kontrak Baru', element: CreateContract, exact: true },
-  { path: '/expiredsoon', name: 'Kontrak Habis Bulan Depan', element: ExpiredSoon, exact: true },
+  { path: '/sparepart', name: 'Sparepart', element: Sparepart, exact: true },
+  { path: '/request', name: 'Request', element: Request, exact: true },
 
   { path: '/customer', name: 'Customer', element: Customer, exact: true },
   { path: '/customer/create', name: 'Buat Customer Baru', element: CreateCustomer, exact: true },
 
-  { path: '/bank', name: 'Bank', element: Bank, exact: true },
+  { path: '/teknisi', name: 'Teknisi', element: Teknisi, exact: true},
+  {
+    path: '/teknisi/detail/:id_teknisi',
+    name: 'Detail Teknisi',
+    element: DetailTeknisi,
+    exact: true,
+  },
+
+  { path: '/barcodescanner', name: 'BarcodeScanner', element: BarcodeScanner, exact: true },
 ]
 
 export default routes

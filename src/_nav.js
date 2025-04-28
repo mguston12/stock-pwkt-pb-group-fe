@@ -3,15 +3,22 @@ import CIcon from '@coreui/icons-react'
 import {
   cilDescription,
   cilPeople,
-  cilSpeedometer,
+  cilPrint,
   cilHome,
-  cilBank,
-  cilAvTimer,
+  cilPaintBucket,
+  cilWalk,
+  cilQrCode,
+  cilBellExclamation,
 } from '@coreui/icons'
 import { CNavGroup, CNavItem } from '@coreui/react'
 
 function checkSessionStorage(name) {
   return sessionStorage.getItem(name)
+}
+
+function isAdmin() {
+  const userRole = checkSessionStorage('user')
+  return userRole === 'admin'
 }
 
 const _nav = [
@@ -20,12 +27,40 @@ const _nav = [
     name: 'Dashboard',
     to: '/dashboard',
     icon: <CIcon icon={cilHome} customClassName="nav-icon" />,
+    hidden: !isAdmin(),
   },
   {
     component: CNavItem,
-    name: 'Bank',
-    to: '/bank',
-    icon: <CIcon icon={cilBank} customClassName="nav-icon" />,
+    name: 'Barcode Scanner',
+    to: '/barcodescanner',
+    icon: <CIcon icon={cilQrCode} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Mesin',
+    to: '/machine',
+    icon: <CIcon icon={cilPrint} customClassName="nav-icon" />,
+    hidden: !isAdmin(),
+  },
+  {
+    component: CNavItem,
+    name: 'Sparepart',
+    to: '/sparepart',
+    icon: <CIcon icon={cilPaintBucket} customClassName="nav-icon" />,
+    hidden: !isAdmin(),
+  },
+  {
+    component: CNavItem,
+    name: 'Teknisi',
+    to: '/teknisi',
+    icon: <CIcon icon={cilWalk} customClassName="nav-icon" />,
+    hidden: !isAdmin(),
+  },
+  {
+    component: CNavItem,
+    name: 'Request',
+    to: '/request',
+    icon: <CIcon icon={cilBellExclamation} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
@@ -34,25 +69,25 @@ const _nav = [
     icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
     hidden: !checkSessionStorage('PT'),
   },
-  {
-    component: CNavGroup,
-    name: 'Contract Management',
-    hidden: !checkSessionStorage('PT'),
-    items: [
-      {
-        component: CNavItem,
-        name: 'Semua Kontrak',
-        to: '/contract',
-        icon: <CIcon icon={cilDescription} customClassName="nav-icon" />,
-      },
-      {
-        component: CNavItem,
-        name: 'Kontrak Habis Bulan Depan',
-        to: '/expiredsoon',
-        icon: <CIcon icon={cilAvTimer} customClassName="nav-icon" />,
-      },
-    ],
-  },
+  // {
+  //   component: CNavGroup,
+  //   name: 'Contract Management',
+  //   hidden: !checkSessionStorage('PT'),
+  //   items: [
+  //     {
+  //       component: CNavItem,
+  //       name: 'Semua Kontrak',
+  //       to: '/contract',
+  //       icon: <CIcon icon={cilDescription} customClassName="nav-icon" />,
+  //     },
+  //     {
+  //       component: CNavItem,
+  //       name: 'Kontrak Habis Bulan Depan',
+  //       to: '/expiredsoon',
+  //       icon: <CIcon icon={cilAvTimer} customClassName="nav-icon" />,
+  //     },
+  //   ],
+  // },
 ]
 
 export default _nav

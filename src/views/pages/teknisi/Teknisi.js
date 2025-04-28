@@ -24,8 +24,8 @@ import {
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 
-const Sekretariat = () => {
-  const [listContract, setListContract] = useState([])
+const Teknisi = () => {
+  const [listTeknisi, setListTeknisi] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [inputSearch, setInputSearch] = useState('')
   const [selectedCompany, setSelectedCompany] = useState(null)
@@ -35,72 +35,55 @@ const Sekretariat = () => {
   const maxVisiblePages = 3
 
   useEffect(() => {
-    const company = JSON.parse(decodeURIComponent(sessionStorage.getItem('PT')))
-    setSelectedCompany(company)
-  }, [])
+    GetTeknisi()
+  }, [currentPage])
 
-  useEffect(() => {
-    console.log(selectedCompany)
+  const GetTeknisi = () => {
+    setIsLoading(true)
+    const url = `http://192.168.88.250:8081/teknisi`
 
-    if (selectedCompany !== null) {
-      if (inputSearch.trim() === '') {
-        GetContracts()
-      } else {
-        SearchContract()
-      }
-    }
-  }, [selectedCompany, currentPage])
-
-  const GetContracts = () => {
-    if (selectedCompany) {
-      setIsLoading(true)
-      const url = `http://192.168.88.250:8080/contracts?company=${selectedCompany.value}&page=${currentPage}&length=${itemsPerPage}`
-
-      axios
-        .get(url)
-        .then((response) => {
-          setIsLoading(false)
-          const { data, metadata } = response.data
-          setListContract(data || [])
-          setTotalPage(metadata || 1)
-        })
-        .catch((error) => {
-          console.error(error)
-          alert('Error fetching contracts: ' + error.message)
-          setIsLoading(false)
-          setListContract([])
-          setTotalPage(1)
-        })
-    }
+    axios
+      .get(url)
+      .then((response) => {
+        setIsLoading(false)
+        const { data, metadata } = response.data
+        setListTeknisi(data || [])
+        setTotalPage(metadata || 1)
+      })
+      .catch((error) => {
+        console.error(error)
+        alert('Error fetching teknisi: ' + error.message)
+        setIsLoading(false)
+        setListTeknisi([])
+        setTotalPage(1)
+      })
   }
 
-  const SearchContract = () => {
-    if (selectedCompany) {
-      setIsLoading(true)
-      const url = `http://192.168.88.250:8080/contracts?keyword=${inputSearch}&company=${selectedCompany.value}&page=${currentPage}&length=${itemsPerPage}`
+  const SearchTeknisi = () => {
+    setIsLoading(true)
+    const url = `http://192.168.88.250:8081/teknisi?keyword=${inputSearch}&page=${currentPage}&length=${itemsPerPage}`
 
-      axios
-        .get(url)
-        .then((response) => {
-          const { data, metadata } = response.data
-          setListContract(data || [])
-          setTotalPage(metadata || 1)
-          setIsLoading(false)
-        })
-        .catch((error) => {
-          console.error(error)
-          alert('Error searching contracts: ' + error.message)
-          setIsLoading(false)
-          setListContract([])
-          setTotalPage(1)
-        })
-    }
+    axios
+      .get(url)
+      .then((response) => {
+        const { data, metadata } = response.data
+        setListTeknisi(data || [])
+        setTotalPage(metadata || 1)
+        setIsLoading(false)
+      })
+      .catch((error) => {
+        console.error(error)
+        alert('Error searching teknisi: ' + error.message)
+        setIsLoading(false)
+        setListTeknisi([])
+        setTotalPage(1)
+      })
   }
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       setCurrentPage(1)
-      SearchContract()
+      SearchTeknisi()
     }
   }
 
@@ -134,17 +117,17 @@ const Sekretariat = () => {
     <CCard>
       <CCardHeader style={{ fontSize: '20px', fontWeight: 'bold' }}>
         <CRow>
-          <CCol>List Kontrak</CCol>
+          <CCol>List Mesin</CCol>
           <CCol className="d-grid gap-2" md={2}>
-            <Link to={`/contract/create`} className="btn btn-block btn-success text-white">
+            {/* <Link to={`/teknisi/create`} className="btn btn-block btn-success text-white">
               Buat Kontrak Baru
-            </Link>
+            </Link> */}
           </CCol>
         </CRow>
         <CRow className="mt-3">
           <CCol md={10}>
             <CFormInput
-              placeholder="Input Nama Perusahaan lalu Tekan Enter atau Tekan Cari"
+              // placeholder="Input Nama Perusahaan lalu Tekan Enter atau Tekan Cari"
               style={{ display: 'inline' }}
               value={inputSearch}
               onChange={(e) => setInputSearch(e.target.value)}
@@ -152,38 +135,35 @@ const Sekretariat = () => {
             />
           </CCol>
           <CCol className="d-grid gap-2" md={2}>
-            <CButton className="btn-block text-white" color="info" onClick={SearchContract}>
+            <CButton className="btn-block text-white" color="info" onClick={SearchTeknisi}>
               Cari
             </CButton>
           </CCol>
         </CRow>
       </CCardHeader>
       <CCardBody>
-        {listContract.length === 0 && !isLoading && (
+        {listTeknisi.length === 0 && !isLoading && (
           <CCol style={{ textAlign: 'center' }}>Maaf Data Tidak Ditemukan</CCol>
         )}
-        {listContract.length > 0 && (
+        {listTeknisi.length > 0 && (
           <CCol>
             <CTable striped bordered hover responsive>
               <CTableHead>
                 <CTableRow>
-                  <CTableHeaderCell className="text-center">No. Kontrak</CTableHeaderCell>
-                  <CTableHeaderCell className="text-center">Customer</CTableHeaderCell>
-                  <CTableHeaderCell className="text-center">Tanggal Buat</CTableHeaderCell>
+                  <CTableHeaderCell className="text-center">ID Teknisi</CTableHeaderCell>
+                  <CTableHeaderCell className="text-center">Nama Teknisi</CTableHeaderCell>
                   <CTableHeaderCell className="text-center">Action</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {listContract.map((item, index) => (
+                {listTeknisi.map((item, index) => (
                   <CTableRow key={index} className="text-center">
-                    <CTableDataCell>{item.no_kontrak}</CTableDataCell>
-                    <CTableDataCell>{item.nama_customer}</CTableDataCell>
-                    <CTableDataCell>{item.tanggal_buat}</CTableDataCell>
+                    <CTableDataCell>{item.id_teknisi}</CTableDataCell>
+                    <CTableDataCell>{item.nama_teknisi}</CTableDataCell>
                     <CTableDataCell>
                       <Link
-                        to={`/contract/detail/${item.no_kontrak.replace(/\//g, '-')}`}
+                        to={`/teknisi/detail/${item.id_teknisi}`}
                         className="btn btn-warning btn-sm text-white"
-                        disabled
                       >
                         Detail
                       </Link>
@@ -257,4 +237,4 @@ const Sekretariat = () => {
   )
 }
 
-export default Sekretariat
+export default Teknisi

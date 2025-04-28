@@ -28,7 +28,7 @@ import axios from 'axios'
 import CIcon from '@coreui/icons-react'
 import { cilCheckCircle, cilXCircle } from '@coreui/icons'
 
-const Sekretariat = () => {
+const Customer = () => {
   const [listCustomer, setListCustomer] = useState([])
   const [inputSearch, setInputSearch] = useState('')
   const [selectedCompany, setSelectedCompany] = useState('')
@@ -450,4 +450,4 @@ const Sekretariat = () => {
   )
 }
 
-export default Sekretariat
+export default Customer

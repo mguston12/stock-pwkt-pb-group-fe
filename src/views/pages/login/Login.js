@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import {
   CButton,
   CCard,
   CCardBody,
   CCardGroup,
-  CCol,
   CContainer,
   CForm,
   CFormInput,
@@ -21,14 +20,54 @@ import 'react-toastify/dist/ReactToastify.css'
 const Login = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
 
-  const login = () => {
-    if (username === 'sekre' && password === 'Sekre#2024') {
-      sessionStorage.setItem('isLoggedIn', true)
-      sessionStorage.setItem('user', 'sekre')
-      window.location.replace('/dashboard')
-    } else {
-      toast.error('Gagal melakukan login', {
+  const login = async () => {
+    setLoading(true) // Start loading
+    try {
+      const response = await fetch('http://192.168.88.250:8081/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      })
+
+      console.log(response)
+
+      const data = await response.json()
+
+      if (data.error.status === true) {
+        if (data.error.msg === 'Buat Password dulu') {
+          toast.error(data.error.msg, {
+            position: 'top-right',
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          })
+          navigate('/set-password')
+        } else {
+          toast.error(data.error.msg || 'Gagal melakukan login', {
+            position: 'top-right',
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          })
+        }
+      } else {
+        sessionStorage.setItem('isLoggedIn', true)
+        sessionStorage.setItem('user', username)
+        window.location.replace('/request') // Redirect to dashboard if login is successful
+      }
+    } catch (error) {
+      toast.error('Terjadi kesalahan, coba lagi.', {
         position: 'top-right',
         autoClose: 3000,
         hideProgressBar: false,
@@ -37,6 +76,8 @@ const Login = () => {
         draggable: true,
         progress: undefined,
       })
+    } finally {
+      setLoading(false) // End loading
     }
   }
 
@@ -48,7 +89,7 @@ const Login = () => {
 
   return (
     <div className="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center">
-      <ToastContainer></ToastContainer>
+      <ToastContainer />
       <CContainer>
         <CRow className="justify-content-center">
           <CCardGroup style={{ width: '30rem' }}>
@@ -77,8 +118,13 @@ const Login = () => {
                     />
                   </CInputGroup>
                   <CRow style={{ alignContent: 'center' }}>
-                    <CButton color="primary" className="px-4" onClick={login}>
-                      Login
+                    <CButton
+                      color="primary"
+                      className="px-4"
+                      onClick={login}
+                      disabled={loading} // Disable the button while loading
+                    >
+                      {loading ? 'Logging in...' : 'Login'} {/* Show loading text */}
                     </CButton>
                   </CRow>
                 </CForm>
