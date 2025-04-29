@@ -8,8 +8,9 @@ const DetailMachine = React.lazy(() => import('./views/pages/machine/DetailMachi
 const Sparepart = React.lazy(() => import('./views/pages/sparepart/Sparepart'))
 
 const Request = React.lazy(() => import('./views/pages/request/Request'))
+const CreateRequest = React.lazy(() => import('./views/pages/request/CreateRequest'))
 
-const Teknisi = React.lazy(()=> import('./views/pages/teknisi/Teknisi'))
+const Teknisi = React.lazy(() => import('./views/pages/teknisi/Teknisi'))
 const DetailTeknisi = React.lazy(() => import('./views/pages/teknisi/DetailTeknisi'))
 
 const Customer = React.lazy(() => import('./views/pages/customer/Customer'))
@@ -17,7 +18,7 @@ const CreateCustomer = React.lazy(() => import('./views/pages/customer/CreateCus
 
 const BarcodeScanner = React.lazy(() => import('./views/pages/barcodescanner/barcodescanner'))
 
-const SetPassword = React.lazy(()=> import('./views/pages/setpassword/SetPassword'))
+const SetPassword = React.lazy(() => import('./views/pages/setpassword/SetPassword'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -31,12 +32,14 @@ const routes = [
     exact: true,
   },
   { path: '/sparepart', name: 'Sparepart', element: Sparepart, exact: true },
+
   { path: '/request', name: 'Request', element: Request, exact: true },
+  { path: '/request/create', name: 'Buat Request Baru', element: CreateRequest, exact: true },
 
   { path: '/customer', name: 'Customer', element: Customer, exact: true },
   { path: '/customer/create', name: 'Buat Customer Baru', element: CreateCustomer, exact: true },
 
-  { path: '/teknisi', name: 'Teknisi', element: Teknisi, exact: true},
+  { path: '/teknisi', name: 'Teknisi', element: Teknisi, exact: true },
   {
     path: '/teknisi/detail/:id_teknisi',
     name: 'Detail Teknisi',

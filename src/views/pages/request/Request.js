@@ -228,9 +228,9 @@ const Request = () => {
         <CRow>
           <CCol>List Request</CCol>
           <CCol className="d-grid gap-2" md={2}>
-            {/* <Link to={`/machine/create`} className="btn btn-block btn-success text-white">
-              Buat Kontrak Baru
-            </Link> */}
+            <Link to={`/request/create`} className="btn btn-block btn-primary text-white">
+              Request Sparepart
+            </Link>
           </CCol>
         </CRow>
         <CRow className="mt-3">
