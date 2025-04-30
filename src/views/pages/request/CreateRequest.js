@@ -31,7 +31,7 @@ const CreateRequest = () => {
   const [idTeknisi, setIdTeknisi] = useState(false)
   const [idMesin, setIdMesin] = useState(false)
   const [idSparepart, setIdSparepart] = useState(false)
-  const [quantity, setQuantity] = useState(0)
+  const [quantity, setQuantity] = useState(1)
   const [statusRequest, setStatusRequest] = useState(false)
   const [selectedCustomer, setSelectedCustomer] = useState('')
   const [listCustomer, setListCustomer] = useState([])
@@ -122,12 +122,14 @@ const CreateRequest = () => {
 
   function createRequest() {
     setIsLoading(true)
+    console.log(selectedMachine)
+
     var obj = {
-      id_teknisi: idTeknisi,
-      id_mesin: idMesin,
-      id_sparepart: idSparepart,
+      id_teknisi: userID,
+      id_mesin: selectedMachine.value.id_machine,
+      id_sparepart: selectedSparepart.value.id_sparepart,
       quantity: parseInt(quantity),
-      status_request: statusRequest,
+      status_request: 'Request',
       updated_by: userID,
     }
     var url = `http://192.168.88.250:8081/requests/create`
@@ -186,7 +188,7 @@ const CreateRequest = () => {
 
                   <ReactSelect
                     options={listMachine.map((machine) => ({
-                      value: machine.id_mesin,
+                      value: machine,
                       label: machine.tipe_machine,
                     }))}
                     onChange={(e) => setSelectedMachine(e)}
@@ -197,14 +199,14 @@ const CreateRequest = () => {
               )}
             </CCol>
           </CRow>
-          <CRow className="mt-3">
-            <CCol>
-              {listSparepart.length !== 0 && (
+          {listSparepart.length !== 0 && (
+            <CRow className="mt-3">
+              <CCol>
                 <CForm>
                   <CFormLabel style={{ fontWeight: 'bold' }}>SPAREPART</CFormLabel>
                   <ReactSelect
                     options={listSparepart.map((sparepart) => ({
-                      value: sparepart.id_sparepart,
+                      value: sparepart,
                       label: sparepart.nama_sparepart,
                     }))}
                     onChange={(e) => setSelectedSparepart(e)}
@@ -212,9 +214,22 @@ const CreateRequest = () => {
                     placeholder="Tekan dan Pilih Sparepart..."
                   />
                 </CForm>
-              )}
-            </CCol>
-          </CRow>
+              </CCol>
+            </CRow>
+          )}
+          {selectedSparepart.length !== 0 && (
+            <CRow className="mt-3">
+              <CForm>
+                <CFormLabel style={{ fontWeight: 'bold' }}>QUANTITY</CFormLabel>
+                <CFormInput
+                  value={quantity}
+                  onChange={(e) => setQuantity(e.target.value)}
+                  min={1}
+                  type="number"
+                ></CFormInput>
+              </CForm>
+            </CRow>
+          )}
         </CCardBody>
         <CCardFooter>
           <CRow>
@@ -224,8 +239,9 @@ const CreateRequest = () => {
                 className="btn btn-success text-white"
                 style={{ width: '100%', display: 'block' }}
                 onClick={() => createRequest()}
+                hidden={!selectedCustomer || !selectedMachine || !selectedSparepart}
               >
-                SIMPAN
+                Kirim Request
               </CButton>
             </CCol>
             <CCol md={4}></CCol>
@@ -291,7 +307,7 @@ const CreateRequest = () => {
           )}
         </CModalBody>
         <CModalFooter style={{ justifyContent: 'center' }}>
-          <Link to={`/customer`} className="btn btn-block btn-info text-white">
+          <Link to={`/request`} className="btn btn-block btn-info text-white">
             Kembali Ke Halaman Request
           </Link>
           <CButton color="success" className="text-white" onClick={() => window.location.reload()}>

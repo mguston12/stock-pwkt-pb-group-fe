@@ -11,6 +11,8 @@ import {
   CModal,
   CModalBody,
   CModalFooter,
+  CModalHeader,
+  CModalTitle,
   CPagination,
   CPaginationItem,
   CRow,
@@ -38,42 +40,63 @@ const Request = () => {
   const [totalPage, setTotalPage] = useState(1)
   const itemsPerPage = 10
   const maxVisiblePages = 3
-  const [requestID, setRequestID] = useState('')
-  const [requestName, setRequestName] = useState('')
-  const [quantity, setQuantity] = useState(0)
+
+  const userID = sessionStorage.getItem('user')
+
+  const [data, setData] = useState({
+    id_request: 0,
+    id_teknisi: '',
+    nama_teknisi: '',
+    id_mesin: '',
+    tipe_machine: '',
+    id_sparepart: '',
+    nama_sparepart: '',
+    quantity: 0,
+    status_request: '',
+    tanggal_request: '',
+    updated_by: '',
+    updated_at: '',
+    nama_customer: '',
+  })
 
   const [modalResponseIsOpen, setModalResponseIsOpen] = useState(false)
   const [responseMessage, setResponseMessage] = useState('')
   const [responseType, setResponseType] = useState(false)
 
   useEffect(() => {
-    SearchRequest()
-  }, [currentPage])
+    if (userID !== 'admin') {
+      SearchRequest()
+    } else {
+      SearchRequestAdmin()
+    }
+  }, [currentPage, userID])
 
-  //   const GetRequests = () => {
-  //     setIsLoading(true)
-  //     const url = `http://192.168.88.250:8081/requests`
+  const SearchRequestAdmin = () => {
+    setIsLoading(true)
 
-  //     axios
-  //       .get(url)
-  //       .then((response) => {
-  //         setIsLoading(false)
-  //         const { data, metadata } = response.data
-  //         setListRequest(data || [])
-  //         setTotalPage(metadata || 1)
-  //       })
-  //       .catch((error) => {
-  //         console.error(error)
-  //         alert('Error fetching machines: ' + error.message)
-  //         setIsLoading(false)
-  //         setListRequest([])
-  //         setTotalPage(1)
-  //       })
-  //   }
+    const url = `http://192.168.88.250:8081/requests?&page=${currentPage}&length=${itemsPerPage}`
+
+    axios
+      .get(url)
+      .then((response) => {
+        const { data, metadata } = response.data
+        setListRequest(data || [])
+        setTotalPage(metadata || 1)
+        setIsLoading(false)
+      })
+      .catch((error) => {
+        console.error(error)
+        alert('Error searching machines: ' + error.message)
+        setIsLoading(false)
+        setListRequest([])
+        setTotalPage(1)
+      })
+  }
 
   const SearchRequest = () => {
     setIsLoading(true)
-    const url = `http://192.168.88.250:8081/requests?keyword=${inputSearch}&page=${currentPage}&length=${itemsPerPage}`
+
+    const url = `http://192.168.88.250:8081/requests?keyword=${userID}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
       .get(url)
@@ -131,66 +154,27 @@ const Request = () => {
   }
 
   const handleModal = (tipe, data) => {
-    if (tipe === 'Add') {
-      setRequestID('')
-      setRequestName('')
-      setQuantity('')
-    } else if (tipe === 'Edit') {
-      setRequestID(data.id_request)
-      setRequestName(data.nama_request)
-      setQuantity(data.quantity)
-    }
-
+    setData(data)
     setType(tipe)
     setModalIsOpen(!modalIsOpen)
   }
 
-  function createRequest() {
+  function updateRequest(status) {
     setIsLoading(true)
     var obj = {
-      id_request: requestID,
-      nama_request: requestName,
-      quantity: parseInt(quantity),
-    }
-    var url = `http://192.168.88.250:8081/requests/create`
-
-    axios
-      .post(url, obj)
-      .then((response) => {
-        SearchRequest()
-        if (response.data.error.status === true) {
-          setIsLoading(false)
-          setResponseType(false)
-          setResponseMessage(response.data.error.msg)
-          setModalResponseIsOpen(true)
-        } else {
-          setIsLoading(false)
-          setResponseType(true)
-          setResponseMessage('Berhasil Membuat Request Baru')
-          setModalResponseIsOpen(true)
-        }
-      })
-      .catch((error) => {
-        setIsLoading(false)
-        setModalResponseIsOpen(true)
-        setResponseType(false)
-        setResponseMessage(error.message)
-      })
-  }
-
-  function updateRequest() {
-    setIsLoading(true)
-    var obj = {
-      id_request: requestID,
-      nama_request: requestName,
-      quantity: parseInt(quantity),
+      id_teknisi: data.id_teknisi,
+      id_mesin: data.id_mesin,
+      id_sparepart: data.id_sparepart,
+      quantity: parseInt(data.quantity),
+      status_request: status,
+      updated_by: userID,
+      id_request: parseInt(data.id_request),
     }
     var url = `http://192.168.88.250:8081/requests/update`
 
     axios
       .put(url, obj)
       .then((response) => {
-        SearchRequest()
         if (response.data.error.status === true) {
           console.log('Gagal Update Request', response)
           setIsLoading(false)
@@ -213,30 +197,22 @@ const Request = () => {
       })
   }
 
-  const handleCreateOrEdit = (type) => {
-    setModalIsOpen(!modalIsOpen)
-    if (type === 'Add') {
-      createRequest()
-    } else {
-      updateRequest()
-    }
-  }
-
   return (
     <CCard>
       <CCardHeader style={{ fontSize: '20px', fontWeight: 'bold' }}>
         <CRow>
           <CCol>List Request</CCol>
-          <CCol className="d-grid gap-2" md={2}>
-            <Link to={`/request/create`} className="btn btn-block btn-primary text-white">
-              Request Sparepart
-            </Link>
-          </CCol>
+          {userID !== 'admin' && (
+            <CCol className="d-grid gap-2" sm={6} md={2}>
+              <Link to={`/request/create`} className="btn btn-block btn-info text-white">
+                Request Sparepart
+              </Link>
+            </CCol>
+          )}
         </CRow>
-        <CRow className="mt-3">
+        {/* <CRow className="mt-3">
           <CCol md={10}>
             <CFormInput
-              // placeholder="Input Nama Perusahaan lalu Tekan Enter atau Tekan Cari"
               style={{ display: 'inline' }}
               value={inputSearch}
               onChange={(e) => setInputSearch(e.target.value)}
@@ -248,7 +224,7 @@ const Request = () => {
               Cari
             </CButton>
           </CCol>
-        </CRow>
+        </CRow> */}
       </CCardHeader>
       <CCardBody>
         {listRequest.length === 0 && !isLoading && (
@@ -263,7 +239,9 @@ const Request = () => {
                   <CTableHeaderCell className="text-center">Request</CTableHeaderCell>
                   <CTableHeaderCell className="text-center">Untuk</CTableHeaderCell>
                   <CTableHeaderCell className="text-center">Status</CTableHeaderCell>
-                  <CTableHeaderCell className="text-center">Action</CTableHeaderCell>
+                  {userID === 'admin' && (
+                    <CTableHeaderCell className="text-center">Action</CTableHeaderCell>
+                  )}
                 </CTableRow>
               </CTableHead>
               <CTableBody>
@@ -275,28 +253,43 @@ const Request = () => {
                     </CTableDataCell>
                     <CTableDataCell>{item.nama_customer}</CTableDataCell>
                     <CTableDataCell>
-                      <CButton color="success" className="btn-sm text-white">
-                        {item.status_request}
-                      </CButton>
-                    </CTableDataCell>
-                    <CTableDataCell>
-                      {item.status_request !== 'Approved' && (
-                        <CButton
-                          className="btn btn-warning btn-sm text-white"
-                          onClick={() => handleModal('Edit', item)}
-                        >
-                          UBAH
+                      {item.status_request === 'Disetujui' && (
+                        <CButton color="success" className="btn-sm text-white">
+                          {item.status_request}
+                        </CButton>
+                      )}{' '}
+                      {item.status_request === 'Request' && (
+                        <CButton color="secondary" className="btn-sm text-white">
+                          {item.status_request}
                         </CButton>
                       )}
-                      {item.status_request === 'Approved' && (
-                        <CButton
-                          className="btn btn-warning btn-sm text-white"
-                          onClick={() => handleModal('Edit', item)}
-                        >
-                          Detail
+                      {item.status_request === 'Ditolak' && (
+                        <CButton color="danger" className="btn-sm text-white">
+                          {item.status_request}
                         </CButton>
                       )}
                     </CTableDataCell>
+                    {userID === 'admin' && (
+                      <CTableDataCell>
+                        {item.status_request === 'Request' && (
+                          <CButton
+                            className="btn btn-warning btn-sm text-white"
+                            onClick={() => handleModal('Edit', item)}
+                          >
+                            UBAH
+                          </CButton>
+                        )}
+                        {(item.status_request === 'Disetujui' ||
+                          item.status_request === 'Ditolak') && (
+                          <CButton
+                            className="btn btn-warning btn-sm text-white"
+                            onClick={() => handleModal('Detail', item)}
+                          >
+                            Detail
+                          </CButton>
+                        )}
+                      </CTableDataCell>
+                    )}
                   </CTableRow>
                 ))}
               </CTableBody>
@@ -324,66 +317,72 @@ const Request = () => {
           </CCol>
         )}
       </CCardBody>
-      <CModal size="lg" alignment="center" visible={modalIsOpen} backdrop="static">
-        <CModalBody style={{ justifyContent: 'center' }}>
-          <CFormLabel style={{ fontWeight: 'bold', fontSize: '20px', paddingTop: '8px' }}>
-            {type === 'Add' ? 'Tambah' : 'Ubah Data'} Request
-          </CFormLabel>
-          <hr />
-          <CRow className="mt-3">
-            <CCol>
-              <CForm>
-                <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
-                  ID Request
-                </CFormLabel>
-              </CForm>
-            </CCol>
-            <CCol>
-              <CFormInput
-                value={requestID}
-                disabled
-                onChange={(e) => setRequestID(e.target.value)}
-              ></CFormInput>
-            </CCol>
-          </CRow>
-          <CRow className="mt-3">
-            <CCol>
-              <CForm>
-                <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
-                  Nama Request
-                </CFormLabel>
-              </CForm>
-            </CCol>
-            <CCol>
-              <CFormInput
-                value={requestName}
-                onChange={(e) => setRequestName(e.target.value)}
-              ></CFormInput>
-            </CCol>
-          </CRow>
-          <CRow className="mt-3">
-            <CCol>
-              <CForm>
-                <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>Quantity</CFormLabel>
-              </CForm>
-            </CCol>
-            <CCol>
-              <CFormInput
-                value={quantity}
-                onChange={(e) => setQuantity(e.target.value)}
-              ></CFormInput>
-            </CCol>
-          </CRow>
-        </CModalBody>
-        <CModalFooter style={{ justifyContent: 'center' }}>
-          <CButton color="success" className="text-white" onClick={() => handleCreateOrEdit(type)}>
-            {type === 'Add' ? 'Tambah' : 'Ubah Data'}
-          </CButton>
-          <CButton color="danger" className="text-white" onClick={() => setModalIsOpen(false)}>
-            Batal
-          </CButton>
-        </CModalFooter>
-      </CModal>
+      {type === 'Edit' && (
+        <CModal size="lg" alignment="center" visible={modalIsOpen} backdrop="static">
+          <CModalHeader>
+            <CModalTitle style={{ fontWeight: 'bold', fontSize: '20px', paddingTop: '8px' }}>
+              Ubah Data Request
+            </CModalTitle>
+          </CModalHeader>
+          <CModalBody style={{ justifyContent: 'center' }}>
+            {/* <CFormLabel style={{ fontWeight: 'bold', fontSize: '20px', paddingTop: '8px' }}>
+              Ubah Data Request
+            </CFormLabel> */}
+            <CRow className="mt-3">
+              <CCol>
+                <CForm>
+                  <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
+                    ID Request
+                  </CFormLabel>
+                </CForm>
+              </CCol>
+              <CCol>
+                <CFormInput value={data.id_request} disabled></CFormInput>
+              </CCol>
+            </CRow>
+          </CModalBody>
+          <CModalFooter style={{ justifyContent: 'center' }}>
+            <CButton
+              color="success"
+              className="text-white"
+              onClick={() => updateRequest('Disetujui')}
+            >
+              SETUJU
+            </CButton>
+            <CButton color="danger" className="text-white" onClick={() => updateRequest('Ditolak')}>
+              TOLAK
+            </CButton>
+          </CModalFooter>
+        </CModal>
+      )}
+      {type === 'Detail' && (
+        <CModal size="lg" alignment="center" visible={modalIsOpen} backdrop="static">
+          <CModalBody style={{ justifyContent: 'center' }}>
+            <CFormLabel style={{ fontWeight: 'bold', fontSize: '20px', paddingTop: '8px' }}>
+              Detail Request
+            </CFormLabel>
+            <hr />
+            <CRow className="mt-3">
+              <CCol>
+                <CForm>
+                  <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
+                    ID Request
+                  </CFormLabel>
+                </CForm>
+              </CCol>
+              <CCol>
+                <CFormInput value={data.id_request} disabled></CFormInput>
+              </CCol>
+            </CRow>
+          </CModalBody>
+          <CModalFooter style={{ justifyContent: 'center' }}>
+            <CButton color="success" className="text-white" onClick={() => setModalIsOpen(false)}>
+              Tutup
+            </CButton>
+          </CModalFooter>
+        </CModal>
+      )}
+
       {/* MODAL LOADING*/}
       <CModal size="xl" alignment="center" visible={isLoading} backdrop="static">
         <CModalBody

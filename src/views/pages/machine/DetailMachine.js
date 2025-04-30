@@ -94,10 +94,8 @@ const DetailMachine = () => {
           </CRow>
         </CCardHeader>
         <CCardBody>
-          {listHistory && listHistory.length === 0 && (
-            <CCol style={{ textAlign: 'center' }}>Maaf Data Tidak Ditemukan</CCol>
-          )}
-          {listHistory && listHistory.length > 0 && (
+          {!listHistory && <CCol style={{ textAlign: 'center' }}>Maaf Data Tidak Ditemukan</CCol>}
+          {listHistory && listHistory.length >= 1 && (
             <CCol>
               <CTable striped bordered hover responsive>
                 <CTableHead>
