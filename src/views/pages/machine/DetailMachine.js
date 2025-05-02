@@ -37,7 +37,7 @@ const DetailMachine = () => {
 
   useEffect(() => {
     setIsLoading(true)
-    const url = `http://192.168.88.250:8081/machines/detail?id=${id_machine}`
+    const url = `http://localhost:8081/machines/detail?id=${id_machine}`
 
     axios
       .get(url)

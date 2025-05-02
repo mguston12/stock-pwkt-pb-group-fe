@@ -20,6 +20,8 @@ const BarcodeScanner = React.lazy(() => import('./views/pages/barcodescanner/bar
 
 const SetPassword = React.lazy(() => import('./views/pages/setpassword/SetPassword'))
 
+const Inventory = React.lazy(() => import('./views/pages/inventory/Inventory'))
+
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard, exact: true },
@@ -40,6 +42,9 @@ const routes = [
   { path: '/customer/create', name: 'Buat Customer Baru', element: CreateCustomer, exact: true },
 
   { path: '/teknisi', name: 'Teknisi', element: Teknisi, exact: true },
+
+  { path: '/inventory', name: 'Inventory', element: Inventory, exact: true },
+
   {
     path: '/teknisi/detail/:id_teknisi',
     name: 'Detail Teknisi',

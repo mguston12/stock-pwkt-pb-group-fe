@@ -27,8 +27,8 @@ import { cilCheckCircle, cilXCircle } from '@coreui/icons'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 
-const Sparepart = () => {
-  const [listSparepart, setListSparepart] = useState([])
+const Inventory = () => {
+  const [listInventory, setListInventory] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [inputSearch, setInputSearch] = useState('')
@@ -38,8 +38,8 @@ const Sparepart = () => {
   const [totalPage, setTotalPage] = useState(1)
   const itemsPerPage = 10
   const maxVisiblePages = 3
-  const [sparepartID, setSparepartID] = useState('')
-  const [sparepartName, setSparepartName] = useState('')
+  const [inventoryID, setInventoryID] = useState('')
+  const [inventoryName, setInventoryName] = useState('')
   const [quantity, setQuantity] = useState(0)
 
   const [modalResponseIsOpen, setModalResponseIsOpen] = useState(false)
@@ -47,39 +47,39 @@ const Sparepart = () => {
   const [responseType, setResponseType] = useState(false)
 
   useEffect(() => {
-    SearchSparepart()
+    SearchInventory()
   }, [currentPage])
 
-  //   const GetSpareparts = () => {
+  //   const GetInventorys = () => {
   //     setIsLoading(true)
-  //     const url = `http://localhost:8081/spareparts`
+  //     const url = `http://localhost:8081/inventory`
 
   //     axios
   //       .get(url)
   //       .then((response) => {
   //         setIsLoading(false)
   //         const { data, metadata } = response.data
-  //         setListSparepart(data || [])
+  //         setListInventory(data || [])
   //         setTotalPage(metadata || 1)
   //       })
   //       .catch((error) => {
   //         console.error(error)
   //         alert('Error fetching machines: ' + error.message)
   //         setIsLoading(false)
-  //         setListSparepart([])
+  //         setListInventory([])
   //         setTotalPage(1)
   //       })
   //   }
 
-  const SearchSparepart = () => {
+  const SearchInventory = () => {
     setIsLoading(true)
-    const url = `http://localhost:8081/spareparts?keyword=${inputSearch}&page=${currentPage}&length=${itemsPerPage}`
+    const url = `http://localhost:8081/inventory?keyword=${inputSearch}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
       .get(url)
       .then((response) => {
         const { data, metadata } = response.data
-        setListSparepart(data || [])
+        setListInventory(data || [])
         setTotalPage(metadata || 1)
         setIsLoading(false)
       })
@@ -87,7 +87,7 @@ const Sparepart = () => {
         console.error(error)
         alert('Error searching machines: ' + error.message)
         setIsLoading(false)
-        setListSparepart([])
+        setListInventory([])
         setTotalPage(1)
       })
   }
@@ -95,7 +95,7 @@ const Sparepart = () => {
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       setCurrentPage(1)
-      SearchSparepart()
+      SearchInventory()
     }
   }
 
@@ -132,12 +132,12 @@ const Sparepart = () => {
 
   const handleModal = (tipe, data) => {
     if (tipe === 'Add') {
-      setSparepartID('')
-      setSparepartName('')
+      setInventoryID('')
+      setInventoryName('')
       setQuantity('')
     } else if (tipe === 'Edit') {
-      setSparepartID(data.id_sparepart)
-      setSparepartName(data.nama_sparepart)
+      setInventoryID(data.id_inventory)
+      setInventoryName(data.nama_inventory)
       setQuantity(data.quantity)
     }
 
@@ -145,19 +145,19 @@ const Sparepart = () => {
     setModalIsOpen(!modalIsOpen)
   }
 
-  function createSparepart() {
+  function createInventory() {
     setIsLoading(true)
     var obj = {
-      id_sparepart: sparepartID,
-      nama_sparepart: sparepartName,
+      id_inventory: inventoryID,
+      nama_inventory: inventoryName,
       quantity: parseInt(quantity),
     }
-    var url = `http://localhost:8081/spareparts/create`
+    var url = `http://localhost:8081/inventory/create`
 
     axios
       .post(url, obj)
       .then((response) => {
-        SearchSparepart()
+        SearchInventory()
         if (response.data.error.status === true) {
           setIsLoading(false)
           setResponseType(false)
@@ -166,7 +166,7 @@ const Sparepart = () => {
         } else {
           setIsLoading(false)
           setResponseType(true)
-          setResponseMessage('Berhasil Membuat Sparepart Baru')
+          setResponseMessage('Berhasil Membuat Inventory Baru')
           setModalResponseIsOpen(true)
         }
       })
@@ -178,30 +178,30 @@ const Sparepart = () => {
       })
   }
 
-  function updateSparepart() {
+  function updateInventory() {
     setIsLoading(true)
     var obj = {
-      id_sparepart: sparepartID,
-      nama_sparepart: sparepartName,
+      id_inventory: inventoryID,
+      nama_inventory: inventoryName,
       quantity: parseInt(quantity),
     }
-    var url = `http://localhost:8081/spareparts/update`
+    var url = `http://localhost:8081/inventory/update`
 
     axios
       .put(url, obj)
       .then((response) => {
-        SearchSparepart()
+        SearchInventory()
         if (response.data.error.status === true) {
-          console.log('Gagal Update Sparepart', response)
+          console.log('Gagal Update Inventory', response)
           setIsLoading(false)
           setResponseType(false)
           setResponseMessage(response.data.error.msg)
           setModalResponseIsOpen(true)
         } else {
           setIsLoading(false)
-          console.log('Berhasil Update Sparepart', response)
+          console.log('Berhasil Update Inventory', response)
           setResponseType(true)
-          setResponseMessage('Berhasil Update Sparepart')
+          setResponseMessage('Berhasil Update Inventory')
           setModalResponseIsOpen(true)
         }
       })
@@ -216,9 +216,9 @@ const Sparepart = () => {
   const handleCreateOrEdit = (type) => {
     setModalIsOpen(!modalIsOpen)
     if (type === 'Add') {
-      createSparepart()
+      createInventory()
     } else {
-      updateSparepart()
+      updateInventory()
     }
   }
 
@@ -226,7 +226,7 @@ const Sparepart = () => {
     <CCard>
       <CCardHeader style={{ fontSize: '20px', fontWeight: 'bold' }}>
         <CRow>
-          <CCol>List Sparepart</CCol>
+          <CCol>List Inventory</CCol>
           <CCol className="d-grid gap-2" md={2}>
             {/* <Link to={`/machine/create`} className="btn btn-block btn-success text-white">
               Buat Kontrak Baru
@@ -244,32 +244,32 @@ const Sparepart = () => {
             />
           </CCol>
           <CCol className="d-grid gap-2" md={2}>
-            <CButton className="btn-block text-white" color="info" onClick={SearchSparepart}>
+            <CButton className="btn-block text-white" color="info" onClick={SearchInventory}>
               Cari
             </CButton>
           </CCol>
         </CRow>
       </CCardHeader>
       <CCardBody>
-        {listSparepart.length === 0 && !isLoading && (
+        {listInventory.length === 0 && !isLoading && (
           <CCol style={{ textAlign: 'center' }}>Maaf Data Tidak Ditemukan</CCol>
         )}
-        {listSparepart.length > 0 && (
+        {listInventory.length > 0 && (
           <CCol>
             <CTable striped bordered hover responsive>
               <CTableHead>
                 <CTableRow>
-                  <CTableHeaderCell className="text-center">Kode Sparepart</CTableHeaderCell>
-                  <CTableHeaderCell className="text-center">Sparepart</CTableHeaderCell>
+                  <CTableHeaderCell className="text-center">Kode Inventory</CTableHeaderCell>
+                  <CTableHeaderCell className="text-center">Inventory</CTableHeaderCell>
                   <CTableHeaderCell className="text-center">Quantity</CTableHeaderCell>
                   <CTableHeaderCell className="text-center">Action</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {listSparepart.map((item, index) => (
+                {listInventory.map((item, index) => (
                   <CTableRow key={index} className="text-center">
-                    <CTableDataCell>{item.id_sparepart}</CTableDataCell>
-                    <CTableDataCell>{item.nama_sparepart}</CTableDataCell>
+                    <CTableDataCell>{item.id_inventory}</CTableDataCell>
+                    <CTableDataCell>{item.nama_inventory}</CTableDataCell>
                     <CTableDataCell>{item.quantity}</CTableDataCell>
                     <CTableDataCell>
                       <CButton
@@ -309,22 +309,22 @@ const Sparepart = () => {
       <CModal size="lg" alignment="center" visible={modalIsOpen} backdrop="static">
         <CModalBody style={{ justifyContent: 'center' }}>
           <CFormLabel style={{ fontWeight: 'bold', fontSize: '20px', paddingTop: '8px' }}>
-            {type === 'Add' ? 'Tambah' : 'Ubah Data'} Sparepart
+            {type === 'Add' ? 'Tambah' : 'Ubah Data'} Inventory
           </CFormLabel>
           <hr />
           <CRow className="mt-3">
             <CCol>
               <CForm>
                 <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
-                  ID Sparepart
+                  ID Inventory
                 </CFormLabel>
               </CForm>
             </CCol>
             <CCol>
               <CFormInput
-                value={sparepartID}
+                value={inventoryID}
                 disabled
-                onChange={(e) => setSparepartID(e.target.value)}
+                onChange={(e) => setInventoryID(e.target.value)}
               ></CFormInput>
             </CCol>
           </CRow>
@@ -332,14 +332,14 @@ const Sparepart = () => {
             <CCol>
               <CForm>
                 <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
-                  Nama Sparepart
+                  Nama Inventory
                 </CFormLabel>
               </CForm>
             </CCol>
             <CCol>
               <CFormInput
-                value={sparepartName}
-                onChange={(e) => setSparepartName(e.target.value)}
+                value={inventoryName}
+                onChange={(e) => setInventoryName(e.target.value)}
               ></CFormInput>
             </CCol>
           </CRow>
@@ -434,4 +434,4 @@ const Sparepart = () => {
   )
 }
 
-export default Sparepart
+export default Inventory

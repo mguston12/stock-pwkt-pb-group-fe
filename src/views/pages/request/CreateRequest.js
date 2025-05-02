@@ -62,7 +62,7 @@ const CreateRequest = () => {
       console.log(selectedCustomer)
 
       setIsLoading(true)
-      const url = `http://192.168.88.250:8081/machines/customer?id=${selectedCustomer.value.id_customer}`
+      const url = `http://localhost:8081/machines/customer?id=${selectedCustomer.value.id_customer}`
 
       axios
         .get(url)
@@ -83,7 +83,7 @@ const CreateRequest = () => {
   useEffect(() => {
     if (selectedMachine !== '') {
       setIsLoading(true)
-      const url = `http://192.168.88.250:8081/spareparts`
+      const url = `http://localhost:8081/spareparts`
 
       axios
         .get(url)
@@ -103,7 +103,7 @@ const CreateRequest = () => {
 
   const GetListCustomer = () => {
     setIsLoading(true)
-    const url = `http://192.168.88.250:8081/customers`
+    const url = `http://localhost:8081/customers`
 
     axios
       .get(url)
@@ -132,7 +132,7 @@ const CreateRequest = () => {
       status_request: 'Request',
       updated_by: userID,
     }
-    var url = `http://192.168.88.250:8081/requests/create`
+    var url = `http://localhost:8081/requests/create`
 
     axios
       .post(url, obj)

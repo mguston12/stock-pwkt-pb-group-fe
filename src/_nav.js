@@ -8,6 +8,7 @@ import {
   cilPaintBucket,
   cilWalk,
   cilQrCode,
+  cilBasket,
   cilBellExclamation,
 } from '@coreui/icons'
 import { CNavGroup, CNavItem } from '@coreui/react'
@@ -61,6 +62,12 @@ const _nav = [
     name: 'Request',
     to: '/request',
     icon: <CIcon icon={cilBellExclamation} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Inventory',
+    to: '/inventory',
+    icon: <CIcon icon={cilBasket} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,

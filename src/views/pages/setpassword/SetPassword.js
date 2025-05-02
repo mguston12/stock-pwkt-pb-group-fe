@@ -58,7 +58,7 @@ const SetPassword = () => {
 
     try {
       // Replace the URL with your actual API endpoint for setting password
-      const response = await fetch('http://192.168.88.250:8081/users/update', {
+      const response = await fetch('http://localhost:8081/users/update', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

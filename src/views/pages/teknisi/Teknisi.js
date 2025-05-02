@@ -40,7 +40,7 @@ const Teknisi = () => {
 
   const GetTeknisi = () => {
     setIsLoading(true)
-    const url = `http://192.168.88.250:8081/teknisi`
+    const url = `http://localhost:8081/teknisi`
 
     axios
       .get(url)
@@ -61,7 +61,7 @@ const Teknisi = () => {
 
   const SearchTeknisi = () => {
     setIsLoading(true)
-    const url = `http://192.168.88.250:8081/teknisi?keyword=${inputSearch}&page=${currentPage}&length=${itemsPerPage}`
+    const url = `http://localhost:8081/teknisi?keyword=${inputSearch}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
       .get(url)

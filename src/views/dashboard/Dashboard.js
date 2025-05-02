@@ -55,7 +55,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     setIsLoading(true)
-    const url = `http://192.168.88.250:8080/companies`
+    const url = `http://localhost:8080/companies`
 
     axios
       .get(url)
