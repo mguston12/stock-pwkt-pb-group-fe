@@ -41,39 +41,44 @@ const Inventory = () => {
   const [inventoryID, setInventoryID] = useState('')
   const [inventoryName, setInventoryName] = useState('')
   const [quantity, setQuantity] = useState(0)
+  const userID = sessionStorage.getItem('user')
 
   const [modalResponseIsOpen, setModalResponseIsOpen] = useState(false)
   const [responseMessage, setResponseMessage] = useState('')
   const [responseType, setResponseType] = useState(false)
 
   useEffect(() => {
-    SearchInventory()
-  }, [currentPage])
-
-  //   const GetInventorys = () => {
-  //     setIsLoading(true)
-  //     const url = `http://localhost:8081/inventory`
-
-  //     axios
-  //       .get(url)
-  //       .then((response) => {
-  //         setIsLoading(false)
-  //         const { data, metadata } = response.data
-  //         setListInventory(data || [])
-  //         setTotalPage(metadata || 1)
-  //       })
-  //       .catch((error) => {
-  //         console.error(error)
-  //         alert('Error fetching machines: ' + error.message)
-  //         setIsLoading(false)
-  //         setListInventory([])
-  //         setTotalPage(1)
-  //       })
-  //   }
+    if (userID !== 'admin') {
+      SearchInventory()
+    } else {
+      SearchInventoryAdmin()
+    }
+  }, [currentPage, userID])
 
   const SearchInventory = () => {
     setIsLoading(true)
-    const url = `http://localhost:8081/inventory?keyword=${inputSearch}&page=${currentPage}&length=${itemsPerPage}`
+    const url = `http://192.168.88.250:8081/inventory/detail?id=${userID}`
+
+    axios
+      .get(url)
+      .then((response) => {
+        const { data, metadata } = response.data
+        setListInventory(data || [])
+        setTotalPage(metadata || 1)
+        setIsLoading(false)
+      })
+      .catch((error) => {
+        console.error(error)
+        alert('Error searching machines: ' + error.message)
+        setIsLoading(false)
+        setListInventory([])
+        setTotalPage(1)
+      })
+  }
+
+  const SearchInventoryAdmin = () => {
+    setIsLoading(true)
+    const url = `http://192.168.88.250:8081/inventory?keyword=${inputSearch}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
       .get(url)
@@ -152,7 +157,7 @@ const Inventory = () => {
       nama_inventory: inventoryName,
       quantity: parseInt(quantity),
     }
-    var url = `http://localhost:8081/inventory/create`
+    var url = `http://192.168.88.250:8081/inventory/create`
 
     axios
       .post(url, obj)
@@ -185,7 +190,7 @@ const Inventory = () => {
       nama_inventory: inventoryName,
       quantity: parseInt(quantity),
     }
-    var url = `http://localhost:8081/inventory/update`
+    var url = `http://192.168.88.250:8081/inventory/update`
 
     axios
       .put(url, obj)
@@ -226,7 +231,7 @@ const Inventory = () => {
     <CCard>
       <CCardHeader style={{ fontSize: '20px', fontWeight: 'bold' }}>
         <CRow>
-          <CCol>List Inventory</CCol>
+          <CCol>List Persediaan</CCol>
           <CCol className="d-grid gap-2" md={2}>
             {/* <Link to={`/machine/create`} className="btn btn-block btn-success text-white">
               Buat Kontrak Baru
@@ -259,26 +264,24 @@ const Inventory = () => {
             <CTable striped bordered hover responsive>
               <CTableHead>
                 <CTableRow>
-                  <CTableHeaderCell className="text-center">Kode Inventory</CTableHeaderCell>
-                  <CTableHeaderCell className="text-center">Inventory</CTableHeaderCell>
+                  <CTableHeaderCell className="text-center">Nama Sparepart</CTableHeaderCell>
                   <CTableHeaderCell className="text-center">Quantity</CTableHeaderCell>
-                  <CTableHeaderCell className="text-center">Action</CTableHeaderCell>
+                  {/* <CTableHeaderCell className="text-center">Action</CTableHeaderCell>  */}
                 </CTableRow>
               </CTableHead>
               <CTableBody>
                 {listInventory.map((item, index) => (
                   <CTableRow key={index} className="text-center">
-                    <CTableDataCell>{item.id_inventory}</CTableDataCell>
-                    <CTableDataCell>{item.nama_inventory}</CTableDataCell>
+                    <CTableDataCell>{item.nama_sparepart}</CTableDataCell>
                     <CTableDataCell>{item.quantity}</CTableDataCell>
-                    <CTableDataCell>
+                    {/* <CTableDataCell>
                       <CButton
                         className="btn btn-warning btn-sm text-white"
                         onClick={() => handleModal('Edit', item)}
                       >
                         UBAH
                       </CButton>
-                    </CTableDataCell>
+                    </CTableDataCell> */}
                   </CTableRow>
                 ))}
               </CTableBody>

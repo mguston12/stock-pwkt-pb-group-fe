@@ -68,6 +68,7 @@ const _nav = [
     name: 'Inventory',
     to: '/inventory',
     icon: <CIcon icon={cilBasket} customClassName="nav-icon" />,
+    hidden: isAdmin(),
   },
   {
     component: CNavItem,

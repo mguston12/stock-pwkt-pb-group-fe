@@ -40,7 +40,7 @@ const Machine = () => {
 
   const GetMachines = () => {
     setIsLoading(true)
-    const url = `http://localhost:8081/machines`
+    const url = `http://192.168.88.250:8081/machines`
 
     axios
       .get(url)
@@ -61,7 +61,7 @@ const Machine = () => {
 
   const SearchMachine = () => {
     setIsLoading(true)
-    const url = `http://localhost:8081/machines?keyword=${inputSearch}&page=${currentPage}&length=${itemsPerPage}`
+    const url = `http://192.168.88.250:8081/machines?keyword=${inputSearch}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
       .get(url)

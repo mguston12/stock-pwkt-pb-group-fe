@@ -52,7 +52,7 @@ const Sparepart = () => {
 
   //   const GetSpareparts = () => {
   //     setIsLoading(true)
-  //     const url = `http://localhost:8081/spareparts`
+  //     const url = `http://192.168.88.250:8081/spareparts`
 
   //     axios
   //       .get(url)
@@ -73,7 +73,7 @@ const Sparepart = () => {
 
   const SearchSparepart = () => {
     setIsLoading(true)
-    const url = `http://localhost:8081/spareparts?keyword=${inputSearch}&page=${currentPage}&length=${itemsPerPage}`
+    const url = `http://192.168.88.250:8081/spareparts?keyword=${inputSearch}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
       .get(url)
@@ -152,7 +152,7 @@ const Sparepart = () => {
       nama_sparepart: sparepartName,
       quantity: parseInt(quantity),
     }
-    var url = `http://localhost:8081/spareparts/create`
+    var url = `http://192.168.88.250:8081/spareparts/create`
 
     axios
       .post(url, obj)
@@ -185,7 +185,7 @@ const Sparepart = () => {
       nama_sparepart: sparepartName,
       quantity: parseInt(quantity),
     }
-    var url = `http://localhost:8081/spareparts/update`
+    var url = `http://192.168.88.250:8081/spareparts/update`
 
     axios
       .put(url, obj)

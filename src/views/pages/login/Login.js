@@ -26,7 +26,7 @@ const Login = () => {
   const login = async () => {
     setLoading(true) // Start loading
     try {
-      const response = await fetch('http://localhost:8081/users/login', {
+      const response = await fetch('http://192.168.88.250:8081/users/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -74,7 +74,7 @@ const Request = () => {
   const SearchRequestAdmin = () => {
     setIsLoading(true)
 
-    const url = `http://localhost:8081/requests?&page=${currentPage}&length=${itemsPerPage}`
+    const url = `http://192.168.88.250:8081/requests?&page=${currentPage}&length=${itemsPerPage}`
 
     axios
       .get(url)
@@ -96,7 +96,7 @@ const Request = () => {
   const SearchRequest = () => {
     setIsLoading(true)
 
-    const url = `http://localhost:8081/requests?keyword=${userID}&page=${currentPage}&length=${itemsPerPage}`
+    const url = `http://192.168.88.250:8081/requests?keyword=${userID}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
       .get(url)
@@ -170,7 +170,7 @@ const Request = () => {
       updated_by: userID,
       id_request: parseInt(data.id_request),
     }
-    var url = `http://localhost:8081/requests/update`
+    var url = `http://192.168.88.250:8081/requests/update`
 
     axios
       .put(url, obj)
@@ -251,7 +251,9 @@ const Request = () => {
                     <CTableDataCell>
                       {item.nama_teknisi} - {item.quantity} {item.nama_sparepart}
                     </CTableDataCell>
-                    <CTableDataCell>{item.nama_customer}</CTableDataCell>
+                    <CTableDataCell>
+                      {item.nama_customer !== '' ? item.nama_customer : 'Persediaan'}
+                    </CTableDataCell>
                     <CTableDataCell>
                       {item.status_request === 'Disetujui' && (
                         <CButton color="success" className="btn-sm text-white">
@@ -276,13 +278,13 @@ const Request = () => {
                             className="btn btn-warning btn-sm text-white"
                             onClick={() => handleModal('Edit', item)}
                           >
-                            UBAH
+                            Ubah
                           </CButton>
                         )}
                         {(item.status_request === 'Disetujui' ||
                           item.status_request === 'Ditolak') && (
                           <CButton
-                            className="btn btn-warning btn-sm text-white"
+                            className="btn btn-info btn-sm text-white"
                             onClick={() => handleModal('Detail', item)}
                           >
                             Detail
