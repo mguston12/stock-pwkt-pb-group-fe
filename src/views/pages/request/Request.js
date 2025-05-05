@@ -13,6 +13,9 @@ import {
   CModalFooter,
   CModalHeader,
   CModalTitle,
+  CNav,
+  CNavItem,
+  CNavLink,
   CPagination,
   CPaginationItem,
   CRow,
@@ -28,6 +31,7 @@ import CIcon from '@coreui/icons-react'
 import { cilCheckCircle, cilXCircle } from '@coreui/icons'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
+import moment from 'moment'
 
 const Request = () => {
   const [listRequest, setListRequest] = useState([])
@@ -38,6 +42,7 @@ const Request = () => {
   //   const [selectedCompany, setSelectedCompany] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPage, setTotalPage] = useState(1)
+  const [status, setStatus] = useState('')
   const itemsPerPage = 10
   const maxVisiblePages = 3
 
@@ -69,12 +74,12 @@ const Request = () => {
     } else {
       SearchRequestAdmin()
     }
-  }, [currentPage, userID])
+  }, [currentPage, userID, status])
 
   const SearchRequestAdmin = () => {
     setIsLoading(true)
 
-    const url = `http://192.168.88.250:8081/requests?&page=${currentPage}&length=${itemsPerPage}`
+    const url = `http://192.168.88.250:8081/requests?status=${status}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
       .get(url)
@@ -96,7 +101,7 @@ const Request = () => {
   const SearchRequest = () => {
     setIsLoading(true)
 
-    const url = `http://192.168.88.250:8081/requests?keyword=${userID}&page=${currentPage}&length=${itemsPerPage}`
+    const url = `http://192.168.88.250:8081/requests?keyword=${userID}&status=${status}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
       .get(url)
@@ -210,21 +215,80 @@ const Request = () => {
             </CCol>
           )}
         </CRow>
-        {/* <CRow className="mt-3">
-          <CCol md={10}>
-            <CFormInput
-              style={{ display: 'inline' }}
-              value={inputSearch}
-              onChange={(e) => setInputSearch(e.target.value)}
-              onKeyDown={handleKeyDown}
-            />
-          </CCol>
-          <CCol className="d-grid gap-2" md={2}>
-            <CButton className="btn-block text-white" color="info" onClick={SearchRequest}>
-              Cari
-            </CButton>
-          </CCol>
-        </CRow> */}
+        <CNav variant="tabs">
+          <CNavItem>
+            <CNavLink
+              active={status === ''}
+              onClick={() => setStatus('')}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = '#f0f0f0'
+                e.target.style.color = '#007bff'
+                e.target.style.cursor = 'pointer'
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = ''
+                e.target.style.color = ''
+                e.target.style.cursor = ''
+              }}
+            >
+              Semua Request
+            </CNavLink>
+          </CNavItem>
+          <CNavItem>
+            <CNavLink
+              active={status === 'Request'}
+              onClick={() => setStatus('Request')}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = '#f0f0f0'
+                e.target.style.color = '#007bff'
+                e.target.style.cursor = 'pointer'
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = ''
+                e.target.style.color = ''
+                e.target.style.cursor = ''
+              }}
+            >
+              Request
+            </CNavLink>
+          </CNavItem>
+          <CNavItem>
+            <CNavLink
+              active={status === 'Disetujui'}
+              onClick={() => setStatus('Disetujui')}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = '#f0f0f0'
+                e.target.style.color = '#007bff'
+                e.target.style.cursor = 'pointer'
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = ''
+                e.target.style.color = ''
+                e.target.style.cursor = ''
+              }}
+            >
+              Disetujui
+            </CNavLink>
+          </CNavItem>
+          <CNavItem>
+            <CNavLink
+              active={status === 'Ditolak'}
+              onClick={() => setStatus('Ditolak')}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = '#f0f0f0'
+                e.target.style.color = '#007bff'
+                e.target.style.cursor = 'pointer'
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = ''
+                e.target.style.color = ''
+                e.target.style.cursor = ''
+              }}
+            >
+              Ditolak
+            </CNavLink>
+          </CNavItem>
+        </CNav>
       </CCardHeader>
       <CCardBody>
         {listRequest.length === 0 && !isLoading && (
@@ -374,6 +438,77 @@ const Request = () => {
               </CCol>
               <CCol>
                 <CFormInput value={data.id_request} disabled></CFormInput>
+              </CCol>
+            </CRow>
+            <CRow className="mt-3">
+              <CCol>
+                <CForm>
+                  <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
+                    Kode & Nama Teknisi
+                  </CFormLabel>
+                </CForm>
+              </CCol>
+              <CCol>
+                <CFormInput
+                  value={`${data.id_teknisi} - ${data.nama_teknisi}`}
+                  disabled
+                ></CFormInput>
+              </CCol>
+            </CRow>
+            <CRow className="mt-3">
+              <CCol>
+                <CForm>
+                  <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
+                    Digunakan untuk
+                  </CFormLabel>
+                </CForm>
+              </CCol>
+              <CCol>
+                <CFormInput
+                  value={
+                    data.id_mesin && data.tipe_machine
+                      ? `${data.id_mesin} - ${data.tipe_machine}`
+                      : `Persediaan`
+                  }
+                  disabled
+                ></CFormInput>
+              </CCol>
+            </CRow>
+            <CRow className="mt-3">
+              <CCol>
+                <CForm>
+                  <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
+                    Sparepart
+                  </CFormLabel>
+                </CForm>
+              </CCol>
+              <CCol>
+                <CFormInput value={`${data.quantity} ${data.nama_sparepart}`} disabled></CFormInput>
+              </CCol>
+            </CRow>
+            <CRow className="mt-3">
+              <CCol>
+                <CForm>
+                  <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>Status</CFormLabel>
+                </CForm>
+              </CCol>
+              <CCol>
+                <CFormInput value={`${data.status_request}`} disabled></CFormInput>
+              </CCol>
+            </CRow>
+            <CRow className="mt-3">
+              <CCol>
+                <CForm>
+                  <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
+                    Update Terakhir Tanggal
+                  </CFormLabel>
+                </CForm>
+              </CCol>
+              <CCol>
+                <CFormInput
+                  value={moment(data.updated_at).format('DD MMM YYYY')}
+                  disabled
+                ></CFormInput>
               </CCol>
             </CRow>
           </CModalBody>
