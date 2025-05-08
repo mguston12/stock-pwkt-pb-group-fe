@@ -31,6 +31,7 @@ const Sparepart = () => {
   const [listSparepart, setListSparepart] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [modalIsOpen, setModalIsOpen] = useState(false)
+  const [modalPurchaseIsOpen, setModalPurchaseIsOpen] = useState(false)
   const [inputSearch, setInputSearch] = useState('')
   const [type, setType] = useState('')
   //   const [selectedCompany, setSelectedCompany] = useState(null)
@@ -41,6 +42,7 @@ const Sparepart = () => {
   const [sparepartID, setSparepartID] = useState('')
   const [sparepartName, setSparepartName] = useState('')
   const [quantity, setQuantity] = useState(0)
+  const [pricePerUnit, setPricePerUnit] = useState(0)
 
   const [modalResponseIsOpen, setModalResponseIsOpen] = useState(false)
   const [responseMessage, setResponseMessage] = useState('')
@@ -135,14 +137,20 @@ const Sparepart = () => {
       setSparepartID('')
       setSparepartName('')
       setQuantity('')
+      setModalIsOpen(!modalIsOpen)
     } else if (tipe === 'Edit') {
       setSparepartID(data.id_sparepart)
       setSparepartName(data.nama_sparepart)
       setQuantity(data.quantity)
+      setModalIsOpen(!modalIsOpen)
+    } else if (tipe === 'Purchase') {
+      setSparepartID(data.id_sparepart)
+      setSparepartName(data.nama_sparepart)
+      setQuantity(1)
+      setModalPurchaseIsOpen(!modalPurchaseIsOpen)
     }
 
     setType(tipe)
-    setModalIsOpen(!modalIsOpen)
   }
 
   function createSparepart() {
@@ -213,11 +221,81 @@ const Sparepart = () => {
       })
   }
 
+  function updateSparepart() {
+    setIsLoading(true)
+    var obj = {
+      id_sparepart: sparepartID,
+      nama_sparepart: sparepartName,
+      quantity: parseInt(quantity),
+    }
+    var url = `http://192.168.88.250:8081/spareparts/update`
+
+    axios
+      .put(url, obj)
+      .then((response) => {
+        SearchSparepart()
+        if (response.data.error.status === true) {
+          console.log('Gagal Update Sparepart', response)
+          setIsLoading(false)
+          setResponseType(false)
+          setResponseMessage(response.data.error.msg)
+          setModalResponseIsOpen(true)
+        } else {
+          setIsLoading(false)
+          console.log('Berhasil Update Sparepart', response)
+          setResponseType(true)
+          setResponseMessage('Berhasil Update Sparepart')
+          setModalResponseIsOpen(true)
+        }
+      })
+      .catch((error) => {
+        setIsLoading(false)
+        setModalResponseIsOpen(true)
+        setResponseType(false)
+        setResponseMessage(error.message)
+      })
+  }
+
+  function purchaseSparepart() {
+    setIsLoading(true)
+    var obj = {
+      id_sparepart: sparepartID,
+      quantity: parseInt(quantity),
+      harga_per_unit: parseFloat(pricePerUnit),
+    }
+    var url = `http://192.168.88.250:8081/purchase/create`
+
+    axios
+      .post(url, obj)
+      .then((response) => {
+        SearchSparepart()
+        if (response.data.error.status === true) {
+          console.log('Gagal Pembelian Sparepart', response)
+          setIsLoading(false)
+          setResponseType(false)
+          setResponseMessage(response.data.error.msg)
+          setModalResponseIsOpen(true)
+        } else {
+          setIsLoading(false)
+          console.log('Berhasil Pembelian Sparepart', response)
+          setResponseType(true)
+          setResponseMessage('Berhasil Pembelian Sparepart')
+          setModalResponseIsOpen(true)
+        }
+      })
+      .catch((error) => {
+        setIsLoading(false)
+        setModalResponseIsOpen(true)
+        setResponseType(false)
+        setResponseMessage(error.message)
+      })
+  }
+
   const handleCreateOrEdit = (type) => {
     setModalIsOpen(!modalIsOpen)
     if (type === 'Add') {
       createSparepart()
-    } else {
+    } else if (type === 'Edit') {
       updateSparepart()
     }
   }
@@ -262,6 +340,7 @@ const Sparepart = () => {
                   <CTableHeaderCell className="text-center">Kode Sparepart</CTableHeaderCell>
                   <CTableHeaderCell className="text-center">Sparepart</CTableHeaderCell>
                   <CTableHeaderCell className="text-center">Quantity</CTableHeaderCell>
+                  <CTableHeaderCell className="text-center">Average Cost</CTableHeaderCell>
                   <CTableHeaderCell className="text-center">Action</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
@@ -271,12 +350,13 @@ const Sparepart = () => {
                     <CTableDataCell>{item.id_sparepart}</CTableDataCell>
                     <CTableDataCell>{item.nama_sparepart}</CTableDataCell>
                     <CTableDataCell>{item.quantity}</CTableDataCell>
+                    <CTableDataCell>Rp {item.average_cost.toFixed(2)}</CTableDataCell>
                     <CTableDataCell>
                       <CButton
-                        className="btn btn-warning btn-sm text-white"
-                        onClick={() => handleModal('Edit', item)}
+                        className="btn btn-success btn-sm text-white"
+                        onClick={() => handleModal('Purchase', item)}
                       >
-                        UBAH
+                        Pembelian Sparepart
                       </CButton>
                     </CTableDataCell>
                   </CTableRow>
@@ -362,6 +442,95 @@ const Sparepart = () => {
             {type === 'Add' ? 'Tambah' : 'Ubah Data'}
           </CButton>
           <CButton color="danger" className="text-white" onClick={() => setModalIsOpen(false)}>
+            Batal
+          </CButton>
+        </CModalFooter>
+      </CModal>
+
+      <CModal size="lg" alignment="center" visible={modalPurchaseIsOpen} backdrop="static">
+        <CModalBody style={{ justifyContent: 'center' }}>
+          <CFormLabel style={{ fontWeight: 'bold', fontSize: '20px', paddingTop: '8px' }}>
+            Pembelian Sparepart
+          </CFormLabel>
+          <hr />
+          <CRow className="mt-3">
+            <CCol>
+              <CForm>
+                <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
+                  ID Sparepart
+                </CFormLabel>
+              </CForm>
+            </CCol>
+            <CCol>
+              <CFormInput
+                value={sparepartID}
+                disabled
+                onChange={(e) => setSparepartID(e.target.value)}
+              ></CFormInput>
+            </CCol>
+          </CRow>
+          <CRow className="mt-3">
+            <CCol>
+              <CForm>
+                <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
+                  Nama Sparepart
+                </CFormLabel>
+              </CForm>
+            </CCol>
+            <CCol>
+              <CFormInput
+                value={sparepartName}
+                disabled
+                onChange={(e) => setSparepartName(e.target.value)}
+              ></CFormInput>
+            </CCol>
+          </CRow>
+          <CRow className="mt-3">
+            <CCol>
+              <CForm>
+                <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>Quantity</CFormLabel>
+              </CForm>
+            </CCol>
+            <CCol>
+              <CFormInput
+                value={quantity}
+                type="number"
+                min={1}
+                onChange={(e) => setQuantity(e.target.value)}
+              ></CFormInput>
+            </CCol>
+          </CRow>
+          <CRow className="mt-3">
+            <CCol>
+              <CForm>
+                <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
+                  Harga per Unit
+                </CFormLabel>
+              </CForm>
+            </CCol>
+            <CCol>
+              <CFormInput
+                value={pricePerUnit}
+                type="number"
+                onChange={(e) => setPricePerUnit(e.target.value)}
+              ></CFormInput>
+            </CCol>
+          </CRow>
+        </CModalBody>
+        <CModalFooter style={{ justifyContent: 'center' }}>
+          <CButton
+            color="success"
+            className="text-white"
+            disabled={pricePerUnit === 0 || pricePerUnit === ''}
+            onClick={() => purchaseSparepart()}
+          >
+            Input
+          </CButton>
+          <CButton
+            color="danger"
+            className="text-white"
+            onClick={() => setModalPurchaseIsOpen(false)}
+          >
             Batal
           </CButton>
         </CModalFooter>

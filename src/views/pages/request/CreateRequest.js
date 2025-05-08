@@ -28,11 +28,12 @@ const CreateRequest = () => {
   const [responseMessage, setResponseMessage] = useState('')
   const [responseType, setResponseType] = useState(false)
   const userID = sessionStorage.getItem('user')
-  const [idTeknisi, setIdTeknisi] = useState(false)
-  const [idMesin, setIdMesin] = useState(false)
-  const [idSparepart, setIdSparepart] = useState(false)
+  const [idTeknisi, setIdTeknisi] = useState("")
+  const [idMesin, setIdMesin] = useState("")
+  const [idSparepart, setIdSparepart] = useState("")
   const [quantity, setQuantity] = useState(1)
-  const [statusRequest, setStatusRequest] = useState(false)
+  const [statusRequest, setStatusRequest] = useState("")
+  const [counter, setCounter] = useState("")
   const [selectedCustomer, setSelectedCustomer] = useState('')
   const [listCustomer, setListCustomer] = useState([])
   const [listCustomerTransformed, setListCustomerTransformed] = useState([])
@@ -228,6 +229,19 @@ const CreateRequest = () => {
                 <CFormInput
                   value={quantity}
                   onChange={(e) => setQuantity(e.target.value)}
+                  min={1}
+                  type="number"
+                ></CFormInput>
+              </CForm>
+            </CRow>
+          )}
+          {selectedSparepart.length !== 0 && selectedCustomer.value.id_customer !== 'Inventory' && (
+            <CRow className="mt-3">
+              <CForm>
+                <CFormLabel style={{ fontWeight: 'bold' }}>COUNTER (Saat Request atau Ganti Sparepart)</CFormLabel>
+                <CFormInput
+                  value={counter}
+                  onChange={(e) => setCounter(e.target.value)}
                   min={1}
                   type="number"
                 ></CFormInput>

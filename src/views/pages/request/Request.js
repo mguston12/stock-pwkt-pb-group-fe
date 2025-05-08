@@ -120,13 +120,6 @@ const Request = () => {
       })
   }
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      setCurrentPage(1)
-      SearchRequest()
-    }
-  }
-
   const handlePageChange = (newPage) => {
     if (newPage < 1 || newPage > totalPage) return // Prevent out-of-bounds page numbers
     setCurrentPage(newPage)
@@ -404,6 +397,77 @@ const Request = () => {
               </CCol>
               <CCol>
                 <CFormInput value={data.id_request} disabled></CFormInput>
+              </CCol>
+            </CRow>
+            <CRow className="mt-3">
+              <CCol>
+                <CForm>
+                  <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
+                    Kode & Nama Teknisi
+                  </CFormLabel>
+                </CForm>
+              </CCol>
+              <CCol>
+                <CFormInput
+                  value={`${data.id_teknisi} - ${data.nama_teknisi}`}
+                  disabled
+                ></CFormInput>
+              </CCol>
+            </CRow>
+            <CRow className="mt-3">
+              <CCol>
+                <CForm>
+                  <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
+                    Digunakan untuk
+                  </CFormLabel>
+                </CForm>
+              </CCol>
+              <CCol>
+                <CFormInput
+                  value={
+                    data.id_mesin && data.tipe_machine
+                      ? `${data.id_mesin} - ${data.tipe_machine}`
+                      : `Persediaan`
+                  }
+                  disabled
+                ></CFormInput>
+              </CCol>
+            </CRow>
+            <CRow className="mt-3">
+              <CCol>
+                <CForm>
+                  <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
+                    Sparepart
+                  </CFormLabel>
+                </CForm>
+              </CCol>
+              <CCol>
+                <CFormInput value={`${data.quantity} ${data.nama_sparepart}`} disabled></CFormInput>
+              </CCol>
+            </CRow>
+            <CRow className="mt-3">
+              <CCol>
+                <CForm>
+                  <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>Status</CFormLabel>
+                </CForm>
+              </CCol>
+              <CCol>
+                <CFormInput value={`${data.status_request}`} disabled></CFormInput>
+              </CCol>
+            </CRow>
+            <CRow className="mt-3">
+              <CCol>
+                <CForm>
+                  <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
+                    Tanggal Request
+                  </CFormLabel>
+                </CForm>
+              </CCol>
+              <CCol>
+                <CFormInput
+                  value={moment(data.updated_at).format('DD MMM YYYY')}
+                  disabled
+                ></CFormInput>
               </CCol>
             </CRow>
           </CModalBody>
