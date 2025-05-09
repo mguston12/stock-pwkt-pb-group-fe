@@ -311,7 +311,7 @@ const Sparepart = () => {
             </Link> */}
           </CCol>
         </CRow>
-        <CRow className="mt-3">
+        <CRow className="mt-5">
           <CCol md={10}>
             <CFormInput
               // placeholder="Input Nama Perusahaan lalu Tekan Enter atau Tekan Cari"
