@@ -24,11 +24,13 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilCheckCircle, cilXCircle } from '@coreui/icons'
-import { Link } from 'react-router-dom'
 import axios from 'axios'
+import * as XLSX from 'xlsx'
+import { saveAs } from 'file-saver'
 
 const Sparepart = () => {
   const [listSparepart, setListSparepart] = useState([])
+  const [listAllSparepart, setListAllSparepart] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [modalPurchaseIsOpen, setModalPurchaseIsOpen] = useState(false)
@@ -52,26 +54,9 @@ const Sparepart = () => {
     SearchSparepart()
   }, [currentPage])
 
-  //   const GetSpareparts = () => {
-  //     setIsLoading(true)
-  //     const url = `http://192.168.88.250:8081/spareparts`
-
-  //     axios
-  //       .get(url)
-  //       .then((response) => {
-  //         setIsLoading(false)
-  //         const { data, metadata } = response.data
-  //         setListSparepart(data || [])
-  //         setTotalPage(metadata || 1)
-  //       })
-  //       .catch((error) => {
-  //         console.error(error)
-  //         alert('Error fetching machines: ' + error.message)
-  //         setIsLoading(false)
-  //         setListSparepart([])
-  //         setTotalPage(1)
-  //       })
-  //   }
+  useEffect(() => {
+    ListAllSparepart()
+  }, [])
 
   const SearchSparepart = () => {
     setIsLoading(true)
@@ -91,6 +76,25 @@ const Sparepart = () => {
         setIsLoading(false)
         setListSparepart([])
         setTotalPage(1)
+      })
+  }
+
+  const ListAllSparepart = () => {
+    setIsLoading(true)
+    const url = `http://192.168.88.250:8081/spareparts`
+
+    axios
+      .get(url)
+      .then((response) => {
+        const { data, metadata } = response.data
+        setListAllSparepart(data || [])
+        setIsLoading(false)
+      })
+      .catch((error) => {
+        console.error(error)
+        alert('Error searching machines: ' + error.message)
+        setIsLoading(false)
+        setListAllSparepart([])
       })
   }
 
@@ -158,7 +162,7 @@ const Sparepart = () => {
     var obj = {
       id_sparepart: sparepartID,
       nama_sparepart: sparepartName,
-      quantity: parseInt(quantity),
+      quantity: 0,
     }
     var url = `http://192.168.88.250:8081/spareparts/create`
 
@@ -175,41 +179,6 @@ const Sparepart = () => {
           setIsLoading(false)
           setResponseType(true)
           setResponseMessage('Berhasil Membuat Sparepart Baru')
-          setModalResponseIsOpen(true)
-        }
-      })
-      .catch((error) => {
-        setIsLoading(false)
-        setModalResponseIsOpen(true)
-        setResponseType(false)
-        setResponseMessage(error.message)
-      })
-  }
-
-  function updateSparepart() {
-    setIsLoading(true)
-    var obj = {
-      id_sparepart: sparepartID,
-      nama_sparepart: sparepartName,
-      quantity: parseInt(quantity),
-    }
-    var url = `http://192.168.88.250:8081/spareparts/update`
-
-    axios
-      .put(url, obj)
-      .then((response) => {
-        SearchSparepart()
-        if (response.data.error.status === true) {
-          console.log('Gagal Update Sparepart', response)
-          setIsLoading(false)
-          setResponseType(false)
-          setResponseMessage(response.data.error.msg)
-          setModalResponseIsOpen(true)
-        } else {
-          setIsLoading(false)
-          console.log('Berhasil Update Sparepart', response)
-          setResponseType(true)
-          setResponseMessage('Berhasil Update Sparepart')
           setModalResponseIsOpen(true)
         }
       })
@@ -300,18 +269,46 @@ const Sparepart = () => {
     }
   }
 
+  const exportToExcel = () => {
+    const ws = XLSX.utils.json_to_sheet(listAllSparepart)
+    const wb = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(wb, ws, 'Spareparts')
+
+    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' })
+    const data = new Blob([excelBuffer], { type: 'application/octet-stream' })
+
+    saveAs(data, 'List_Spareparts.xlsx')
+  }
+
   return (
     <CCard>
       <CCardHeader style={{ fontSize: '20px', fontWeight: 'bold' }}>
         <CRow>
           <CCol>List Sparepart</CCol>
           <CCol className="d-grid gap-2" md={2}>
-            {/* <Link to={`/machine/create`} className="btn btn-block btn-success text-white">
-              Buat Kontrak Baru
-            </Link> */}
+            <CButton
+              className="btn-block text-white"
+              color="dark"
+              onClick={() => handleModal('Add')}
+            >
+              Tambah Sparepart
+            </CButton>
           </CCol>
         </CRow>
-        <CRow className="mt-5">
+        <CRow className="mt-2">
+          <CCol></CCol>
+          <CCol className="d-grid gap-2" md={2}>
+            <CButton
+              className="btn-block text-white"
+              color="primary"
+              onClick={exportToExcel}
+              disabled={listSparepart.length === 0}
+            >
+              Export Excel
+            </CButton>
+          </CCol>
+        </CRow>
+        <CRow className="mt-2">
           <CCol md={10}>
             <CFormInput
               // placeholder="Input Nama Perusahaan lalu Tekan Enter atau Tekan Cari"
@@ -352,6 +349,13 @@ const Sparepart = () => {
                     <CTableDataCell>{item.quantity}</CTableDataCell>
                     <CTableDataCell>Rp {item.average_cost.toFixed(2)}</CTableDataCell>
                     <CTableDataCell>
+                      <CButton
+                        className="btn btn-warning btn-sm text-white"
+                        style={{ marginRight: '5px' }}
+                        onClick={() => handleModal('Edit', item)}
+                      >
+                        Edit
+                      </CButton>
                       <CButton
                         className="btn btn-success btn-sm text-white"
                         onClick={() => handleModal('Purchase', item)}
@@ -403,7 +407,7 @@ const Sparepart = () => {
             <CCol>
               <CFormInput
                 value={sparepartID}
-                disabled
+                disabled={type !== 'Add'}
                 onChange={(e) => setSparepartID(e.target.value)}
               ></CFormInput>
             </CCol>
@@ -423,19 +427,24 @@ const Sparepart = () => {
               ></CFormInput>
             </CCol>
           </CRow>
-          <CRow className="mt-3">
-            <CCol>
-              <CForm>
-                <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>Quantity</CFormLabel>
-              </CForm>
-            </CCol>
-            <CCol>
-              <CFormInput
-                value={quantity}
-                onChange={(e) => setQuantity(e.target.value)}
-              ></CFormInput>
-            </CCol>
-          </CRow>
+          {type !== 'Add' && (
+            <CRow className="mt-3">
+              <CCol>
+                <CForm>
+                  <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
+                    Quantity
+                  </CFormLabel>
+                </CForm>
+              </CCol>
+              <CCol>
+                <CFormInput
+                  disabled
+                  value={quantity}
+                  onChange={(e) => setQuantity(e.target.value)}
+                ></CFormInput>
+              </CCol>
+            </CRow>
+          )}
         </CModalBody>
         <CModalFooter style={{ justifyContent: 'center' }}>
           <CButton color="success" className="text-white" onClick={() => handleCreateOrEdit(type)}>

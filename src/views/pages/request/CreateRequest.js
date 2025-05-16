@@ -190,7 +190,6 @@ const CreateRequest = () => {
               <CCol>
                 <CForm>
                   <CFormLabel style={{ fontWeight: 'bold' }}>MESIN</CFormLabel>
-
                   <ReactSelect
                     options={listMachine.map((machine) => ({
                       value: machine,

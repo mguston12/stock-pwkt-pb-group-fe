@@ -117,7 +117,7 @@ const Teknisi = () => {
     <CCard>
       <CCardHeader style={{ fontSize: '20px', fontWeight: 'bold' }}>
         <CRow>
-          <CCol>List Mesin</CCol>
+          <CCol>List Teknisi</CCol>
           <CCol className="d-grid gap-2" md={2}>
             {/* <Link to={`/teknisi/create`} className="btn btn-block btn-success text-white">
               Buat Kontrak Baru
@@ -163,7 +163,7 @@ const Teknisi = () => {
                     <CTableDataCell>
                       <Link
                         to={`/teknisi/detail/${item.id_teknisi}`}
-                        className="btn btn-warning btn-sm text-white"
+                        className="btn btn-primary btn-sm text-white"
                       >
                         Detail
                       </Link>

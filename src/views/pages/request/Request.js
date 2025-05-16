@@ -208,80 +208,48 @@ const Request = () => {
             </CCol>
           )}
         </CRow>
-        <CNav variant="tabs">
-          <CNavItem>
-            <CNavLink
-              active={status === ''}
-              onClick={() => setStatus('')}
-              onMouseEnter={(e) => {
-                e.target.style.backgroundColor = '#f0f0f0'
-                e.target.style.color = '#007bff'
-                e.target.style.cursor = 'pointer'
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.backgroundColor = ''
-                e.target.style.color = ''
-                e.target.style.cursor = ''
-              }}
-            >
-              Semua Request
-            </CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink
-              active={status === 'Request'}
-              onClick={() => setStatus('Request')}
-              onMouseEnter={(e) => {
-                e.target.style.backgroundColor = '#f0f0f0'
-                e.target.style.color = '#007bff'
-                e.target.style.cursor = 'pointer'
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.backgroundColor = ''
-                e.target.style.color = ''
-                e.target.style.cursor = ''
-              }}
-            >
-              Request
-            </CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink
-              active={status === 'Disetujui'}
-              onClick={() => setStatus('Disetujui')}
-              onMouseEnter={(e) => {
-                e.target.style.backgroundColor = '#f0f0f0'
-                e.target.style.color = '#007bff'
-                e.target.style.cursor = 'pointer'
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.backgroundColor = ''
-                e.target.style.color = ''
-                e.target.style.cursor = ''
-              }}
-            >
-              Disetujui
-            </CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink
-              active={status === 'Ditolak'}
-              onClick={() => setStatus('Ditolak')}
-              onMouseEnter={(e) => {
-                e.target.style.backgroundColor = '#f0f0f0'
-                e.target.style.color = '#007bff'
-                e.target.style.cursor = 'pointer'
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.backgroundColor = ''
-                e.target.style.color = ''
-                e.target.style.cursor = ''
-              }}
-            >
-              Ditolak
-            </CNavLink>
-          </CNavItem>
-        </CNav>
+        <CRow className="mt-3">
+          <CCol>
+            <CNav variant="tabs" className="d-flex w-100">
+              <CNavItem className="flex-fill text-center">
+                <CNavLink
+                  active={status === ''}
+                  onClick={() => setStatus('')}
+                  style={{ fontWeight: 'bold', fontSize: '14px' }}
+                >
+                  Semua Request
+                </CNavLink>
+              </CNavItem>
+              <CNavItem className="flex-fill text-center">
+                <CNavLink
+                  active={status === 'Request'}
+                  onClick={() => setStatus('Request')}
+                  style={{ fontWeight: 'bold', fontSize: '14px' }}
+                >
+                  Request
+                </CNavLink>
+              </CNavItem>
+              <CNavItem className="flex-fill text-center">
+                <CNavLink
+                  active={status === 'Disetujui'}
+                  onClick={() => setStatus('Disetujui')}
+                  style={{ fontWeight: 'bold', fontSize: '14px' }}
+                >
+                  Disetujui
+                </CNavLink>
+              </CNavItem>
+              <CNavItem className="flex-fill text-center">
+                <CNavLink
+                  active={status === 'Ditolak'}
+                  onClick={() => setStatus('Ditolak')}
+                  style={{ fontWeight: 'bold', fontSize: '14px' }}
+                >
+                  Ditolak
+                </CNavLink>
+              </CNavItem>
+            </CNav>
+          </CCol>
+        </CRow>
       </CCardHeader>
       <CCardBody>
         {listRequest.length === 0 && !isLoading && (
@@ -341,7 +309,7 @@ const Request = () => {
                         {(item.status_request === 'Disetujui' ||
                           item.status_request === 'Ditolak') && (
                           <CButton
-                            className="btn btn-info btn-sm text-white"
+                            className="btn btn-primary btn-sm text-white"
                             onClick={() => handleModal('Detail', item)}
                           >
                             Detail

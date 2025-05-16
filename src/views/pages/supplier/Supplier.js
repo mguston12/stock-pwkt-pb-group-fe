@@ -24,58 +24,57 @@ import {
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 
-const Machine = () => {
-  const [listMachine, setListMachine] = useState([])
+const Supplier = () => {
+  const [listSupplier, setListSupplier] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [inputSearch, setInputSearch] = useState('')
-  const [selectedCompany, setSelectedCompany] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPage, setTotalPage] = useState(1)
   const itemsPerPage = 5
   const maxVisiblePages = 3
 
   useEffect(() => {
-    GetMachines()
+    GetSuppliers()
   }, [currentPage])
 
-  const GetMachines = () => {
+  const GetSuppliers = () => {
     setIsLoading(true)
-    const url = `http://192.168.88.250:8081/machines`
+    const url = `http://192.168.88.250:8081/suppliers`
 
     axios
       .get(url)
       .then((response) => {
         setIsLoading(false)
         const { data, metadata } = response.data
-        setListMachine(data || [])
+        setListSupplier(data || [])
         setTotalPage(metadata || 1)
       })
       .catch((error) => {
         console.error(error)
-        alert('Error fetching machines: ' + error.message)
+        alert('Error fetching suppliers: ' + error.message)
         setIsLoading(false)
-        setListMachine([])
+        setListSupplier([])
         setTotalPage(1)
       })
   }
 
-  const SearchMachine = () => {
+  const SearchSupplier = () => {
     setIsLoading(true)
-    const url = `http://192.168.88.250:8081/machines?keyword=${inputSearch}&page=${currentPage}&length=${itemsPerPage}`
+    const url = `http://192.168.88.250:8081/suppliers?keyword=${inputSearch}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
       .get(url)
       .then((response) => {
         const { data, metadata } = response.data
-        setListMachine(data || [])
+        setListSupplier(data || [])
         setTotalPage(metadata || 1)
         setIsLoading(false)
       })
       .catch((error) => {
         console.error(error)
-        alert('Error searching machines: ' + error.message)
+        alert('Error searching suppliers: ' + error.message)
         setIsLoading(false)
-        setListMachine([])
+        setListSupplier([])
         setTotalPage(1)
       })
   }
@@ -83,7 +82,7 @@ const Machine = () => {
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       setCurrentPage(1)
-      SearchMachine()
+      SearchSupplier()
     }
   }
 
@@ -119,7 +118,7 @@ const Machine = () => {
         <CRow>
           <CCol>List Mesin</CCol>
           <CCol className="d-grid gap-2" md={2}>
-            {/* <Link to={`/machine/create`} className="btn btn-block btn-success text-white">
+            {/* <Link to={`/supplier/create`} className="btn btn-block btn-success text-white">
               Buat Kontrak Baru
             </Link> */}
           </CCol>
@@ -127,7 +126,7 @@ const Machine = () => {
         <CRow className="mt-3">
           <CCol md={10}>
             <CFormInput
-              // placeholder="Input Nama Perusahaan lalu Tekan Enter atau Tekan Cari"
+              placeholder="Input Nama Supplier lalu Tekan Enter atau Tekan Cari"
               style={{ display: 'inline' }}
               value={inputSearch}
               onChange={(e) => setInputSearch(e.target.value)}
@@ -135,36 +134,34 @@ const Machine = () => {
             />
           </CCol>
           <CCol className="d-grid gap-2" md={2}>
-            <CButton className="btn-block text-white" color="info" onClick={SearchMachine}>
+            <CButton className="btn-block text-white" color="info" onClick={SearchSupplier}>
               Cari
             </CButton>
           </CCol>
         </CRow>
       </CCardHeader>
       <CCardBody>
-        {listMachine.length === 0 && !isLoading && (
+        {listSupplier.length === 0 && !isLoading && (
           <CCol style={{ textAlign: 'center' }}>Maaf Data Tidak Ditemukan</CCol>
         )}
-        {listMachine.length > 0 && (
+        {listSupplier.length > 0 && (
           <CCol>
             <CTable striped bordered hover responsive>
               <CTableHead>
                 <CTableRow>
-                  <CTableHeaderCell className="text-center">ID Mesin</CTableHeaderCell>
-                  <CTableHeaderCell className="text-center">Tipe Mesin</CTableHeaderCell>
-                  <CTableHeaderCell className="text-center">Customer</CTableHeaderCell>
+                  <CTableHeaderCell className="text-center">ID Supplier</CTableHeaderCell>
+                  <CTableHeaderCell className="text-center">Nama Supplier</CTableHeaderCell>
                   <CTableHeaderCell className="text-center">Action</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {listMachine.map((item, index) => (
+                {listSupplier.map((item, index) => (
                   <CTableRow key={index} className="text-center">
-                    <CTableDataCell>{item.id_machine}</CTableDataCell>
-                    <CTableDataCell>{item.tipe_machine}</CTableDataCell>
-                    <CTableDataCell>{item.id_customer}</CTableDataCell>
+                    <CTableDataCell>{item.id_supplier}</CTableDataCell>
+                    <CTableDataCell>{item.nama_supplier}</CTableDataCell>
                     <CTableDataCell>
                       <Link
-                        to={`/machine/detail/${item.id_machine}`}
+                        to={`/supplier/detail/${item.id_supplier}`}
                         className="btn btn-primary btn-sm text-white"
                       >
                         Detail
@@ -239,4 +236,4 @@ const Machine = () => {
   )
 }
 
-export default Machine
+export default Supplier

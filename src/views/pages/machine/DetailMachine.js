@@ -78,12 +78,12 @@ const DetailMachine = () => {
                 <CFormInput value={machineDetail.tipe_machine} disabled />
               </CForm>
             </CCol>
-            <CCol>
+            {/* <CCol>
               <CForm>
                 <CFormLabel style={{ fontWeight: 'bold' }}>Counter</CFormLabel>
                 <CFormInput value={machineDetail.counter} disabled />
               </CForm>
-            </CCol>
+            </CCol> */}
           </CRow>
         </CCardBody>
       </CCard>
@@ -100,20 +100,20 @@ const DetailMachine = () => {
               <CTable striped bordered hover responsive>
                 <CTableHead>
                   <CTableRow>
-                    <CTableHeaderCell className="text-center">ID Request</CTableHeaderCell>
                     <CTableHeaderCell className="text-center">Quantity</CTableHeaderCell>
                     <CTableHeaderCell className="text-center">Sparepart</CTableHeaderCell>
                     <CTableHeaderCell className="text-center">Teknisi</CTableHeaderCell>
+                    <CTableHeaderCell className="text-center">Counter</CTableHeaderCell>
                     <CTableHeaderCell className="text-center">Tanggal</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
                   {listHistory.map((item, index) => (
                     <CTableRow key={index} className="text-center">
-                      <CTableDataCell>{item.id_request}</CTableDataCell>
                       <CTableDataCell>{item.quantity}</CTableDataCell>
                       <CTableDataCell>{item.nama_sparepart}</CTableDataCell>
                       <CTableDataCell>{item.nama_teknisi}</CTableDataCell>
+                      <CTableDataCell>{item.counter}</CTableDataCell>
                       <CTableDataCell>
                         {moment(item.updated_at).format('DD-MMM-YYYY')}
                       </CTableDataCell>

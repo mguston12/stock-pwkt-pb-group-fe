@@ -8,8 +8,11 @@ import {
   cilPaintBucket,
   cilWalk,
   cilQrCode,
+  cilTask,
+  cilHeader,
   cilBasket,
   cilBellExclamation,
+  cilMoodVeryGood
 } from '@coreui/icons'
 import { CNavGroup, CNavItem } from '@coreui/react'
 
@@ -23,19 +26,19 @@ function isAdmin() {
 }
 
 const _nav = [
-  {
-    component: CNavItem,
-    name: 'Dashboard',
-    to: '/dashboard',
-    icon: <CIcon icon={cilHome} customClassName="nav-icon" />,
-    hidden: !isAdmin(),
-  },
-  {
-    component: CNavItem,
-    name: 'Barcode Scanner',
-    to: '/barcodescanner',
-    icon: <CIcon icon={cilQrCode} customClassName="nav-icon" />,
-  },
+  // {
+  //   component: CNavItem,
+  //   name: 'Dashboard',
+  //   to: '/dashboard',
+  //   icon: <CIcon icon={cilHome} customClassName="nav-icon" />,
+  //   hidden: !isAdmin(),
+  // },
+  // {
+  //   component: CNavItem,
+  //   name: 'Barcode Scanner',
+  //   to: '/barcodescanner',
+  //   icon: <CIcon icon={cilQrCode} customClassName="nav-icon" />,
+  // },
   {
     component: CNavItem,
     name: 'Mesin',
@@ -48,6 +51,20 @@ const _nav = [
     name: 'Sparepart',
     to: '/sparepart',
     icon: <CIcon icon={cilPaintBucket} customClassName="nav-icon" />,
+    hidden: !isAdmin(),
+  },
+  {
+    component: CNavItem,
+    name: 'Penggunaan Sparepart',
+    to: '/sparepart-usage',
+    icon: <CIcon icon={cilTask} customClassName="nav-icon" />,
+    // hidden: !isAdmin(),
+  },
+  {
+    component: CNavItem,
+    name: 'History Penggunaan SP',
+    to: '/sparepart-history',
+    icon: <CIcon icon={cilHeader} customClassName="nav-icon" />,
     hidden: !isAdmin(),
   },
   {
@@ -65,18 +82,25 @@ const _nav = [
   },
   {
     component: CNavItem,
+    name: 'Supplier',
+    to: '/supplier',
+    icon: <CIcon icon={cilMoodVeryGood} customClassName="nav-icon" />,
+    hidden: !isAdmin(),
+  },
+  {
+    component: CNavItem,
     name: 'Inventory',
     to: '/inventory',
     icon: <CIcon icon={cilBasket} customClassName="nav-icon" />,
     hidden: isAdmin(),
   },
-  {
-    component: CNavItem,
-    name: 'Customer',
-    to: '/customer',
-    icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
-    hidden: !checkSessionStorage('PT'),
-  },
+  // {
+  //   component: CNavItem,
+  //   name: 'Customer',
+  //   to: '/customer',
+  //   icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
+  //   hidden: !checkSessionStorage('PT'),
+  // },
   // {
   //   component: CNavGroup,
   //   name: 'Contract Management',
