@@ -27,13 +27,19 @@ import { cilCheckCircle, cilXCircle } from '@coreui/icons'
 import axios from 'axios'
 import * as XLSX from 'xlsx'
 import { saveAs } from 'file-saver'
+import { useNavigate } from 'react-router-dom'
 
 const Sparepart = () => {
+  const navigate = useNavigate()
+
   const [listSparepart, setListSparepart] = useState([])
   const [listAllSparepart, setListAllSparepart] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [modalPurchaseIsOpen, setModalPurchaseIsOpen] = useState(false)
+  const [modalDeleteIsOpen, setModalDeleteIsOpen] = useState(false)
+  const [selectedSparepartForDelete, setSelectedSparepartForDelete] = useState({ id: '', nama: '' })
+
   const [inputSearch, setInputSearch] = useState('')
   const [type, setType] = useState('')
   //   const [selectedCompany, setSelectedCompany] = useState(null)
@@ -260,6 +266,35 @@ const Sparepart = () => {
       })
   }
 
+  function deleteSparepart(id) {
+    setIsLoading(true)
+
+    var url = `http://192.168.88.250:8081/spareparts/delete?id=${id}`
+
+    axios
+      .delete(url)
+      .then((response) => {
+        SearchSparepart()
+        if (response.data.error.status === true) {
+          setIsLoading(false)
+          setResponseType(false)
+          setResponseMessage(response.data.error.msg)
+          setModalResponseIsOpen(true)
+        } else {
+          setIsLoading(false)
+          setResponseType(true)
+          setResponseMessage('Berhasil Menghapus Sparepart')
+          setModalResponseIsOpen(true)
+        }
+      })
+      .catch((error) => {
+        setIsLoading(false)
+        setModalResponseIsOpen(true)
+        setResponseType(false)
+        setResponseMessage(error.message)
+      })
+  }
+
   const handleCreateOrEdit = (type) => {
     setModalIsOpen(!modalIsOpen)
     if (type === 'Add') {
@@ -278,6 +313,11 @@ const Sparepart = () => {
     const data = new Blob([excelBuffer], { type: 'application/octet-stream' })
 
     saveAs(data, 'List_Spareparts.xlsx')
+  }
+
+  const handleOpenDeleteModal = (id, nama) => {
+    setSelectedSparepartForDelete({ id, nama })
+    setModalDeleteIsOpen(true)
   }
 
   return (
@@ -358,9 +398,31 @@ const Sparepart = () => {
                       </CButton>
                       <CButton
                         className="btn btn-success btn-sm text-white"
+                        style={{ marginRight: '5px' }}
                         onClick={() => handleModal('Purchase', item)}
                       >
                         Pembelian Sparepart
+                      </CButton>
+                      <CButton
+                        className="btn btn-secondary btn-sm text-white"
+                        style={{ marginRight: '5px' }}
+                        onClick={() =>
+                          navigate(
+                            `/sparepart/purchase/${item.id_sparepart}/${item.nama_sparepart
+                              .replaceAll(' ', '-')
+                              .replaceAll('/', '-')}`,
+                          )
+                        }
+                      >
+                        History Pembelian
+                      </CButton>
+                      <CButton
+                        className="btn btn-danger btn-sm text-white"
+                        onClick={() =>
+                          handleOpenDeleteModal(item.id_sparepart, item.nama_sparepart)
+                        }
+                      >
+                        Hapus
                       </CButton>
                     </CTableDataCell>
                   </CTableRow>
@@ -544,6 +606,42 @@ const Sparepart = () => {
           </CButton>
         </CModalFooter>
       </CModal>
+
+      <CModal
+        size="md"
+        alignment="center"
+        visible={modalDeleteIsOpen}
+        onClose={() => setModalDeleteIsOpen(false)}
+      >
+        <CModalBody style={{ textAlign: 'center' }}>
+          <CFormLabel style={{ fontWeight: 'bold', fontSize: '1rem' }}>
+            Apakah Anda yakin ingin menghapus sparepart berikut?
+          </CFormLabel>
+          <p style={{ fontSize: '1.1rem', marginTop: '10px', color: 'red' }}>
+            {selectedSparepartForDelete.nama}
+          </p>
+        </CModalBody>
+        <CModalFooter style={{ justifyContent: 'center' }}>
+          <CButton
+            color="danger"
+            className="text-white"
+            onClick={() => {
+              deleteSparepart(selectedSparepartForDelete.id)
+              setModalDeleteIsOpen(false)
+            }}
+          >
+            Hapus
+          </CButton>
+          <CButton
+            color="secondary"
+            className="text-white"
+            onClick={() => setModalDeleteIsOpen(false)}
+          >
+            Batal
+          </CButton>
+        </CModalFooter>
+      </CModal>
+
       {/* MODAL LOADING*/}
       <CModal size="xl" alignment="center" visible={isLoading} backdrop="static">
         <CModalBody

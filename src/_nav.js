@@ -12,7 +12,7 @@ import {
   cilHeader,
   cilBasket,
   cilBellExclamation,
-  cilMoodVeryGood
+  cilMoodVeryGood,
 } from '@coreui/icons'
 import { CNavGroup, CNavItem } from '@coreui/react'
 
@@ -58,7 +58,21 @@ const _nav = [
     name: 'Penggunaan Sparepart',
     to: '/sparepart-usage',
     icon: <CIcon icon={cilTask} customClassName="nav-icon" />,
-    // hidden: !isAdmin(),
+    hidden: isAdmin(),
+  },
+  {
+    component: CNavItem,
+    name: 'Retur Sparepart',
+    to: '/sparepart-return',
+    icon: <CIcon icon={cilTask} customClassName="nav-icon" />,
+    hidden: isAdmin(),
+  },
+  {
+    component: CNavItem,
+    name: 'Admin Retur Sparepart',
+    to: '/admin-sparepart-return',
+    icon: <CIcon icon={cilTask} customClassName="nav-icon" />,
+    hidden: !isAdmin(),
   },
   {
     component: CNavItem,

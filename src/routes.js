@@ -8,6 +8,11 @@ const DetailMachine = React.lazy(() => import('./views/pages/machine/DetailMachi
 const Sparepart = React.lazy(() => import('./views/pages/sparepart/Sparepart'))
 const SparepartUsage = React.lazy(() => import('./views/pages/sparepartusage/SparepartUsage'))
 const SparepartHistory = React.lazy(() => import('./views/pages/spareparthistory/SparepartHistory'))
+const SparepartPurchase = React.lazy(() => import('./views/pages/sparepart/HistoryPembelian'))
+const SparepartReturn = React.lazy(() => import('./views/pages/sparepartreturn/SparepartReturn'))
+const AdminReturSparepart = React.lazy(
+  () => import('./views/pages/sparepartreturn/AdminReturSparepart'),
+)
 
 const Request = React.lazy(() => import('./views/pages/request/Request'))
 const CreateRequest = React.lazy(() => import('./views/pages/request/CreateRequest'))
@@ -38,7 +43,22 @@ const routes = [
     exact: true,
   },
   { path: '/sparepart', name: 'Sparepart', element: Sparepart, exact: true },
+  {
+    path: '/sparepart/purchase/:id_sparepart/:nama_sparepart',
+    name: 'Sparepart Purchase',
+    element: SparepartPurchase,
+    exact: true,
+  },
   { path: '/sparepart-usage', name: 'Penggunaan Sparepart', element: SparepartUsage, exact: true },
+
+  { path: '/sparepart-return', name: 'Retur Sparepart', element: SparepartReturn, exact: true },
+  {
+    path: '/admin-sparepart-return',
+    name: 'Admin Retur Sparepart',
+    element: AdminReturSparepart,
+    exact: true,
+  },
+
   {
     path: '/sparepart-history',
     name: 'History Penggunaan Sparepart',

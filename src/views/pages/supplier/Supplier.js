@@ -20,6 +20,7 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
+  CForm,
 } from '@coreui/react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
@@ -30,33 +31,20 @@ const Supplier = () => {
   const [inputSearch, setInputSearch] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPage, setTotalPage] = useState(1)
-  const itemsPerPage = 5
+  const itemsPerPage = 10
   const maxVisiblePages = 3
 
+  const [type, setType] = useState('')
+  const [inputSupplierName, setInputSupplierName] = useState('')
+  const [modalIsOpen, setModalIsOpen] = useState(false)
+
+  const [modalResponseIsOpen, setModalResponseIsOpen] = useState(false)
+  const [responseMessage, setResponseMessage] = useState('')
+  const [responseType, setResponseType] = useState(false)
+
   useEffect(() => {
-    GetSuppliers()
+    SearchSupplier()
   }, [currentPage])
-
-  const GetSuppliers = () => {
-    setIsLoading(true)
-    const url = `http://192.168.88.250:8081/suppliers`
-
-    axios
-      .get(url)
-      .then((response) => {
-        setIsLoading(false)
-        const { data, metadata } = response.data
-        setListSupplier(data || [])
-        setTotalPage(metadata || 1)
-      })
-      .catch((error) => {
-        console.error(error)
-        alert('Error fetching suppliers: ' + error.message)
-        setIsLoading(false)
-        setListSupplier([])
-        setTotalPage(1)
-      })
-  }
 
   const SearchSupplier = () => {
     setIsLoading(true)
@@ -112,15 +100,103 @@ const Supplier = () => {
     return pages
   }
 
+  function createSupplier() {
+    setIsLoading(true)
+    var obj = {
+      nama_supplier: inputSupplierName,
+    }
+    var url = `http://192.168.88.250:8081/suppliers/create`
+
+    axios
+      .post(url, obj)
+      .then((response) => {
+        SearchSupplier()
+        if (response.data.error.status === true) {
+          setIsLoading(false)
+          setResponseType(false)
+          setResponseMessage(response.data.error.msg)
+          setModalResponseIsOpen(true)
+        } else {
+          setIsLoading(false)
+          setResponseType(true)
+          setResponseMessage('Berhasil Membuat Supplier Baru')
+          setModalResponseIsOpen(true)
+        }
+      })
+      .catch((error) => {
+        setIsLoading(false)
+        setModalResponseIsOpen(true)
+        setResponseType(false)
+        setResponseMessage(error.message)
+      })
+  }
+
+  function updateSupplier() {
+    setIsLoading(true)
+    var obj = {
+      id_supplier: supplierID,
+      nama_supplier: inputSupplierName,
+    }
+    var url = `http://192.168.88.250:8081/suppliers/update`
+
+    axios
+      .put(url, obj)
+      .then((response) => {
+        SearchSupplier()
+        if (response.data.error.status === true) {
+          console.log('Gagal Update Supplier', response)
+          setIsLoading(false)
+          setResponseType(false)
+          setResponseMessage(response.data.error.msg)
+          setModalResponseIsOpen(true)
+        } else {
+          setIsLoading(false)
+          console.log('Berhasil Update Supplier', response)
+          setResponseType(true)
+          setResponseMessage('Berhasil Update Supplier')
+          setModalResponseIsOpen(true)
+        }
+      })
+      .catch((error) => {
+        setIsLoading(false)
+        setModalResponseIsOpen(true)
+        setResponseType(false)
+        setResponseMessage(error.message)
+      })
+  }
+
+  const handleModal = (tipe, data) => {
+    if (tipe === 'Add') {
+      setInputSupplierName('')
+    } else if (tipe === 'Edit') {
+      setInputSupplierName(data.nama_supplier)
+    }
+    setModalIsOpen(!modalIsOpen)
+    setType(tipe)
+  }
+
+  const handleCreateOrEdit = (type) => {
+    setModalIsOpen(!modalIsOpen)
+    if (type === 'Add') {
+      createSupplier()
+    } else if (type === 'Edit') {
+      updateSupplier()
+    }
+  }
+
   return (
     <CCard>
       <CCardHeader style={{ fontSize: '20px', fontWeight: 'bold' }}>
         <CRow>
           <CCol>List Mesin</CCol>
           <CCol className="d-grid gap-2" md={2}>
-            {/* <Link to={`/supplier/create`} className="btn btn-block btn-success text-white">
-              Buat Kontrak Baru
-            </Link> */}
+            <CButton
+              className="btn-block text-white"
+              color="dark"
+              onClick={() => handleModal('Add')}
+            >
+              Tambah Supplier
+            </CButton>
           </CCol>
         </CRow>
         <CRow className="mt-3">
@@ -192,6 +268,60 @@ const Supplier = () => {
           </CCol>
         )}
       </CCardBody>
+      <CModal size="lg" alignment="center" visible={modalIsOpen} backdrop="static">
+        <CModalBody style={{ justifyContent: 'center' }}>
+          <CFormLabel style={{ fontWeight: 'bold', fontSize: '20px', paddingTop: '8px' }}>
+            {type === 'Add' ? 'Tambah' : 'Ubah Data'} Supplier
+          </CFormLabel>
+          <hr />
+          {type === 'Edit' && (
+            <CRow className="mt-3">
+              <CCol>
+                <CForm>
+                  <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
+                    ID Supplier
+                  </CFormLabel>
+                </CForm>
+              </CCol>
+              <CCol>
+                <CFormInput
+                  value={supplierID}
+                  disabled={type !== 'Add'}
+                  onChange={(e) => setSupplierID(e.target.value)}
+                ></CFormInput>
+              </CCol>
+            </CRow>
+          )}
+          <CRow className="mt-3">
+            <CCol>
+              <CForm>
+                <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
+                  Nama Supplier
+                </CFormLabel>
+              </CForm>
+            </CCol>
+            <CCol>
+              <CFormInput
+                value={inputSupplierName}
+                onChange={(e) => setInputSupplierName(e.target.value)}
+              ></CFormInput>
+            </CCol>
+          </CRow>
+        </CModalBody>
+        <CModalFooter style={{ justifyContent: 'center' }}>
+          <CButton
+            color="success"
+            className="text-white"
+            disabled={inputSupplierName === ''}
+            onClick={() => handleCreateOrEdit(type)}
+          >
+            {type === 'Add' ? 'Tambah Supplier' : 'Ubah Data Supplier'}
+          </CButton>
+          <CButton color="danger" className="text-white" onClick={() => setModalIsOpen(false)}>
+            Batal
+          </CButton>
+        </CModalFooter>
+      </CModal>
       {/* MODAL LOADING*/}
       <CModal size="xl" alignment="center" visible={isLoading} backdrop="static">
         <CModalBody
