@@ -41,25 +41,35 @@ const SparepartUsage = () => {
     }
   }, [machineDetail])
 
+  useEffect(() => {
+    if (userID === 'ws') {
+      GetDataMachine()
+      setMachineCode('WS')
+      setCounter(0)
+    }
+  }, [userID])
+
   const GetDataMachine = () => {
-    setIsLoading(true)
-    const url = `http://192.168.88.250:8081/machines/detail?id=${machineCode}`
+    if (machineCode !== '') {
+      setIsLoading(true)
+      const url = `http://192.168.88.250:8081/machines/detail?id=${machineCode}`
 
-    axios
-      .get(url)
-      .then((response) => {
-        console.log(response)
+      axios
+        .get(url)
+        .then((response) => {
+          console.log(response)
 
-        setIsLoading(false)
-        const { data } = response.data
-        setMachineDetail(data)
-      })
-      .catch((error) => {
-        console.error(error)
-        alert('Error fetching machines: ' + error.message)
-        setIsLoading(false)
-        setMachineDetail('')
-      })
+          setIsLoading(false)
+          const { data } = response.data
+          setMachineDetail(data)
+        })
+        .catch((error) => {
+          console.error(error)
+          alert('Error fetching machines: ' + error.message)
+          setIsLoading(false)
+          setMachineDetail('')
+        })
+    }
   }
 
   const GetListInventory = () => {
@@ -140,7 +150,6 @@ const SparepartUsage = () => {
                     ></CFormInput>
                   </CCol>
                 </CRow>
-
                 {machineDetail && (
                   <CCol>
                     <CRow className="mt-3">
@@ -173,6 +182,7 @@ const SparepartUsage = () => {
                           placeholder="Masukkan counter mesin..."
                           value={counter}
                           onChange={(e) => setCounter(e.target.value)}
+                          disabled={userID === 'ws'}
                         ></CFormInput>
                       </CCol>
                     </CRow>

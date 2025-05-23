@@ -30,6 +30,7 @@ const SetPassword = React.lazy(() => import('./views/pages/setpassword/SetPasswo
 const Inventory = React.lazy(() => import('./views/pages/inventory/Inventory'))
 
 const Supplier = React.lazy(() => import('./views/pages/supplier/Supplier'))
+const DetailSupplier = React.lazy(() => import('./views/pages/supplier/DetailSupplier'))
 
 const routes = [
   { path: '/request', exact: true, name: 'Home' },
@@ -77,6 +78,12 @@ const routes = [
   { path: '/inventory', name: 'Inventory', element: Inventory, exact: true },
 
   { path: '/supplier', name: 'Supplier', element: Supplier, exact: true },
+  {
+    path: '/supplier/detail/:id_supplier',
+    name: 'Detail Supplier',
+    element: DetailSupplier,
+    exact: true,
+  },
 
   {
     path: '/teknisi/detail/:id_teknisi',

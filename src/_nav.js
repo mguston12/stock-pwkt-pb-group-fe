@@ -1,20 +1,21 @@
 import React from 'react'
 import CIcon from '@coreui/icons-react'
 import {
-  cilDescription,
-  cilPeople,
+  // cilDescription,
+  // cilPeople,
   cilPrint,
-  cilHome,
+  // cilHome,
   cilPaintBucket,
   cilWalk,
   cilQrCode,
   cilTask,
+  cilHandPointUp,
   cilHeader,
   cilBasket,
   cilBellExclamation,
   cilMoodVeryGood,
 } from '@coreui/icons'
-import { CNavGroup, CNavItem } from '@coreui/react'
+import { CNavItem } from '@coreui/react'
 
 function checkSessionStorage(name) {
   return sessionStorage.getItem(name)
@@ -64,14 +65,14 @@ const _nav = [
     component: CNavItem,
     name: 'Retur Sparepart',
     to: '/sparepart-return',
-    icon: <CIcon icon={cilTask} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilHandPointUp} customClassName="nav-icon" />,
     hidden: isAdmin(),
   },
   {
     component: CNavItem,
     name: 'Admin Retur Sparepart',
     to: '/admin-sparepart-return',
-    icon: <CIcon icon={cilTask} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilHandPointUp} customClassName="nav-icon" />,
     hidden: !isAdmin(),
   },
   {

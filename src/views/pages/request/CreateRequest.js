@@ -28,12 +28,12 @@ const CreateRequest = () => {
   const [responseMessage, setResponseMessage] = useState('')
   const [responseType, setResponseType] = useState(false)
   const userID = sessionStorage.getItem('user')
-  const [idTeknisi, setIdTeknisi] = useState("")
-  const [idMesin, setIdMesin] = useState("")
-  const [idSparepart, setIdSparepart] = useState("")
+  const [idTeknisi, setIdTeknisi] = useState('')
+  const [idMesin, setIdMesin] = useState('')
+  const [idSparepart, setIdSparepart] = useState('')
   const [quantity, setQuantity] = useState(1)
-  const [statusRequest, setStatusRequest] = useState("")
-  const [counter, setCounter] = useState("")
+  const [statusRequest, setStatusRequest] = useState('')
+  const [counter, setCounter] = useState('')
   const [selectedCustomer, setSelectedCustomer] = useState('')
   const [listCustomer, setListCustomer] = useState([])
   const [listCustomerTransformed, setListCustomerTransformed] = useState([])
@@ -44,85 +44,85 @@ const CreateRequest = () => {
   const [selectedSparepart, setSelectedSparepart] = useState('')
   const [listSparepart, setListSparepart] = useState([])
 
-  useEffect(() => {
-    GetListCustomer()
-  }, [])
+  // useEffect(() => {
+  //   GetListCustomer()
+  // }, [])
+
+  // useEffect(() => {
+  //   if (listCustomer.length !== 0) {
+  //     const transformedList = listCustomer.map((obj) => ({
+  //       value: obj,
+  //       label: `${obj.nama_customer} - ${obj.alamat}`,
+  //     }))
+  //     setListCustomerTransformed(transformedList)
+  //   }
+  // }, [listCustomer])
+
+  // useEffect(() => {
+  //   if (selectedCustomer !== '') {
+  //     console.log(selectedCustomer)
+
+  //     setIsLoading(true)
+  //     const url = `http://192.168.88.250:8081/machines/customer?id=${selectedCustomer.value.id_customer}`
+
+  //     axios
+  //       .get(url)
+  //       .then((response) => {
+  //         const { data } = response.data
+  //         setListMachine(data || [])
+  //         setIsLoading(false)
+  //       })
+  //       .catch((error) => {
+  //         console.error(error)
+  //         alert('Error searching machines: ' + error.message)
+  //         setIsLoading(false)
+  //         setListMachine([])
+  //       })
+  //   }
+  // }, [selectedCustomer])
 
   useEffect(() => {
-    if (listCustomer.length !== 0) {
-      const transformedList = listCustomer.map((obj) => ({
-        value: obj,
-        label: `${obj.nama_customer} - ${obj.alamat}`,
-      }))
-      setListCustomerTransformed(transformedList)
-    }
-  }, [listCustomer])
-
-  useEffect(() => {
-    if (selectedCustomer !== '') {
-      console.log(selectedCustomer)
-
-      setIsLoading(true)
-      const url = `http://192.168.88.250:8081/machines/customer?id=${selectedCustomer.value.id_customer}`
-
-      axios
-        .get(url)
-        .then((response) => {
-          const { data } = response.data
-          setListMachine(data || [])
-          setIsLoading(false)
-        })
-        .catch((error) => {
-          console.error(error)
-          alert('Error searching machines: ' + error.message)
-          setIsLoading(false)
-          setListMachine([])
-        })
-    }
-  }, [selectedCustomer])
-
-  useEffect(() => {
-    if (
-      (selectedCustomer && selectedCustomer.value.id_customer === 'Inventory') ||
-      selectedMachine !== ''
-    ) {
-      setIsLoading(true)
-      const url = `http://192.168.88.250:8081/spareparts`
-
-      axios
-        .get(url)
-        .then((response) => {
-          const { data } = response.data
-          setListSparepart(data || [])
-          setIsLoading(false)
-        })
-        .catch((error) => {
-          console.error(error)
-          alert('Error searching machines: ' + error.message)
-          setIsLoading(false)
-          setListSparepart([])
-        })
-    }
-  }, [selectedCustomer, selectedMachine])
-
-  const GetListCustomer = () => {
+    // if (
+    //   (selectedCustomer && selectedCustomer.value.id_customer === 'Inventory') ||
+    //   selectedMachine !== ''
+    // ) {
     setIsLoading(true)
-    const url = `http://192.168.88.250:8081/customers`
+    const url = `http://192.168.88.250:8081/spareparts`
 
     axios
       .get(url)
       .then((response) => {
         const { data } = response.data
-        setListCustomer(data || [])
+        setListSparepart(data || [])
         setIsLoading(false)
       })
       .catch((error) => {
         console.error(error)
-        alert('Error searching customers: ' + error.message)
+        alert('Error searching machines: ' + error.message)
         setIsLoading(false)
         setListSparepart([])
       })
-  }
+    // }
+  }, [])
+
+  // const GetListCustomer = () => {
+  //   setIsLoading(true)
+  //   const url = `http://192.168.88.250:8081/customers`
+
+  //   axios
+  //     .get(url)
+  //     .then((response) => {
+  //       const { data } = response.data
+  //       setListCustomer(data || [])
+  //       setIsLoading(false)
+  //     })
+  //     .catch((error) => {
+  //       console.error(error)
+  //       alert('Error searching customers: ' + error.message)
+  //       setIsLoading(false)
+  //       setListSparepart([])
+  //     })
+  // }
 
   function createRequest() {
     setIsLoading(true)
@@ -130,8 +130,8 @@ const CreateRequest = () => {
 
     var obj = {
       id_teknisi: userID,
-      id_mesin:
-        selectedCustomer.value.id_customer === 'Inventory' ? '' : selectedMachine.value.id_machine,
+      id_mesin: '',
+      // selectedCustomer.value.id_customer === 'Inventory' ? '' : selectedMachine.value.id_machine,
       id_sparepart: selectedSparepart.value.id_sparepart,
       quantity: parseInt(quantity),
       status_request: 'Request',
@@ -171,7 +171,7 @@ const CreateRequest = () => {
           Buat Request Baru
         </CCardHeader>
         <CCardBody>
-          <CRow>
+          {/* <CRow>
             <CCol>
               <CForm>
                 <CFormLabel style={{ fontWeight: 'bold' }}>NAMA CUSTOMER</CFormLabel>
@@ -181,11 +181,11 @@ const CreateRequest = () => {
                   isSearchable={true}
                   placeholder="Tekan dan Pilih Customer..."
                 />
-                {/* <CFormInput value={selectedCompany.label} disabled /> */}
+                 <CFormInput value={selectedCompany.label} disabled /> 
               </CForm>
             </CCol>
-          </CRow>
-          {listMachine.length !== 0 && (
+          </CRow> */}
+          {/* {listMachine.length !== 0 && (
             <CRow className="mt-3">
               <CCol>
                 <CForm>
@@ -202,9 +202,9 @@ const CreateRequest = () => {
                 </CForm>
               </CCol>
             </CRow>
-          )}
+          )} */}
           {listSparepart.length !== 0 && (
-            <CRow className="mt-3">
+            <CRow>
               <CCol>
                 <CForm>
                   <CFormLabel style={{ fontWeight: 'bold' }}>SPAREPART</CFormLabel>
@@ -234,10 +234,12 @@ const CreateRequest = () => {
               </CForm>
             </CRow>
           )}
-          {selectedSparepart.length !== 0 && selectedCustomer.value.id_customer !== 'Inventory' && (
+          {/* {selectedSparepart.length !== 0 && selectedCustomer.value.id_customer !== 'Inventory' && (
             <CRow className="mt-3">
               <CForm>
-                <CFormLabel style={{ fontWeight: 'bold' }}>COUNTER (Saat Request atau Ganti Sparepart)</CFormLabel>
+                <CFormLabel style={{ fontWeight: 'bold' }}>
+                  COUNTER (Saat Request atau Ganti Sparepart)
+                </CFormLabel>
                 <CFormInput
                   value={counter}
                   onChange={(e) => setCounter(e.target.value)}
@@ -246,7 +248,7 @@ const CreateRequest = () => {
                 ></CFormInput>
               </CForm>
             </CRow>
-          )}
+          )} */}
         </CCardBody>
         <CCardFooter>
           <CRow>
@@ -256,7 +258,7 @@ const CreateRequest = () => {
                 className="btn btn-success text-white"
                 style={{ width: '100%', display: 'block' }}
                 onClick={() => createRequest()}
-                hidden={!selectedCustomer || !selectedSparepart}
+                hidden={!selectedSparepart}
               >
                 Kirim Request
               </CButton>

@@ -263,6 +263,8 @@ const Request = () => {
                   <CTableHeaderCell className="text-center">Kode Request</CTableHeaderCell>
                   <CTableHeaderCell className="text-center">Request</CTableHeaderCell>
                   <CTableHeaderCell className="text-center">Untuk</CTableHeaderCell>
+                  <CTableHeaderCell className="text-center">Tanggal Request</CTableHeaderCell>
+                  <CTableHeaderCell className="text-center">Tanggal Respon</CTableHeaderCell>
                   <CTableHeaderCell className="text-center">Status</CTableHeaderCell>
                   {userID === 'admin' && (
                     <CTableHeaderCell className="text-center">Action</CTableHeaderCell>
@@ -279,6 +281,10 @@ const Request = () => {
                     <CTableDataCell>
                       {item.nama_customer !== '' ? item.nama_customer : 'Persediaan'}
                     </CTableDataCell>
+                    <CTableDataCell>
+                      {moment(item.tanggal_request).format('DD MMM YYYY')}
+                    </CTableDataCell>
+                    <CTableDataCell>{moment(item.updated_at).format('DD MMM YYYY')}</CTableDataCell>
                     <CTableDataCell>
                       {item.status_request === 'Disetujui' && (
                         <CButton color="success" className="btn-sm text-white">
