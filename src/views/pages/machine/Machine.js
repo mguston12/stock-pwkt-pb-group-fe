@@ -5,6 +5,7 @@ import {
   CCardBody,
   CCardHeader,
   CCol,
+  CForm,
   CFormInput,
   CFormLabel,
   CModal,
@@ -27,12 +28,14 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 import CIcon from '@coreui/icons-react'
 import { cilCheckCircle, cilXCircle } from '@coreui/icons'
+import ReactSelect from 'react-select'
 
 const Machine = () => {
   const [listMachine, setListMachine] = useState([])
+  const [listCustomer, setListCustomer] = useState([])
   const [isLoading, setIsLoading] = useState(false)
+  const [modalOpen, setModalOpen] = useState(false)
   const [inputSearch, setInputSearch] = useState('')
-  const [selectedCompany, setSelectedCompany] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPage, setTotalPage] = useState(1)
   const [showReplaceModal, setShowReplaceModal] = useState(false)
@@ -46,8 +49,15 @@ const Machine = () => {
   const [responseMessage, setResponseMessage] = useState('')
   const [responseType, setResponseType] = useState(false)
 
+  const [showActivateModal, setShowActivateModal] = useState(false)
+  const [selectedCustomer, setSelectedCustomer] = useState('')
+  const [startDate, setStartDate] = useState('')
+  const [singleData, setSingleData] = useState('')
+  const userID = sessionStorage.getItem('user')
+
   useEffect(() => {
     GetMachines()
+    GetListCustomers()
   }, [currentPage])
 
   const GetMachines = () => {
@@ -68,6 +78,25 @@ const Machine = () => {
         setIsLoading(false)
         setListMachine([])
         setTotalPage(1)
+      })
+  }
+
+  const GetListCustomers = () => {
+    setIsLoading(true)
+    const url = `http://192.168.88.250:8081/customers`
+
+    axios
+      .get(url)
+      .then((response) => {
+        const { data, metadata } = response.data
+        setListCustomer(data || [])
+        setIsLoading(false)
+      })
+      .catch((error) => {
+        console.error(error)
+        alert('Error searching machines: ' + error.message)
+        setIsLoading(false)
+        setListCustomer([])
       })
   }
 
@@ -180,30 +209,30 @@ const Machine = () => {
       })
   }
 
-  function activateMachine() {
+  function handleActivateSubmit() {
     setIsLoading(true)
     var obj = {
       id_machine: selectedMachineId,
-      id_customer: selectedCustomer,
-      tanggal_mulai: tanggalMulai,
+      tanggal_mulai_string: startDate,
+      status: 'aktif',
     }
-    var url = `http://192.168.88.250:8081/spareparts/update`
+    var url = `http://192.168.88.250:8081/machine-history/create`
 
     axios
-      .put(url, obj)
+      .post(url, obj)
       .then((response) => {
-        SearchSparepart()
+        SearchMachine()
         if (response.data.error.status === true) {
-          console.log('Gagal Update Sparepart', response)
+          console.log('Gagal Aktifkan Mesin', response)
           setIsLoading(false)
           setResponseType(false)
           setResponseMessage(response.data.error.msg)
           setModalResponseIsOpen(true)
         } else {
           setIsLoading(false)
-          console.log('Berhasil Update Sparepart', response)
+          console.log('Berhasil Aktifkan Mesin', response)
           setResponseType(true)
-          setResponseMessage('Berhasil Update Sparepart')
+          setResponseMessage('Berhasil Aktifkan Mesin')
           setModalResponseIsOpen(true)
         }
       })
@@ -215,15 +244,64 @@ const Machine = () => {
       })
   }
 
+  const handleActivate = (machineId) => {
+    // Open the modal and set the selected machine ID
+    setSelectedMachineId(machineId)
+    setShowActivateModal(true)
+  }
+
+  function createMachine() {
+    setIsLoading(true)
+    var obj = {
+      id_machine: singleData.id_machine,
+      tipe_machine: singleData.tipe_machine,
+      updated_by: userID,
+    }
+    var url = `http://192.168.88.250:8081/machines/create`
+
+    axios
+      .post(url, obj)
+      .then((response) => {
+        if (response.data.error.status === true) {
+          console.log('Gagal Update Machine Baru', response)
+          setIsLoading(false)
+          setResponseType(false)
+          setResponseMessage(response.data.error.msg)
+          setModalResponseIsOpen(true)
+        } else {
+          setIsLoading(false)
+          console.log('Berhasil Update Machine Baru', response)
+          setResponseType(true)
+          setResponseMessage('Berhasil Update Machine Baru')
+          setModalResponseIsOpen(true)
+        }
+      })
+      .catch((error) => {
+        setIsLoading(false)
+        setModalResponseIsOpen(true)
+        setResponseType(false)
+        setResponseMessage(error.message)
+      })
+  }
+
+  const handleModalAdd = () => {
+    setSingleData('')
+    setModalOpen(true)
+  }
+
   return (
     <CCard>
       <CCardHeader style={{ fontSize: '20px', fontWeight: 'bold' }}>
         <CRow>
           <CCol>List Mesin</CCol>
           <CCol className="d-grid gap-2" md={2}>
-            {/* <Link to={`/machine/create`} className="btn btn-block btn-success text-white">
-              Buat Kontrak Baru
-            </Link> */}
+            <CButton
+              className="btn-block text-white"
+              color="dark"
+              onClick={() => handleModalAdd('')}
+            >
+              Tambah Mesin
+            </CButton>
           </CCol>
         </CRow>
         <CRow className="mt-3">
@@ -265,20 +343,34 @@ const Machine = () => {
                     <CTableDataCell>{item.tipe_machine}</CTableDataCell>
                     <CTableDataCell>{item.id_customer}</CTableDataCell>
                     <CTableDataCell>
-                      <CButton
-                        className="btn btn-danger btn-sm text-white"
-                        style={{ marginRight: '5px' }}
-                        onClick={() => handleDeactivate(item.id_machine)}
-                      >
-                        Nonaktifkan
-                      </CButton>
-                      <CButton
-                        className="btn btn-warning btn-sm text-white"
-                        style={{ marginRight: '5px' }}
-                        onClick={() => handleReplace(item.id_machine)}
-                      >
-                        Ganti Mesin
-                      </CButton>
+                      {item.id_customer === 'N/A' ||
+                        (item.id_customer === '' && (
+                          <CButton
+                            className="btn btn-success btn-sm text-white"
+                            style={{ marginRight: '5px' }}
+                            onClick={() => handleActivate(item.id_machine)}
+                          >
+                            Aktifkan
+                          </CButton>
+                        ))}
+                      {item.id_customer !== 'N/A' && item.id_customer !== '' && (
+                        <CButton
+                          className="btn btn-danger btn-sm text-white"
+                          style={{ marginRight: '5px' }}
+                          onClick={() => handleDeactivate(item.id_machine)}
+                        >
+                          Nonaktifkan
+                        </CButton>
+                      )}
+                      {/* {item.id_machine !== 'N/A' && (
+                        <CButton
+                          className="btn btn-warning btn-sm text-white"
+                          style={{ marginRight: '5px' }}
+                          onClick={() => handleReplace(item.id_machine)}
+                        >
+                          Ganti Mesin
+                        </CButton>
+                      )} */}
                       <Link
                         to={`/machine/detail/${item.id_machine}`}
                         className="btn btn-primary btn-sm text-white"
@@ -351,6 +443,53 @@ const Machine = () => {
         </CModalFooter>
       </CModal>
       {/* MODAL LOADING */}
+
+      <CModal size="lg" alignment="center" visible={modalOpen} backdrop="static">
+        <CModalBody style={{ justifyContent: 'center' }}>
+          <CFormLabel style={{ fontWeight: 'bold', fontSize: '20px', paddingTop: '8px' }}>
+            Tambah Machine
+          </CFormLabel>
+          <hr />
+          <CRow className="mt-3">
+            <CCol>
+              <CForm>
+                <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
+                  ID Machine
+                </CFormLabel>
+              </CForm>
+            </CCol>
+            <CCol>
+              <CFormInput
+                value={singleData.id_machine}
+                onChange={(e) => setSingleData({ ...singleData, id_machine: e.target.value })}
+              ></CFormInput>
+            </CCol>
+          </CRow>
+          <CRow className="mt-3">
+            <CCol>
+              <CForm>
+                <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
+                  Tipe Machine
+                </CFormLabel>
+              </CForm>
+            </CCol>
+            <CCol>
+              <CFormInput
+                value={singleData.tipe_machine}
+                onChange={(e) => setSingleData({ ...singleData, tipe_machine: e.target.value })}
+              ></CFormInput>
+            </CCol>
+          </CRow>
+        </CModalBody>
+        <CModalFooter style={{ justifyContent: 'center' }}>
+          <CButton color="success" className="text-white" onClick={() => createMachine()}>
+            Tambah
+          </CButton>
+          <CButton color="danger" className="text-white" onClick={() => setModalOpen(false)}>
+            Batal
+          </CButton>
+        </CModalFooter>
+      </CModal>
       <CModal
         visible={showReplaceModal}
         onClose={() => setShowReplaceModal(false)}
@@ -395,6 +534,49 @@ const Machine = () => {
           </CButton>
         </CModalFooter>
       </CModal>
+      {/* Activation Modal */}
+      <CModal
+        visible={showActivateModal}
+        onClose={() => setShowActivateModal(false)}
+        size="lg"
+        alignment="center"
+      >
+        <CModalHeader>
+          <CModalTitle>Aktifkan Mesin</CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          <CCol>
+            <CRow>
+              <CFormLabel style={{ fontWeight: 'bold' }}>Customer</CFormLabel>
+              <ReactSelect
+                options={listCustomer.map((customer) => ({
+                  value: customer,
+                  label: customer.nama_customer,
+                }))}
+                onChange={(e) => setSelectedCustomer(e)}
+                isSearchable={true}
+                placeholder="Tekan dan Pilih Machine..."
+              />
+            </CRow>
+            <CRow className="mt-3">
+              <CFormLabel style={{ fontWeight: 'bold' }}>Tanggal Mulai</CFormLabel>
+              <CFormInput
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                type="date"
+              ></CFormInput>
+            </CRow>
+          </CCol>
+        </CModalBody>
+        <CModalFooter>
+          <CButton color="secondary" onClick={() => setShowActivateModal(false)}>
+            Batal
+          </CButton>
+          <CButton color="primary" onClick={handleActivateSubmit}>
+            Aktifkan Mesin
+          </CButton>
+        </CModalFooter>
+      </CModal>
       {/* MODAL RESPONSE*/}
       <CModal size="md" alignment="center" visible={modalResponseIsOpen} backdrop="static">
         <CModalBody style={{ justifyContent: 'center', textAlign: 'center' }}>
@@ -413,11 +595,11 @@ const Machine = () => {
           )}
         </CModalBody>
         <CModalFooter style={{ justifyContent: 'center' }}>
-          <Link to={`/request`} className="btn btn-block btn-info text-white">
+          {/* <Link to={`/request`} className="btn btn-block btn-info text-white">
             Kembali Ke Halaman Request
-          </Link>
+          </Link> */}
           <CButton color="success" className="text-white" onClick={() => window.location.reload()}>
-            Tambah Request Lagi
+            Tutup
           </CButton>
         </CModalFooter>
       </CModal>

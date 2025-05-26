@@ -2,7 +2,7 @@ import React from 'react'
 import CIcon from '@coreui/icons-react'
 import {
   // cilDescription,
-  // cilPeople,
+  cilPeople,
   cilPrint,
   // cilHome,
   cilPaintBucket,
@@ -109,13 +109,13 @@ const _nav = [
     icon: <CIcon icon={cilBasket} customClassName="nav-icon" />,
     hidden: isAdmin(),
   },
-  // {
-  //   component: CNavItem,
-  //   name: 'Customer',
-  //   to: '/customer',
-  //   icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
-  //   hidden: !checkSessionStorage('PT'),
-  // },
+  {
+    component: CNavItem,
+    name: 'Customer',
+    to: '/customer',
+    icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
+    hidden: !isAdmin(),
+  },
   // {
   //   component: CNavGroup,
   //   name: 'Contract Management',

@@ -243,7 +243,6 @@ const SparepartUsage = () => {
         </CCol>
         <CCol md={3}></CCol>
       </CRow>
-
       {/* MODAL LOADING*/}
       <CModal size="xl" alignment="center" visible={isLoading} backdrop="static">
         <CModalBody

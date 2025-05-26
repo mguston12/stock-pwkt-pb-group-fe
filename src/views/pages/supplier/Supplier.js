@@ -188,7 +188,7 @@ const Supplier = () => {
     <CCard>
       <CCardHeader style={{ fontSize: '20px', fontWeight: 'bold' }}>
         <CRow>
-          <CCol>List Mesin</CCol>
+          <CCol>List Supplier</CCol>
           <CCol className="d-grid gap-2" md={2}>
             <CButton
               className="btn-block text-white"

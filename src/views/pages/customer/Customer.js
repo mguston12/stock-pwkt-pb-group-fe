@@ -27,11 +27,16 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 import CIcon from '@coreui/icons-react'
 import { cilCheckCircle, cilXCircle } from '@coreui/icons'
+import ReactSelect from 'react-select'
 
 const Customer = () => {
   const [listCustomer, setListCustomer] = useState([])
+  const [listCompany, setListCompany] = useState([
+    { id_company: 1, nama_company: 'PT. Purnama Bayu' },
+    { id_company: 2, nama_company: 'PT. Purnama Bayu Max' },
+    { id_company: 3, nama_company: 'PT. Mars Max Utama' },
+  ])
   const [inputSearch, setInputSearch] = useState('')
-  const [selectedCompany, setSelectedCompany] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
   const [modalEditIsOpen, setModalEditIsOpen] = useState(false)
   const [singleData, setSingleData] = useState('')
@@ -48,53 +53,43 @@ const Customer = () => {
   const maxVisiblePages = 3
 
   useEffect(() => {
-    setSelectedCompany(JSON.parse(decodeURIComponent(sessionStorage.getItem('PT'))))
-  }, [])
+    // if (selectedCompany.value === '' || selectedCompany.value === undefined) {
+    //   setModalOpen(true)
+    // } else {
+    //  if (inputSearch.trim() === '') {
+    //     GetCustomers()
+    //   } else {
+    SearchCustomer()
+    // }
+    // }
+  }, [currentPage])
 
-  useEffect(() => {
-    if (selectedCompany.value === '' || selectedCompany.value === undefined) {
-      setModalOpen(true)
-    } else {
-      if (inputSearch.trim() === '') {
-        GetCustomers()
-      } else {
-        SearchCustomer()
-      }
-    }
-  }, [selectedCompany, currentPage])
+  // const GetCustomers = () => {
+  //   setIsLoading(true)
+  //   const url = `http://localhost:8080/customers?company=${selectedCompany.value}&page=${currentPage}&length=${itemsPerPage}`
 
-  // useEffect(() => {
-  //   if (inputSearch.trim() !== '') {
-  //     SearchCustomer()
-  //   }
-  // }, [currentPage])
-
-  const GetCustomers = () => {
-    setIsLoading(true)
-    const url = `http://localhost:8080/customers?company=${selectedCompany.value}&page=${currentPage}&length=${itemsPerPage}`
-
-    axios
-      .get(url)
-      .then((response) => {
-        setIsLoading(false)
-        if (response.data.data !== null) {
-          setListCustomer(response.data.data)
-          setTotalPage(response.data.metadata)
-        } else {
-          setListCustomer([])
-          setTotalPage(response.data.metadata)
-        }
-      })
-      .catch((error) => {
-        alert(error.message)
-        setIsLoading(false)
-        // Handle error state or message
-      })
-  }
+  //   axios
+  //     .get(url)
+  //     .then((response) => {
+  //       setIsLoading(false)
+  //       if (response.data.data !== null) {
+  //         setListCustomer(response.data.data)
+  //         setTotalPage(response.data.metadata)
+  //       } else {
+  //         setListCustomer([])
+  //         setTotalPage(response.data.metadata)
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       alert(error.message)
+  //       setIsLoading(false)
+  //       // Handle error state or message
+  //     })
+  // }
 
   const SearchCustomer = () => {
     setIsLoading(true)
-    const url = `http://localhost:8080/customers?keyword=${inputSearch}&company=${selectedCompany.value}&page=${currentPage}&length=${itemsPerPage}`
+    const url = `http://192.168.88.250:8081/customers?keyword=${inputSearch}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
       .get(url)
@@ -121,6 +116,11 @@ const Customer = () => {
     }
   }
 
+  const handleModalAdd = () => {
+    setSingleData('')
+    setModalOpen(true)
+  }
+
   const handleModalEdit = (item) => {
     setSingleData(item)
     setModalEditIsOpen(true)
@@ -132,17 +132,50 @@ const Customer = () => {
     var obj = {
       id_customer: singleData.id_customer,
       nama_customer: singleData.nama_customer,
-      alamat_customer: singleData.alamat_customer,
-      pic: singleData.pic,
-      penandatangan: singleData.penandatangan,
-      jabatan: singleData.jabatan,
-      no_telp: singleData.no_telp,
+      alamat: singleData.alamat,
       updated_by: userID,
     }
-    var url = `http://localhost:8080/customers/update`
+    var url = `http://192.168.88.250:8081/customers/update`
 
     axios
       .put(url, obj)
+      .then((response) => {
+        if (response.data.error.status === true) {
+          console.log('Gagal Update Customer Baru', response)
+          setIsLoading(false)
+          setResponseType(false)
+          setResponseMessage(response.data.error.msg)
+          setModalResponseIsOpen(true)
+        } else {
+          setIsLoading(false)
+          console.log('Berhasil Update Customer Baru', response)
+          setResponseType(true)
+          setResponseMessage('Berhasil Update Customer Baru')
+          setModalResponseIsOpen(true)
+        }
+      })
+      .catch((error) => {
+        setIsLoading(false)
+        setModalResponseIsOpen(true)
+        setResponseType(false)
+        setResponseMessage(error.message)
+      })
+  }
+
+  function createCustomer() {
+    setModalEditIsOpen(false)
+    setIsLoading(true)
+    var obj = {
+      id_customer: singleData.id_customer,
+      id_company: singleData.id_company,
+      nama_customer: singleData.nama_customer,
+      alamat: singleData.alamat,
+      updated_by: userID,
+    }
+    var url = `http://192.168.88.250:8081/customers/create`
+
+    axios
+      .post(url, obj)
       .then((response) => {
         if (response.data.error.status === true) {
           console.log('Gagal Update Customer Baru', response)
@@ -198,15 +231,15 @@ const Customer = () => {
         <CRow>
           <CCol>List Customer</CCol>
           <CCol className="d-grid gap-2" md={2}>
-            <Link to={`/customer/create`} className="btn btn-block btn-success text-white">
+            <CButton className="btn btn-block text-white" color="dark" onClick={handleModalAdd}>
               Tambah Customer
-            </Link>
+            </CButton>
           </CCol>
         </CRow>
         <CRow className="mt-3">
           <CCol md={10}>
             <CFormInput
-              placeholder="Input Nomor Kontrak atau Nama Customer lalu Tekan Enter atau Tekan Cari"
+              placeholder="Input ID Customer atau Nama Customer lalu Tekan Enter atau Tekan Cari"
               style={{ display: 'inline' }}
               value={inputSearch}
               onChange={(e) => setInputSearch(e.target.value)}
@@ -234,10 +267,6 @@ const Customer = () => {
                   <CTableHeaderCell className="text-center" width="20%">
                     Alamat
                   </CTableHeaderCell>
-                  <CTableHeaderCell className="text-center">PIC</CTableHeaderCell>
-                  <CTableHeaderCell className="text-center">Penandatangan</CTableHeaderCell>
-                  <CTableHeaderCell className="text-center">Jabatan</CTableHeaderCell>
-                  <CTableHeaderCell className="text-center">Contact</CTableHeaderCell>
                   <CTableHeaderCell className="text-center">Action</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
@@ -246,17 +275,13 @@ const Customer = () => {
                   <CTableRow key={index} className="text-center">
                     <CTableDataCell>{item.id_customer}</CTableDataCell>
                     <CTableDataCell>{item.nama_customer}</CTableDataCell>
-                    <CTableDataCell>{item.alamat_customer}</CTableDataCell>
-                    <CTableDataCell>{item.pic}</CTableDataCell>
-                    <CTableDataCell>{item.penandatangan}</CTableDataCell>
-                    <CTableDataCell>{item.jabatan}</CTableDataCell>
-                    <CTableDataCell>{item.no_telp}</CTableDataCell>
+                    <CTableDataCell>{item.alamat}</CTableDataCell>
                     <CTableDataCell>
                       <CButton
                         className="btn btn-warning btn-sm text-white"
                         onClick={() => handleModalEdit(item)}
                       >
-                        UBAH
+                        Ubah
                       </CButton>
                     </CTableDataCell>
                   </CTableRow>
@@ -284,6 +309,87 @@ const Customer = () => {
           </CCol>
         )}
       </CCardBody>
+      <CModal size="lg" alignment="center" visible={modalOpen} backdrop="static">
+        <CModalBody style={{ justifyContent: 'center' }}>
+          <CFormLabel style={{ fontWeight: 'bold', fontSize: '20px', paddingTop: '8px' }}>
+            Tambah Customer
+          </CFormLabel>
+          <hr />
+          <CRow className="mt-3">
+            <CCol>
+              <CForm>
+                <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
+                  ID Customer
+                </CFormLabel>
+              </CForm>
+            </CCol>
+            <CCol>
+              <CFormInput
+                value={singleData.id_customer}
+                onChange={(e) => setSingleData({ ...singleData, id_customer: e.target.value })}
+              ></CFormInput>
+            </CCol>
+          </CRow>
+          <CRow className="mt-3">
+            <CCol>
+              <CForm>
+                <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>Company</CFormLabel>
+              </CForm>
+            </CCol>
+            <CCol>
+              <CCol>
+                <ReactSelect
+                  options={listCompany.map((company) => ({
+                    value: company.id_company,
+                    label: company.nama_company,
+                  }))}
+                  onChange={(selectedOption) =>
+                    setSingleData({ ...singleData, id_company: selectedOption?.value })
+                  }
+                  isSearchable={true}
+                  placeholder="Tekan dan Pilih Company..."
+                />
+              </CCol>
+            </CCol>
+          </CRow>
+          <CRow className="mt-3">
+            <CCol>
+              <CForm>
+                <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
+                  Nama Customer
+                </CFormLabel>
+              </CForm>
+            </CCol>
+            <CCol>
+              <CFormInput
+                value={singleData.nama_customer}
+                onChange={(e) => setSingleData({ ...singleData, nama_customer: e.target.value })}
+              ></CFormInput>
+            </CCol>
+          </CRow>
+          <CRow className="mt-3">
+            <CCol>
+              <CForm>
+                <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>Alamat</CFormLabel>
+              </CForm>
+            </CCol>
+            <CCol>
+              <CFormTextarea
+                value={singleData.alamat}
+                onChange={(e) => setSingleData({ ...singleData, alamat: e.target.value })}
+              ></CFormTextarea>
+            </CCol>
+          </CRow>
+        </CModalBody>
+        <CModalFooter style={{ justifyContent: 'center' }}>
+          <CButton color="success" className="text-white" onClick={() => createCustomer()}>
+            Tambah
+          </CButton>
+          <CButton color="danger" className="text-white" onClick={() => setModalOpen(false)}>
+            Batal
+          </CButton>
+        </CModalFooter>
+      </CModal>
       <CModal size="lg" alignment="center" visible={modalEditIsOpen} backdrop="static">
         <CModalBody style={{ justifyContent: 'center' }}>
           <CFormLabel style={{ fontWeight: 'bold', fontSize: '20px', paddingTop: '8px' }}>
@@ -313,63 +419,9 @@ const Customer = () => {
             </CCol>
             <CCol>
               <CFormTextarea
-                value={singleData.alamat_customer}
-                onChange={(e) => setSingleData({ ...singleData, alamat_customer: e.target.value })}
+                value={singleData.alamat}
+                onChange={(e) => setSingleData({ ...singleData, alamat: e.target.value })}
               ></CFormTextarea>
-            </CCol>
-          </CRow>
-          <CRow className="mt-3">
-            <CCol>
-              <CForm>
-                <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>PIC</CFormLabel>
-              </CForm>
-            </CCol>
-            <CCol>
-              <CFormInput
-                value={singleData.pic}
-                onChange={(e) => setSingleData({ ...singleData, pic: e.target.value })}
-              ></CFormInput>
-            </CCol>
-          </CRow>
-          <CRow className="mt-3">
-            <CCol>
-              <CForm>
-                <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
-                  Penandatangan
-                </CFormLabel>
-              </CForm>
-            </CCol>
-            <CCol>
-              <CFormInput
-                value={singleData.penandatangan}
-                onChange={(e) => setSingleData({ ...singleData, penandatangan: e.target.value })}
-              ></CFormInput>
-            </CCol>
-          </CRow>
-          <CRow className="mt-3">
-            <CCol>
-              <CForm>
-                <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>Jabatan</CFormLabel>
-              </CForm>
-            </CCol>
-            <CCol>
-              <CFormInput
-                value={singleData.jabatan}
-                onChange={(e) => setSingleData({ ...singleData, jabatan: e.target.value })}
-              ></CFormInput>
-            </CCol>
-          </CRow>
-          <CRow className="mt-3">
-            <CCol>
-              <CForm>
-                <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>Contact</CFormLabel>
-              </CForm>
-            </CCol>
-            <CCol>
-              <CFormInput
-                value={singleData.no_telp}
-                onChange={(e) => setSingleData({ ...singleData, no_telp: e.target.value })}
-              ></CFormInput>
             </CCol>
           </CRow>
         </CModalBody>

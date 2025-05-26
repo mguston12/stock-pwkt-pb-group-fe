@@ -279,7 +279,7 @@ const Inventory = () => {
                         className="btn btn-warning btn-sm text-white"
                         onClick={() => handleModal('Edit', item)}
                       >
-                        UBAH
+                        Ubah
                       </CButton>
                     </CTableDataCell> */}
                   </CTableRow>

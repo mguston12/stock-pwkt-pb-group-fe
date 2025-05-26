@@ -5,6 +5,7 @@ import {
   CCardBody,
   CCardHeader,
   CCol,
+  CForm,
   CFormInput,
   CFormLabel,
   CModal,
@@ -28,11 +29,18 @@ const Teknisi = () => {
   const [listTeknisi, setListTeknisi] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [inputSearch, setInputSearch] = useState('')
-  const [selectedCompany, setSelectedCompany] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPage, setTotalPage] = useState(1)
   const itemsPerPage = 5
   const maxVisiblePages = 3
+  const [type, setType] = useState('')
+  const [modalIsOpen, setModalIsOpen] = useState(false)
+
+  const [modalResponseIsOpen, setModalResponseIsOpen] = useState(false)
+  const [responseMessage, setResponseMessage] = useState('')
+  const [responseType, setResponseType] = useState(false)
+  const [inputTeknisiName, setInputTeknisiName] = useState('')
+  const [inputIDTeknisi, setInputIDTeknisi] = useState('')
 
   useEffect(() => {
     GetTeknisi()
@@ -113,15 +121,104 @@ const Teknisi = () => {
     return pages
   }
 
+  function createTeknisi() {
+    setIsLoading(true)
+    var obj = {
+      id_teknisi: inputIDTeknisi,
+      nama_teknisi: inputTeknisiName,
+    }
+    var url = `http://192.168.88.250:8081/teknisi/create`
+
+    axios
+      .post(url, obj)
+      .then((response) => {
+        SearchTeknisi()
+        if (response.data.error.status === true) {
+          setIsLoading(false)
+          setResponseType(false)
+          setResponseMessage(response.data.error.msg)
+          setModalResponseIsOpen(true)
+        } else {
+          setIsLoading(false)
+          setResponseType(true)
+          setResponseMessage('Berhasil Membuat Teknisi Baru')
+          setModalResponseIsOpen(true)
+        }
+      })
+      .catch((error) => {
+        setIsLoading(false)
+        setModalResponseIsOpen(true)
+        setResponseType(false)
+        setResponseMessage(error.message)
+      })
+  }
+
+  function updateTeknisi() {
+    setIsLoading(true)
+    var obj = {
+      id_teknisi: teknisiID,
+      nama_teknisi: inputTeknisiName,
+    }
+    var url = `http://192.168.88.250:8081/teknisi/update`
+
+    axios
+      .put(url, obj)
+      .then((response) => {
+        SearchTeknisi()
+        if (response.data.error.status === true) {
+          console.log('Gagal Update Teknisi', response)
+          setIsLoading(false)
+          setResponseType(false)
+          setResponseMessage(response.data.error.msg)
+          setModalResponseIsOpen(true)
+        } else {
+          setIsLoading(false)
+          console.log('Berhasil Update Teknisi', response)
+          setResponseType(true)
+          setResponseMessage('Berhasil Update Teknisi')
+          setModalResponseIsOpen(true)
+        }
+      })
+      .catch((error) => {
+        setIsLoading(false)
+        setModalResponseIsOpen(true)
+        setResponseType(false)
+        setResponseMessage(error.message)
+      })
+  }
+
+  const handleModal = (tipe, data) => {
+    if (tipe === 'Add') {
+      setInputTeknisiName('')
+    } else if (tipe === 'Edit') {
+      setInputTeknisiName(data.nama_teknisi)
+    }
+    setModalIsOpen(!modalIsOpen)
+    setType(tipe)
+  }
+
+  const handleCreateOrEdit = (type) => {
+    setModalIsOpen(!modalIsOpen)
+    if (type === 'Add') {
+      createTeknisi()
+    } else if (type === 'Edit') {
+      updateTeknisi()
+    }
+  }
+
   return (
     <CCard>
       <CCardHeader style={{ fontSize: '20px', fontWeight: 'bold' }}>
         <CRow>
           <CCol>List Teknisi</CCol>
           <CCol className="d-grid gap-2" md={2}>
-            {/* <Link to={`/teknisi/create`} className="btn btn-block btn-success text-white">
-              Buat Kontrak Baru
-            </Link> */}
+            <CButton
+              className="btn-block text-white"
+              color="dark"
+              onClick={() => handleModal('Add')}
+            >
+              Tambah Teknisi
+            </CButton>
           </CCol>
         </CRow>
         <CRow className="mt-3">
@@ -233,6 +330,57 @@ const Teknisi = () => {
         </CModalFooter>
       </CModal>
       {/* MODAL LOADING */}
+      <CModal size="lg" alignment="center" visible={modalIsOpen} backdrop="static">
+        <CModalBody style={{ justifyContent: 'center' }}>
+          <CFormLabel style={{ fontWeight: 'bold', fontSize: '20px', paddingTop: '8px' }}>
+            {type === 'Add' ? 'Tambah' : 'Ubah Data'} Teknisi
+          </CFormLabel>
+          <hr />
+          <CRow className="mt-3">
+            <CCol>
+              <CForm>
+                <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
+                  ID Teknisi
+                </CFormLabel>
+              </CForm>
+            </CCol>
+            <CCol>
+              <CFormInput
+                value={inputIDTeknisi}
+                onChange={(e) => setInputIDTeknisi(e.target.value)}
+              ></CFormInput>
+            </CCol>
+          </CRow>
+          <CRow className="mt-3">
+            <CCol>
+              <CForm>
+                <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
+                  Nama Teknisi
+                </CFormLabel>
+              </CForm>
+            </CCol>
+            <CCol>
+              <CFormInput
+                value={inputTeknisiName}
+                onChange={(e) => setInputTeknisiName(e.target.value)}
+              ></CFormInput>
+            </CCol>
+          </CRow>
+        </CModalBody>
+        <CModalFooter style={{ justifyContent: 'center' }}>
+          <CButton
+            color="success"
+            className="text-white"
+            disabled={inputTeknisiName === ''}
+            onClick={() => handleCreateOrEdit(type)}
+          >
+            {type === 'Add' ? 'Tambah Teknisi' : 'Ubah Data Teknisi'}
+          </CButton>
+          <CButton color="danger" className="text-white" onClick={() => setModalIsOpen(false)}>
+            Batal
+          </CButton>
+        </CModalFooter>
+      </CModal>
     </CCard>
   )
 }

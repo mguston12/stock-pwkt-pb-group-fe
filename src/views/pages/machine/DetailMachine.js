@@ -31,7 +31,8 @@ import { Link, useParams } from 'react-router-dom'
 const DetailMachine = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [machineDetail, setMachineDetail] = useState('')
-  const [listHistory, setListHistory] = useState('')
+  const [listHistory, setListHistory] = useState([])
+  const [listPemakaian, setListPemakaian] = useState([])
 
   let { id_machine } = useParams()
 
@@ -55,6 +56,27 @@ const DetailMachine = () => {
         setIsLoading(false)
         setMachineDetail('')
         setListHistory([])
+      })
+  }, [id_machine])
+
+  useEffect(() => {
+    setIsLoading(true)
+    const url = `http://192.168.88.250:8081/machine-history/detail?id=${id_machine}`
+
+    axios
+      .get(url)
+      .then((response) => {
+        console.log(response)
+
+        setIsLoading(false)
+        const { data } = response.data
+        setListPemakaian(data)
+      })
+      .catch((error) => {
+        console.error(error)
+        alert('Error fetching machines: ' + error.message)
+        setIsLoading(false)
+        setListPemakaian([])
       })
   }, [id_machine])
 
@@ -85,6 +107,42 @@ const DetailMachine = () => {
               </CForm>
             </CCol> */}
           </CRow>
+        </CCardBody>
+      </CCard>
+      <CCard style={{ marginTop: '20px' }}>
+        <CCardHeader style={{ fontSize: '20px', fontWeight: 'bold' }}>
+          <CRow>
+            <CCol>History Pemakaian Mesin</CCol>
+          </CRow>
+        </CCardHeader>
+        <CCardBody>
+          {!listHistory && <CCol style={{ textAlign: 'center' }}>Maaf Data Tidak Ditemukan</CCol>}
+          {listHistory && listHistory.length >= 1 && (
+            <CCol>
+              <CTable striped bordered hover responsive>
+                <CTableHead>
+                  <CTableRow>
+                    <CTableHeaderCell className="text-center">Nama Customer</CTableHeaderCell>
+                    <CTableHeaderCell className="text-center">Tanggal Mulai</CTableHeaderCell>
+                    <CTableHeaderCell className="text-center">Tanggal Selesai</CTableHeaderCell>
+                  </CTableRow>
+                </CTableHead>
+                <CTableBody>
+                  {listPemakaian.map((item, index) => (
+                    <CTableRow key={index} className="text-center">
+                      <CTableDataCell>{item.nama_customer}</CTableDataCell>
+                      <CTableDataCell>
+                        {moment(item.tanggal_mulai).format('DD-MMM-YYYY')}
+                      </CTableDataCell>
+                       <CTableDataCell>
+                        {moment(item.tanggal_selesai).format('DD-MMM-YYYY')}
+                      </CTableDataCell>
+                    </CTableRow>
+                  ))}
+                </CTableBody>
+              </CTable>
+            </CCol>
+          )}
         </CCardBody>
       </CCard>
       <CCard style={{ marginTop: '20px' }}>
