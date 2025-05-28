@@ -56,30 +56,30 @@ const Machine = () => {
   const userID = sessionStorage.getItem('user')
 
   useEffect(() => {
-    GetMachines()
+    SearchMachine()
     GetListCustomers()
   }, [currentPage])
 
-  const GetMachines = () => {
-    setIsLoading(true)
-    const url = `http://192.168.88.250:8081/machines`
+  // const GetMachines = () => {
+  //   setIsLoading(true)
+  //   const url = `http://192.168.88.250:8081/machines`
 
-    axios
-      .get(url)
-      .then((response) => {
-        setIsLoading(false)
-        const { data, metadata } = response.data
-        setListMachine(data || [])
-        setTotalPage(metadata || 1)
-      })
-      .catch((error) => {
-        console.error(error)
-        alert('Error fetching machines: ' + error.message)
-        setIsLoading(false)
-        setListMachine([])
-        setTotalPage(1)
-      })
-  }
+  //   axios
+  //     .get(url)
+  //     .then((response) => {
+  //       setIsLoading(false)
+  //       const { data, metadata } = response.data
+  //       setListMachine(data || [])
+  //       setTotalPage(metadata || 1)
+  //     })
+  //     .catch((error) => {
+  //       console.error(error)
+  //       alert('Error fetching machines: ' + error.message)
+  //       setIsLoading(false)
+  //       setListMachine([])
+  //       setTotalPage(1)
+  //     })
+  // }
 
   const GetListCustomers = () => {
     setIsLoading(true)
@@ -213,6 +213,7 @@ const Machine = () => {
     setIsLoading(true)
     var obj = {
       id_machine: selectedMachineId,
+      id_customer: selectedCustomer.value.id_customer,
       tanggal_mulai_string: startDate,
       status: 'aktif',
     }
@@ -307,7 +308,7 @@ const Machine = () => {
         <CRow className="mt-3">
           <CCol md={10}>
             <CFormInput
-              // placeholder="Input Nama Perusahaan lalu Tekan Enter atau Tekan Cari"
+              placeholder="Input ID Mesin atau Tipe Mesin lalu Tekan Enter atau Tekan Cari"
               style={{ display: 'inline' }}
               value={inputSearch}
               onChange={(e) => setInputSearch(e.target.value)}
@@ -341,18 +342,28 @@ const Machine = () => {
                   <CTableRow key={index} className="text-center">
                     <CTableDataCell>{item.id_machine}</CTableDataCell>
                     <CTableDataCell>{item.tipe_machine}</CTableDataCell>
-                    <CTableDataCell>{item.id_customer}</CTableDataCell>
                     <CTableDataCell>
-                      {item.id_customer === 'N/A' ||
-                        (item.id_customer === '' && (
-                          <CButton
-                            className="btn btn-success btn-sm text-white"
-                            style={{ marginRight: '5px' }}
-                            onClick={() => handleActivate(item.id_machine)}
-                          >
-                            Aktifkan
-                          </CButton>
-                        ))}
+                      {item.id_customer} - {item.nama_customer}
+                    </CTableDataCell>
+                    <CTableDataCell>
+                      {/* {item.id_customer === 'N/A' && (
+                        <CButton
+                          className="btn btn-success btn-sm text-white"
+                          style={{ marginRight: '5px' }}
+                          onClick={() => handleActivate(item.id_machine)}
+                        >
+                          Aktifkan
+                        </CButton>
+                      )} */}
+                      {item.id_customer === '' && (
+                        <CButton
+                          className="btn btn-success btn-sm text-white"
+                          style={{ marginRight: '5px' }}
+                          onClick={() => handleActivate(item.id_machine)}
+                        >
+                          Aktifkan
+                        </CButton>
+                      )}
                       {item.id_customer !== 'N/A' && item.id_customer !== '' && (
                         <CButton
                           className="btn btn-danger btn-sm text-white"
@@ -529,7 +540,11 @@ const Machine = () => {
           <CButton color="secondary" onClick={() => setShowDeactivateModal(false)}>
             Batal
           </CButton>
-          <CButton color="danger" onClick={handleDeactivateSubmit}>
+          <CButton
+            color="danger"
+            className="btn btn-danger btn-sm text-white"
+            onClick={handleDeactivateSubmit}
+          >
             Nonaktifkan
           </CButton>
         </CModalFooter>
@@ -551,7 +566,7 @@ const Machine = () => {
               <ReactSelect
                 options={listCustomer.map((customer) => ({
                   value: customer,
-                  label: customer.nama_customer,
+                  label: `${customer.nama_customer} - ${customer.alamat}`,
                 }))}
                 onChange={(e) => setSelectedCustomer(e)}
                 isSearchable={true}
@@ -560,11 +575,13 @@ const Machine = () => {
             </CRow>
             <CRow className="mt-3">
               <CFormLabel style={{ fontWeight: 'bold' }}>Tanggal Mulai</CFormLabel>
-              <CFormInput
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                type="date"
-              ></CFormInput>
+              <CCol>
+                <CFormInput
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  type="date"
+                />
+              </CCol>
             </CRow>
           </CCol>
         </CModalBody>

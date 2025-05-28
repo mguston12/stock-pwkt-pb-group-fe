@@ -221,10 +221,10 @@ const Teknisi = () => {
             </CButton>
           </CCol>
         </CRow>
-        <CRow className="mt-3">
+        {/* <CRow className="mt-3">
           <CCol md={10}>
             <CFormInput
-              // placeholder="Input Nama Perusahaan lalu Tekan Enter atau Tekan Cari"
+              placeholder="Input Nama Perusahaan lalu Tekan Enter atau Tekan Cari"
               style={{ display: 'inline' }}
               value={inputSearch}
               onChange={(e) => setInputSearch(e.target.value)}
@@ -236,7 +236,7 @@ const Teknisi = () => {
               Cari
             </CButton>
           </CCol>
-        </CRow>
+        </CRow> */}
       </CCardHeader>
       <CCardBody>
         {listTeknisi.length === 0 && !isLoading && (

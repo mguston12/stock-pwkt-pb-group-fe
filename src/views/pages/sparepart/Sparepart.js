@@ -351,7 +351,7 @@ const Sparepart = () => {
         <CRow className="mt-2">
           <CCol md={10}>
             <CFormInput
-              // placeholder="Input Nama Perusahaan lalu Tekan Enter atau Tekan Cari"
+              placeholder="Input Nama Sparepart lalu Tekan Enter atau Tekan Cari"
               style={{ display: 'inline' }}
               value={inputSearch}
               onChange={(e) => setInputSearch(e.target.value)}

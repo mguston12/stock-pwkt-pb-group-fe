@@ -96,24 +96,78 @@ const SparepartHistory = () => {
 
   return (
     <CCard>
-      <CCardHeader style={{ fontSize: '20px', fontWeight: 'bold' }}>
+      <CCardHeader>
         <CRow>
-          <CCol>List History Penggunaan Sparepart</CCol>
-        </CRow>
-        <CRow className="mt-3">
-          <CCol md={10}>
-            <CFormInput
-              // placeholder="Input Nama Perusahaan lalu Tekan Enter atau Tekan Cari"
-              style={{ display: 'inline' }}
-              value={inputTeknisi}
-              onChange={(e) => setInputTeknisi(e.target.value)}
-              onKeyDown={handleKeyDown}
-            />
+          <CCol style={{ fontSize: '20px', fontWeight: 'bold' }}>
+            List History Penggunaan Sparepart
           </CCol>
-          <CCol className="d-grid gap-2" md={2}>
-            <CButton className="btn-block text-white" color="info" onClick={SearchSparepartHistory}>
-              Cari
-            </CButton>
+        </CRow>
+        <CRow>
+          <CCol md={4}>
+            <CRow>
+              <CCol className="mt-3" style={{ fontSize: '16px', fontWeight: 'bold' }}>
+                ID Mesin
+              </CCol>
+            </CRow>
+            <CRow className="mt-2">
+              <CCol>
+                <CFormInput
+                  placeholder="Input ID Mesin"
+                  style={{ display: 'inline' }}
+                  value={inputMesin}
+                  onChange={(e) => setInputMesin(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                />
+              </CCol>
+            </CRow>
+          </CCol>
+          <CCol md={4}>
+            <CRow>
+              <CCol className="mt-3" style={{ fontSize: '16px', fontWeight: 'bold' }}>
+                ID Teknisi
+              </CCol>
+            </CRow>
+            <CRow className="mt-2">
+              <CCol>
+                <CFormInput
+                  placeholder="Input ID Teknisi"
+                  style={{ display: 'inline' }}
+                  value={inputTeknisi}
+                  onChange={(e) => setInputTeknisi(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                />
+              </CCol>
+            </CRow>
+          </CCol>
+          <CCol md={3}>
+            <CRow>
+              <CCol className="mt-3" style={{ fontSize: '16px', fontWeight: 'bold' }}>
+                ID Sparepart
+              </CCol>
+            </CRow>
+            <CRow className="mt-2">
+              <CCol>
+                <CFormInput
+                  placeholder="Input ID Sparepart"
+                  style={{ display: 'inline' }}
+                  value={inputSparepart}
+                  onChange={(e) => setInputSparepart(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                />
+              </CCol>
+            </CRow>
+          </CCol>
+          <CCol className="d-grid gap-2 mt-2" md={1}>
+            <CRow></CRow>
+            <CRow>
+              <CButton
+                className="btn-block text-white"
+                color="info"
+                onClick={SearchSparepartHistory}
+              >
+                Cari
+              </CButton>
+            </CRow>
           </CCol>
         </CRow>
       </CCardHeader>
@@ -138,9 +192,11 @@ const SparepartHistory = () => {
                 {listSparepartHistory.map((item, index) => (
                   <CTableRow key={index} className="text-center">
                     <CTableDataCell>{item.id_machine}</CTableDataCell>
-                    <CTableDataCell>{item.nama_teknisi}</CTableDataCell>
                     <CTableDataCell>
-                      {item.quantity} {item.nama_sparepart}
+                      {item.id_teknisi} - {item.nama_teknisi}
+                    </CTableDataCell>
+                    <CTableDataCell>
+                      {item.quantity} ({item.id_sparepart} - {item.nama_sparepart})
                     </CTableDataCell>
                     <CTableDataCell>{item.counter}</CTableDataCell>
                     <CTableDataCell>{moment(item.updated_at).format('DD-MMM-YYYY')}</CTableDataCell>
