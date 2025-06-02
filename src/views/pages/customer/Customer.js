@@ -146,7 +146,11 @@ const Customer = () => {
     var url = `${apiUrl}/customers/update`
 
     axios
-      .put(url, obj)
+      .put(url, obj, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         if (response.data.error.status === true) {
           console.log('Gagal Update Customer Baru', response)
@@ -183,7 +187,11 @@ const Customer = () => {
     var url = `${apiUrl}/customers/create`
 
     axios
-      .post(url, obj)
+      .post(url, obj, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         if (response.data.error.status === true) {
           console.log('Gagal Update Customer Baru', response)

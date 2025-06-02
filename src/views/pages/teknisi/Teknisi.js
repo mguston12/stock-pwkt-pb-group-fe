@@ -137,6 +137,7 @@ const Teknisi = () => {
     var obj = {
       id_teknisi: inputIDTeknisi,
       nama_teknisi: inputTeknisiName,
+      active_yn: 'Y',
     }
     var url = `${apiUrl}/teknisi/create`
 
