@@ -26,6 +26,7 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 
 const Supplier = () => {
+  const token = sessionStorage.getItem('token')
   const [listSupplier, setListSupplier] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [inputSearch, setInputSearch] = useState('')
@@ -51,7 +52,11 @@ const Supplier = () => {
     const url = `http://192.168.88.250:8081/suppliers?keyword=${inputSearch}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
-      .get(url)
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         const { data, metadata } = response.data
         setListSupplier(data || [])
@@ -108,7 +113,11 @@ const Supplier = () => {
     var url = `http://192.168.88.250:8081/suppliers/create`
 
     axios
-      .post(url, obj)
+      .post(url, obj, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         SearchSupplier()
         if (response.data.error.status === true) {
@@ -140,7 +149,11 @@ const Supplier = () => {
     var url = `http://192.168.88.250:8081/suppliers/update`
 
     axios
-      .put(url, obj)
+      .put(url, obj, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         SearchSupplier()
         if (response.data.error.status === true) {

@@ -29,6 +29,7 @@ import moment from 'moment'
 import { Link, useParams } from 'react-router-dom'
 
 const HistoryPembelian = () => {
+  const token = sessionStorage.getItem('token')
   const [isLoading, setIsLoading] = useState(false)
   const [sparepartDetail, setSparepartDetail] = useState([])
 
@@ -44,7 +45,11 @@ const HistoryPembelian = () => {
     const url = `http://192.168.88.250:8081/purchase/${id_sparepart}`
 
     axios
-      .get(url)
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         console.log(response)
 

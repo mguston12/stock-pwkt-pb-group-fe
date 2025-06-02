@@ -34,6 +34,7 @@ import axios from 'axios'
 import moment from 'moment'
 
 const Request = () => {
+  const token = sessionStorage.getItem('token')
   const [listRequest, setListRequest] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [modalIsOpen, setModalIsOpen] = useState(false)
@@ -82,7 +83,11 @@ const Request = () => {
     const url = `http://192.168.88.250:8081/requests?status=${status}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
-      .get(url)
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         const { data, metadata } = response.data
         setListRequest(data || [])
@@ -104,7 +109,11 @@ const Request = () => {
     const url = `http://192.168.88.250:8081/requests?keyword=${userID}&status=${status}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
-      .get(url)
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         const { data, metadata } = response.data
         setListRequest(data || [])
@@ -171,7 +180,11 @@ const Request = () => {
     var url = `http://192.168.88.250:8081/requests/update`
 
     axios
-      .put(url, obj)
+      .put(url, obj, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         if (response.data.error.status === true) {
           console.log('Gagal Update Request', response)

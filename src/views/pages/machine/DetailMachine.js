@@ -35,13 +35,18 @@ const DetailMachine = () => {
   const [listPemakaian, setListPemakaian] = useState([])
 
   let { id_machine } = useParams()
+  const token = sessionStorage.getItem('token')
 
   useEffect(() => {
     setIsLoading(true)
     const url = `http://192.168.88.250:8081/machines/detail?id=${id_machine}`
 
     axios
-      .get(url)
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         console.log(response)
 
@@ -64,7 +69,11 @@ const DetailMachine = () => {
     const url = `http://192.168.88.250:8081/machine-history/detail?id=${id_machine}`
 
     axios
-      .get(url)
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         console.log(response)
 
@@ -134,7 +143,7 @@ const DetailMachine = () => {
                       <CTableDataCell>
                         {moment(item.tanggal_mulai).format('DD-MMM-YYYY')}
                       </CTableDataCell>
-                       <CTableDataCell>
+                      <CTableDataCell>
                         {moment(item.tanggal_selesai).format('DD-MMM-YYYY')}
                       </CTableDataCell>
                     </CTableRow>
@@ -161,7 +170,11 @@ const DetailMachine = () => {
                     <CTableHeaderCell className="text-center">Quantity</CTableHeaderCell>
                     <CTableHeaderCell className="text-center">Sparepart</CTableHeaderCell>
                     <CTableHeaderCell className="text-center">Teknisi</CTableHeaderCell>
-                    <CTableHeaderCell className="text-center">Counter</CTableHeaderCell>
+                    <CTableHeaderCell className="text-center">Counter BW</CTableHeaderCell>
+                    <CTableHeaderCell className="text-center">
+                      Counter Colour A4/F4
+                    </CTableHeaderCell>
+                    <CTableHeaderCell className="text-center">Counter Colour A3</CTableHeaderCell>
                     <CTableHeaderCell className="text-center">Tanggal</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
@@ -172,6 +185,8 @@ const DetailMachine = () => {
                       <CTableDataCell>{item.nama_sparepart}</CTableDataCell>
                       <CTableDataCell>{item.nama_teknisi}</CTableDataCell>
                       <CTableDataCell>{item.counter}</CTableDataCell>
+                      <CTableDataCell>{item.counter_colour}</CTableDataCell>
+                      <CTableDataCell>{item.counter_colour_a3}</CTableDataCell>
                       <CTableDataCell>
                         {moment(item.updated_at).format('DD-MMM-YYYY')}
                       </CTableDataCell>

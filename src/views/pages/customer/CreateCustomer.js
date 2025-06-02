@@ -35,6 +35,7 @@ const CreateCustomer = () => {
   const [responseMessage, setResponseMessage] = useState('')
   const [responseType, setResponseType] = useState(false)
   const userID = sessionStorage.getItem('user')
+  const token = sessionStorage.getItem('token')
 
   useEffect(() => {
     setSelectedCompany(JSON.parse(decodeURIComponent(sessionStorage.getItem('PT'))))
@@ -55,7 +56,11 @@ const CreateCustomer = () => {
     var url = `http://localhost:8080/customers/create`
 
     axios
-      .post(url, obj)
+      .post(url, obj, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         if (response.data.error.status === true) {
           console.log('Gagal Membuat Customer Baru', response)

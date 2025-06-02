@@ -58,7 +58,11 @@ const Dashboard = () => {
     const url = `http://localhost:8080/companies`
 
     axios
-      .get(url)
+      .get(url, {
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+})
       .then((response) => {
         if (response.data.data.length !== 0) {
           setListCompanies(response.data.data)

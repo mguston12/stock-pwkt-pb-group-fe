@@ -21,6 +21,7 @@ import ReactSelect from 'react-select'
 import axios from 'axios'
 
 const SparepartReturn = () => {
+  const token = sessionStorage.getItem('token')
   const [listInventory, setListInventory] = useState([])
   const [selectedInventory, setSelectedInventory] = useState('')
   const [returnQty, setReturnQty] = useState('')
@@ -39,7 +40,11 @@ const SparepartReturn = () => {
   const fetchInventory = () => {
     setIsLoading(true)
     axios
-      .get(`http://192.168.88.250:8081/inventory/detail?id=${userID}`)
+      .get(`http://192.168.88.250:8081/inventory/detail?id=${userID}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         const { data } = response.data
         setListInventory(data || [])
@@ -63,7 +68,11 @@ const SparepartReturn = () => {
     }
 
     axios
-      .post(`http://192.168.88.250:8081/return-inventory/return`, body)
+      .post(`http://192.168.88.250:8081/return-inventory/return`, body, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((res) => {
         if (res.data.error.status === true) {
           setResponseType(false)

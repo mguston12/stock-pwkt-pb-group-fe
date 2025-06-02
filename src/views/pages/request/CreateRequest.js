@@ -23,6 +23,7 @@ import ReactSelect from 'react-select'
 import { Link } from 'react-router-dom'
 
 const CreateRequest = () => {
+  const token = sessionStorage.getItem('token')
   const [isLoading, setIsLoading] = useState(false)
   const [modalResponseIsOpen, setModalResponseIsOpen] = useState(false)
   const [responseMessage, setResponseMessage] = useState('')
@@ -66,7 +67,8 @@ const CreateRequest = () => {
   //     const url = `http://192.168.88.250:8081/machines/customer?id=${selectedCustomer.value.id_customer}`
 
   //     axios
-  //       .get(url)
+  //       .get(url, {
+
   //       .then((response) => {
   //         const { data } = response.data
   //         setListMachine(data || [])
@@ -90,7 +92,11 @@ const CreateRequest = () => {
     const url = `http://192.168.88.250:8081/spareparts`
 
     axios
-      .get(url)
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         const { data } = response.data
         setListSparepart(data || [])
@@ -110,7 +116,8 @@ const CreateRequest = () => {
   //   const url = `http://192.168.88.250:8081/customers`
 
   //   axios
-  //     .get(url)
+  //     .get(url, {
+
   //     .then((response) => {
   //       const { data } = response.data
   //       setListCustomer(data || [])
@@ -140,7 +147,11 @@ const CreateRequest = () => {
     var url = `http://192.168.88.250:8081/requests/create`
 
     axios
-      .post(url, obj)
+      .post(url, obj, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         if (response.data.error.status === true) {
           console.log('Gagal Membuat Request Baru', response)

@@ -24,6 +24,7 @@ import axios from 'axios'
 import moment from 'moment'
 
 const AdminReturSparepart = () => {
+  const token = sessionStorage.getItem('token')
   const [listRetur, setListRetur] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [selectedRetur, setSelectedRetur] = useState(null)
@@ -39,7 +40,11 @@ const AdminReturSparepart = () => {
   const fetchRetur = () => {
     setIsLoading(true)
     axios
-      .get('http://192.168.88.250:8081/return-inventory')
+      .get('http://192.168.88.250:8081/return-inventory', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((res) => {
         const { data } = res.data
         setListRetur(data || [])
@@ -54,14 +59,22 @@ const AdminReturSparepart = () => {
   const handleAction = (status) => {
     setIsLoading(true)
     axios
-      .post('http://192.168.88.250:8081/return-inventory/approve', {
-        id_return: selectedRetur.id_return,
-        id_inventory: selectedRetur.id_inventory,
-        id_sparepart: selectedRetur.id_sparepart,
-        quantity: selectedRetur.quantity,
-        status: status,
-        approved_by: 'admin',
-      })
+      .post(
+        'http://192.168.88.250:8081/return-inventory/approve',
+        {
+          id_return: selectedRetur.id_return,
+          id_inventory: selectedRetur.id_inventory,
+          id_sparepart: selectedRetur.id_sparepart,
+          quantity: selectedRetur.quantity,
+          status: status,
+          approved_by: 'admin',
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
       .then((res) => {
         if (res.data.error.status === true) {
           setResponseType(false)

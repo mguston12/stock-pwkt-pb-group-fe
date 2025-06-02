@@ -52,6 +52,8 @@ const Customer = () => {
   const itemsPerPage = 5
   const maxVisiblePages = 3
 
+  const token = sessionStorage.getItem('token')
+
   useEffect(() => {
     // if (selectedCompany.value === '' || selectedCompany.value === undefined) {
     //   setModalOpen(true)
@@ -69,7 +71,7 @@ const Customer = () => {
   //   const url = `http://localhost:8080/customers?company=${selectedCompany.value}&page=${currentPage}&length=${itemsPerPage}`
 
   //   axios
-  //     .get(url)
+  //     .get(url, {
   //     .then((response) => {
   //       setIsLoading(false)
   //       if (response.data.data !== null) {
@@ -92,7 +94,11 @@ const Customer = () => {
     const url = `http://192.168.88.250:8081/customers?keyword=${inputSearch}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
-      .get(url)
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         setIsLoading(false)
         if (response.data.data !== null) {

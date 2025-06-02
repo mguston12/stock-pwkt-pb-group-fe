@@ -24,62 +24,99 @@ const Login = () => {
   const navigate = useNavigate()
 
   const login = async () => {
-    setLoading(true) // Start loading
+    setLoading(true)
     try {
       const response = await fetch('http://192.168.88.250:8081/users/login', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
       })
 
-      console.log(response)
-
       const data = await response.json()
 
-      if (data.error.status === true) {
-        if (data.error.msg === 'Buat Password dulu') {
-          toast.error(data.error.msg, {
-            position: 'top-right',
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          })
+      if (!response.ok) {
+        if (data.error?.msg === 'Buat Password dulu') {
+          toast.error('Please set your password first')
           navigate('/set-password')
         } else {
-          toast.error(data.error.msg || 'Gagal melakukan login', {
-            position: 'top-right',
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          })
+          toast.error(data.error?.msg || 'Login failed')
         }
-      } else {
-        sessionStorage.setItem('isLoggedIn', true)
-        sessionStorage.setItem('user', username)
-        window.location.replace('/request') // Redirect to dashboard if login is successful
+        return
       }
+
+      // Save JWT in localStorage
+      sessionStorage.setItem('token', data.data.token)
+
+      const payload = JSON.parse(atob(data.data.token.split('.')[1])) // Decode JWT
+      sessionStorage.setItem('user', payload.username)
+      sessionStorage.setItem('role', payload.role)
+      sessionStorage.setItem('isLoggedIn', true)
+
+      window.location.replace('/request')
     } catch (error) {
-      toast.error('Terjadi kesalahan, coba lagi.', {
-        position: 'top-right',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      })
+      toast.error(error.message)
     } finally {
-      setLoading(false) // End loading
+      setLoading(false)
     }
   }
+
+  // const login = async () => {
+  //   setLoading(true) // Start loading
+  //   try {
+  // const response = await fetch('http://192.168.88.250:8081/users/login', {
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //   },
+  //   body: JSON.stringify({ username, password }),
+  // })
+
+  // console.log(response)
+
+  // const data = await response.json()
+
+  // if (data.error.status === true) {
+  //   if (data.error.msg === 'Buat Password dulu') {
+  //     toast.error(data.error.msg, {
+  //       position: 'top-right',
+  //       autoClose: 3000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //       progress: undefined,
+  //     })
+  //     navigate('/set-password')
+  //   } else {
+  //     toast.error(data.error.msg || 'Gagal melakukan login', {
+  //       position: 'top-right',
+  //       autoClose: 3000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //       progress: undefined,
+  //     })
+  //   }
+  // } else {
+  // sessionStorage.setItem('isLoggedIn', true)
+  // sessionStorage.setItem('user', username)
+  // window.location.replace('/request') // Redirect to dashboard if login is successful
+  // }
+  //   } catch (error) {
+  //     toast.error('Terjadi kesalahan, coba lagi.', {
+  //       position: 'top-right',
+  //       autoClose: 3000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //       progress: undefined,
+  //     })
+  //   } finally {
+  //     setLoading(false) // End loading
+  //   }
+  // }
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {

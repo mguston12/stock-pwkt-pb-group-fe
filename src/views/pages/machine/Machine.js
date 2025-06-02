@@ -54,6 +54,7 @@ const Machine = () => {
   const [startDate, setStartDate] = useState('')
   const [singleData, setSingleData] = useState('')
   const userID = sessionStorage.getItem('user')
+  const token = sessionStorage.getItem('token')
 
   useEffect(() => {
     SearchMachine()
@@ -65,7 +66,7 @@ const Machine = () => {
   //   const url = `http://192.168.88.250:8081/machines`
 
   //   axios
-  //     .get(url)
+  //     .get(url, {
   //     .then((response) => {
   //       setIsLoading(false)
   //       const { data, metadata } = response.data
@@ -86,7 +87,11 @@ const Machine = () => {
     const url = `http://192.168.88.250:8081/customers`
 
     axios
-      .get(url)
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         const { data, metadata } = response.data
         setListCustomer(data || [])
@@ -105,7 +110,11 @@ const Machine = () => {
     const url = `http://192.168.88.250:8081/machines?keyword=${inputSearch}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
-      .get(url)
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         const { data, metadata } = response.data
         setListMachine(data || [])
@@ -130,10 +139,18 @@ const Machine = () => {
 
   const handleReplaceSubmit = () => {
     axios
-      .post('http://192.168.88.250:8081/machines/replace', {
-        old_machine_id: selectedMachineId,
-        new_machine_id: newMachineId,
-      })
+      .post(
+        'http://192.168.88.250:8081/machines/replace',
+        {
+          old_machine_id: selectedMachineId,
+          new_machine_id: newMachineId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
       .then((response) => {
         // Tanggapi respons dari server
         setResponseType(true)
@@ -189,9 +206,17 @@ const Machine = () => {
 
   const handleDeactivateSubmit = () => {
     axios
-      .post('http://192.168.88.250:8081/machines/deactivate', {
-        machine_id: selectedMachineId,
-      })
+      .post(
+        'http://192.168.88.250:8081/machines/deactivate',
+        {
+          machine_id: selectedMachineId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
       .then((response) => {
         // Tanggapi respons dari server
 
@@ -220,7 +245,11 @@ const Machine = () => {
     var url = `http://192.168.88.250:8081/machine-history/create`
 
     axios
-      .post(url, obj)
+      .post(url, obj, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         SearchMachine()
         if (response.data.error.status === true) {
@@ -261,7 +290,11 @@ const Machine = () => {
     var url = `http://192.168.88.250:8081/machines/create`
 
     axios
-      .post(url, obj)
+      .post(url, obj, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         if (response.data.error.status === true) {
           console.log('Gagal Update Machine Baru', response)

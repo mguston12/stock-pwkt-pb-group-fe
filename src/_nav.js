@@ -17,14 +17,19 @@ import {
 } from '@coreui/icons'
 import { CNavItem } from '@coreui/react'
 
-function checkSessionStorage(name) {
-  return sessionStorage.getItem(name)
+// function checkSessionStorage(name) {
+//   return sessionStorage.getItem(name)
+// }
+
+// function isAdmin() {
+//   const userRole = checkSessionStorage('user')
+//   return userRole === 'admin'
+// }
+function isAdmin() {
+  const role = sessionStorage.getItem('role')
+  return role === 'admin'
 }
 
-function isAdmin() {
-  const userRole = checkSessionStorage('user')
-  return userRole === 'admin'
-}
 const _nav = [
   {
     component: CNavItem,
@@ -32,6 +37,13 @@ const _nav = [
     to: '/admin-sparepart-return',
     icon: <CIcon icon={cilHandPointUp} customClassName="nav-icon" />,
     hidden: !isAdmin(),
+  },
+  {
+    component: CNavItem,
+    name: 'Barcode Scanner',
+    to: '/barcodescanner',
+    icon: <CIcon icon={cilQrCode} customClassName="nav-icon" />,
+    hidden: isAdmin(),
   },
   {
     component: CNavItem,
@@ -49,13 +61,6 @@ const _nav = [
   },
   {
     component: CNavItem,
-    name: 'Inventory',
-    to: '/inventory',
-    icon: <CIcon icon={cilBasket} customClassName="nav-icon" />,
-    hidden: isAdmin(),
-  },
-  {
-    component: CNavItem,
     name: 'Mesin',
     to: '/machine',
     icon: <CIcon icon={cilPrint} customClassName="nav-icon" />,
@@ -66,6 +71,13 @@ const _nav = [
     name: 'Penggunaan Sparepart',
     to: '/sparepart-usage',
     icon: <CIcon icon={cilTask} customClassName="nav-icon" />,
+    hidden: isAdmin(),
+  },
+  {
+    component: CNavItem,
+    name: 'Persediaan',
+    to: '/inventory',
+    icon: <CIcon icon={cilBasket} customClassName="nav-icon" />,
     hidden: isAdmin(),
   },
   {

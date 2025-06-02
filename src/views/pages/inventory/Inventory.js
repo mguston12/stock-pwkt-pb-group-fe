@@ -47,6 +47,8 @@ const Inventory = () => {
   const [responseMessage, setResponseMessage] = useState('')
   const [responseType, setResponseType] = useState(false)
 
+  const token = sessionStorage.getItem('token')
+
   useEffect(() => {
     if (userID !== 'admin') {
       SearchInventory()
@@ -60,7 +62,11 @@ const Inventory = () => {
     const url = `http://192.168.88.250:8081/inventory/detail?id=${userID}`
 
     axios
-      .get(url)
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         const { data, metadata } = response.data
         setListInventory(data || [])
@@ -81,7 +87,11 @@ const Inventory = () => {
     const url = `http://192.168.88.250:8081/inventory?keyword=${inputSearch}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
-      .get(url)
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         const { data, metadata } = response.data
         setListInventory(data || [])
@@ -160,7 +170,11 @@ const Inventory = () => {
     var url = `http://192.168.88.250:8081/inventory/create`
 
     axios
-      .post(url, obj)
+      .post(url, obj, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         SearchInventory()
         if (response.data.error.status === true) {
@@ -193,7 +207,11 @@ const Inventory = () => {
     var url = `http://192.168.88.250:8081/inventory/update`
 
     axios
-      .put(url, obj)
+      .put(url, obj, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         SearchInventory()
         if (response.data.error.status === true) {

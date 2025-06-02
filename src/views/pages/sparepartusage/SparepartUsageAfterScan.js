@@ -20,8 +20,9 @@ import React, { useEffect, useState } from 'react'
 import { cilCheckCircle, cilXCircle } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import ReactSelect from 'react-select'
+import { useParams } from 'react-router-dom'
 
-const SparepartUsage = () => {
+const SparepartUsageAfterScan = () => {
   const token = sessionStorage.getItem('token')
   const [machineCode, setMachineCode] = useState('')
   const [machineDetail, setMachineDetail] = useState('')
@@ -37,6 +38,7 @@ const SparepartUsage = () => {
   const [responseType, setResponseType] = useState(false)
 
   const userID = sessionStorage.getItem('user')
+  let { id_machine } = useParams()
 
   useEffect(() => {
     if (machineDetail !== '' || machineDetail !== undefined) {
@@ -50,7 +52,10 @@ const SparepartUsage = () => {
       setMachineCode('WS')
       setCounter(0)
     }
-  }, [userID])
+    if (id_machine) {
+      setMachineCode(id_machine)
+    }
+  }, [userID, id_machine])
 
   const GetDataMachine = () => {
     if (machineCode !== '') {
@@ -249,7 +254,7 @@ const SparepartUsage = () => {
                         ></CFormInput>
                       </CCol>
                     </CRow>
-                    <CRow>
+                    <CRow className="mt-3">
                       <CCol>
                         <CForm>
                           <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
@@ -374,4 +379,4 @@ const SparepartUsage = () => {
   )
 }
 
-export default SparepartUsage
+export default SparepartUsageAfterScan

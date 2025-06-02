@@ -26,6 +26,7 @@ import axios from 'axios'
 import moment from 'moment'
 
 const SparepartHistory = () => {
+  const token = sessionStorage.getItem('token')
   const [listSparepartHistory, setListSparepartHistory] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [inputTeknisi, setInputTeknisi] = useState('')
@@ -45,7 +46,11 @@ const SparepartHistory = () => {
     const url = `http://192.168.88.250:8081/histories?teknisi=${inputTeknisi}&mesin=${inputMesin}&sparepart=${inputSparepart}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
-      .get(url)
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         const { data, metadata } = response.data
         setListSparepartHistory(data || [])

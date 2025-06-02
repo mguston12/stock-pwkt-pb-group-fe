@@ -31,6 +31,7 @@ import { useNavigate } from 'react-router-dom'
 
 const Sparepart = () => {
   const navigate = useNavigate()
+  const token = sessionStorage.getItem('token')
 
   const [listSparepart, setListSparepart] = useState([])
   const [listAllSparepart, setListAllSparepart] = useState([])
@@ -69,7 +70,11 @@ const Sparepart = () => {
     const url = `http://192.168.88.250:8081/spareparts?keyword=${inputSearch}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
-      .get(url)
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         const { data, metadata } = response.data
         setListSparepart(data || [])
@@ -90,7 +95,11 @@ const Sparepart = () => {
     const url = `http://192.168.88.250:8081/spareparts`
 
     axios
-      .get(url)
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         const { data, metadata } = response.data
         setListAllSparepart(data || [])
@@ -173,7 +182,11 @@ const Sparepart = () => {
     var url = `http://192.168.88.250:8081/spareparts/create`
 
     axios
-      .post(url, obj)
+      .post(url, obj, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         SearchSparepart()
         if (response.data.error.status === true) {
@@ -206,7 +219,11 @@ const Sparepart = () => {
     var url = `http://192.168.88.250:8081/spareparts/update`
 
     axios
-      .put(url, obj)
+      .put(url, obj, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         SearchSparepart()
         if (response.data.error.status === true) {
@@ -241,7 +258,11 @@ const Sparepart = () => {
     var url = `http://192.168.88.250:8081/purchase/create`
 
     axios
-      .post(url, obj)
+      .post(url, obj, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         SearchSparepart()
         if (response.data.error.status === true) {
@@ -272,7 +293,11 @@ const Sparepart = () => {
     var url = `http://192.168.88.250:8081/spareparts/delete?id=${id}`
 
     axios
-      .delete(url)
+      .delete(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         SearchSparepart()
         if (response.data.error.status === true) {

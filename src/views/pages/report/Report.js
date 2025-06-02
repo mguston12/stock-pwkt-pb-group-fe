@@ -20,6 +20,7 @@ import CIcon from '@coreui/icons-react'
 import ReactSelect from 'react-select'
 
 const Report = () => {
+  const token = sessionStorage.getItem('token')
   const [isLoading, setIsLoading] = useState(false)
   const [modalResponseIsOpen, setModalResponseIsOpen] = useState(false)
   const [responseMessage, setResponseMessage] = useState('')
@@ -63,7 +64,10 @@ const Report = () => {
 
     try {
       const response = await axios.get(url, {
-        responseType: 'blob', // Penting untuk file binary
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        responseType: 'blob',
       })
 
       const blob = new Blob([response.data], {

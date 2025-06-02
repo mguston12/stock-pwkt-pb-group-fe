@@ -26,6 +26,7 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 
 const Teknisi = () => {
+  const token = sessionStorage.getItem('token')
   const [listTeknisi, setListTeknisi] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [inputSearch, setInputSearch] = useState('')
@@ -51,7 +52,11 @@ const Teknisi = () => {
     const url = `http://192.168.88.250:8081/teknisi`
 
     axios
-      .get(url)
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         setIsLoading(false)
         const { data, metadata } = response.data
@@ -72,7 +77,11 @@ const Teknisi = () => {
     const url = `http://192.168.88.250:8081/teknisi?keyword=${inputSearch}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
-      .get(url)
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         const { data, metadata } = response.data
         setListTeknisi(data || [])
@@ -130,7 +139,11 @@ const Teknisi = () => {
     var url = `http://192.168.88.250:8081/teknisi/create`
 
     axios
-      .post(url, obj)
+      .post(url, obj, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         SearchTeknisi()
         if (response.data.error.status === true) {
@@ -162,7 +175,11 @@ const Teknisi = () => {
     var url = `http://192.168.88.250:8081/teknisi/update`
 
     axios
-      .put(url, obj)
+      .put(url, obj, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         SearchTeknisi()
         if (response.data.error.status === true) {

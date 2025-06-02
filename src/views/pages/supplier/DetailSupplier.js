@@ -29,6 +29,7 @@ import moment from 'moment'
 import { Link, useParams } from 'react-router-dom'
 
 const DetailSupplier = () => {
+  const token = sessionStorage.getItem('token')
   const [isLoading, setIsLoading] = useState(false)
   const [supplierDetail, setSupplierDetail] = useState([])
 
@@ -43,7 +44,11 @@ const DetailSupplier = () => {
     const url = `http://192.168.88.250:8081/purchase/supplier/${id_supplier}`
 
     axios
-      .get(url)
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         console.log(response)
 
