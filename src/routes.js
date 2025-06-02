@@ -7,7 +7,9 @@ const DetailMachine = React.lazy(() => import('./views/pages/machine/DetailMachi
 
 const Sparepart = React.lazy(() => import('./views/pages/sparepart/Sparepart'))
 const SparepartUsage = React.lazy(() => import('./views/pages/sparepartusage/SparepartUsage'))
-const SparepartUsageAfterScan = React.lazy(() => import('./views/pages/sparepartusage/SparepartUsageAfterScan'))
+const SparepartUsageAfterScan = React.lazy(
+  () => import('./views/pages/sparepartusage/SparepartUsageAfterScan'),
+)
 const SparepartHistory = React.lazy(() => import('./views/pages/spareparthistory/SparepartHistory'))
 const SparepartPurchase = React.lazy(() => import('./views/pages/sparepart/HistoryPembelian'))
 const SparepartReturn = React.lazy(() => import('./views/pages/sparepartreturn/SparepartReturn'))
@@ -90,6 +92,12 @@ const routes = [
   { path: '/teknisi', name: 'Teknisi', element: Teknisi, exact: true },
 
   { path: '/inventory', name: 'Persediaan', element: Inventory, exact: true },
+
+  {
+    path: '/setpassword/:usernames',
+    element: SetPassword,
+    exact: true,
+  },
 
   { path: '/supplier', name: 'Supplier', element: Supplier, exact: true },
   {

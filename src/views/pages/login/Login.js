@@ -39,7 +39,7 @@ const Login = () => {
       if (!response.ok) {
         if (data.error?.msg === 'Buat Password dulu') {
           toast.error('Please set your password first')
-          navigate('/set-password')
+          navigate(`/set-password/${username}`)
         } else {
           toast.error(data.error?.msg || 'Login failed')
         }
@@ -141,7 +141,7 @@ const Login = () => {
                       <CIcon icon={cilUser} />
                     </CInputGroupText>
                     <CFormInput
-                      placeholder="Username"
+                      placeholder="ID Teknisi Anda"
                       onChange={(e) => setUsername(e.target.value)}
                     />
                   </CInputGroup>

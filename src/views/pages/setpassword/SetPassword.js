@@ -16,9 +16,10 @@ import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilLockUnlocked, cilUser } from '@coreui/icons'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { useParams } from 'react-router-dom'
 
 const SetPassword = () => {
-  const [username, setUsername] = useState('')
+  // const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -26,6 +27,8 @@ const SetPassword = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const navigate = useNavigate()
   const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
+
+  let { username } = useParams()
 
   const handleSubmit = async () => {
     // Basic validation
@@ -116,7 +119,8 @@ const SetPassword = () => {
             <CCard className="p-4">
               <CCardBody>
                 <CForm>
-                  <h1 className="mb-4">Set Password</h1>
+                  <h1 className="mb-1">Buat Password</h1>
+                  <h3 className="mb-4">(Akun Baru)</h3>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
                       <CIcon icon={cilUser} />
@@ -124,6 +128,8 @@ const SetPassword = () => {
                     <CFormInput
                       type="text"
                       placeholder="Masukkan ID Teknisi Anda"
+                      value={username}
+                      disabled
                       onChange={(e) => setUsername(e.target.value)}
                     />
                   </CInputGroup>
