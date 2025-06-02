@@ -30,6 +30,8 @@ import { Link, useParams } from 'react-router-dom'
 
 const HistoryPembelian = () => {
   const token = sessionStorage.getItem('token')
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
+
   const [isLoading, setIsLoading] = useState(false)
   const [sparepartDetail, setSparepartDetail] = useState([])
 
@@ -42,7 +44,7 @@ const HistoryPembelian = () => {
 
   useEffect(() => {
     setIsLoading(true)
-    const url = `http://192.168.88.250:8081/purchase/${id_sparepart}`
+    const url = `${apiUrl}/purchase/${id_sparepart}`
 
     axios
       .get(url, {

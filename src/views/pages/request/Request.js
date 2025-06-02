@@ -35,6 +35,8 @@ import moment from 'moment'
 
 const Request = () => {
   const token = sessionStorage.getItem('token')
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
+
   const [listRequest, setListRequest] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [modalIsOpen, setModalIsOpen] = useState(false)
@@ -80,7 +82,7 @@ const Request = () => {
   const SearchRequestAdmin = () => {
     setIsLoading(true)
 
-    const url = `http://192.168.88.250:8081/requests?status=${status}&page=${currentPage}&length=${itemsPerPage}`
+    const url = `${apiUrl}/requests?status=${status}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
       .get(url, {
@@ -106,7 +108,7 @@ const Request = () => {
   const SearchRequest = () => {
     setIsLoading(true)
 
-    const url = `http://192.168.88.250:8081/requests?keyword=${userID}&status=${status}&page=${currentPage}&length=${itemsPerPage}`
+    const url = `${apiUrl}/requests?keyword=${userID}&status=${status}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
       .get(url, {
@@ -177,7 +179,7 @@ const Request = () => {
       updated_by: userID,
       id_request: parseInt(data.id_request),
     }
-    var url = `http://192.168.88.250:8081/requests/update`
+    var url = `${apiUrl}/requests/update`
 
     axios
       .put(url, obj, {

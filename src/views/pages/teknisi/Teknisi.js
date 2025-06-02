@@ -27,6 +27,8 @@ import axios from 'axios'
 
 const Teknisi = () => {
   const token = sessionStorage.getItem('token')
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
+
   const [listTeknisi, setListTeknisi] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [inputSearch, setInputSearch] = useState('')
@@ -49,7 +51,7 @@ const Teknisi = () => {
 
   const GetTeknisi = () => {
     setIsLoading(true)
-    const url = `http://192.168.88.250:8081/teknisi`
+    const url = `${apiUrl}/teknisi`
 
     axios
       .get(url, {
@@ -74,7 +76,7 @@ const Teknisi = () => {
 
   const SearchTeknisi = () => {
     setIsLoading(true)
-    const url = `http://192.168.88.250:8081/teknisi?keyword=${inputSearch}&page=${currentPage}&length=${itemsPerPage}`
+    const url = `${apiUrl}/teknisi?keyword=${inputSearch}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
       .get(url, {
@@ -136,7 +138,7 @@ const Teknisi = () => {
       id_teknisi: inputIDTeknisi,
       nama_teknisi: inputTeknisiName,
     }
-    var url = `http://192.168.88.250:8081/teknisi/create`
+    var url = `${apiUrl}/teknisi/create`
 
     axios
       .post(url, obj, {
@@ -172,7 +174,7 @@ const Teknisi = () => {
       id_teknisi: teknisiID,
       nama_teknisi: inputTeknisiName,
     }
-    var url = `http://192.168.88.250:8081/teknisi/update`
+    var url = `${apiUrl}/teknisi/update`
 
     axios
       .put(url, obj, {

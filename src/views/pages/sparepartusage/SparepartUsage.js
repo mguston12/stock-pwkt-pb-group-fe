@@ -23,6 +23,8 @@ import ReactSelect from 'react-select'
 
 const SparepartUsage = () => {
   const token = sessionStorage.getItem('token')
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
+
   const [machineCode, setMachineCode] = useState('')
   const [machineDetail, setMachineDetail] = useState('')
   const [listInventory, setListInventory] = useState([])
@@ -55,7 +57,7 @@ const SparepartUsage = () => {
   const GetDataMachine = () => {
     if (machineCode !== '') {
       setIsLoading(true)
-      const url = `http://192.168.88.250:8081/machines/detail?id=${machineCode}`
+      const url = `${apiUrl}/machines/detail?id=${machineCode}`
 
       axios
         .get(url, {
@@ -81,7 +83,7 @@ const SparepartUsage = () => {
 
   const GetListInventory = () => {
     setIsLoading(true)
-    const url = `http://192.168.88.250:8081/inventory/detail?id=${userID}`
+    const url = `${apiUrl}/inventory/detail?id=${userID}`
 
     axios
       .get(url, {
@@ -111,7 +113,7 @@ const SparepartUsage = () => {
       counter_colour_a3: parseInt(counterColourA3),
       updated_by: userID,
     }
-    var url = `http://192.168.88.250:8081/inventory/usage`
+    var url = `${apiUrl}/inventory/usage`
 
     axios
       .post(url, obj, {

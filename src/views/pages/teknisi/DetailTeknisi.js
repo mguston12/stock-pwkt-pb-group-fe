@@ -30,6 +30,8 @@ import { Link, useParams } from 'react-router-dom'
 
 const DetailTeknisi = () => {
   const token = sessionStorage.getItem('token')
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
+
   const [isLoading, setIsLoading] = useState(false)
   const [teknisiDetail, setTeknisiDetail] = useState('')
 
@@ -37,7 +39,7 @@ const DetailTeknisi = () => {
 
   useEffect(() => {
     setIsLoading(true)
-    const url = `http://192.168.88.250:8081/teknisi/detail?id=${id_teknisi}`
+    const url = `${apiUrl}/teknisi/detail?id=${id_teknisi}`
 
     axios
       .get(url, {

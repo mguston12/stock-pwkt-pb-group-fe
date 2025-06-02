@@ -56,6 +56,8 @@ const Machine = () => {
   const userID = sessionStorage.getItem('user')
   const token = sessionStorage.getItem('token')
 
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
+
   useEffect(() => {
     SearchMachine()
     GetListCustomers()
@@ -63,7 +65,7 @@ const Machine = () => {
 
   // const GetMachines = () => {
   //   setIsLoading(true)
-  //   const url = `http://192.168.88.250:8081/machines`
+  //   const url = `${apiUrl}/machines`
 
   //   axios
   //     .get(url, {
@@ -84,7 +86,7 @@ const Machine = () => {
 
   const GetListCustomers = () => {
     setIsLoading(true)
-    const url = `http://192.168.88.250:8081/customers`
+    const url = `${apiUrl}/customers`
 
     axios
       .get(url, {
@@ -107,7 +109,7 @@ const Machine = () => {
 
   const SearchMachine = () => {
     setIsLoading(true)
-    const url = `http://192.168.88.250:8081/machines?keyword=${inputSearch}&page=${currentPage}&length=${itemsPerPage}`
+    const url = `${apiUrl}/machines?keyword=${inputSearch}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
       .get(url, {
@@ -140,7 +142,7 @@ const Machine = () => {
   const handleReplaceSubmit = () => {
     axios
       .post(
-        'http://192.168.88.250:8081/machines/replace',
+        `${apiUrl}/machines/replace`,
         {
           old_machine_id: selectedMachineId,
           new_machine_id: newMachineId,
@@ -207,7 +209,7 @@ const Machine = () => {
   const handleDeactivateSubmit = () => {
     axios
       .post(
-        'http://192.168.88.250:8081/machines/deactivate',
+        `${apiUrl}/machines/deactivate`,
         {
           machine_id: selectedMachineId,
         },
@@ -242,7 +244,7 @@ const Machine = () => {
       tanggal_mulai_string: startDate,
       status: 'aktif',
     }
-    var url = `http://192.168.88.250:8081/machine-history/create`
+    var url = `${apiUrl}/machine-history/create`
 
     axios
       .post(url, obj, {
@@ -287,7 +289,7 @@ const Machine = () => {
       tipe_machine: singleData.tipe_machine,
       updated_by: userID,
     }
-    var url = `http://192.168.88.250:8081/machines/create`
+    var url = `${apiUrl}/machines/create`
 
     axios
       .post(url, obj, {

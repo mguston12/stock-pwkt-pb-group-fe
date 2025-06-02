@@ -22,6 +22,8 @@ import axios from 'axios'
 
 const SparepartReturn = () => {
   const token = sessionStorage.getItem('token')
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
+
   const [listInventory, setListInventory] = useState([])
   const [selectedInventory, setSelectedInventory] = useState('')
   const [returnQty, setReturnQty] = useState('')
@@ -40,7 +42,7 @@ const SparepartReturn = () => {
   const fetchInventory = () => {
     setIsLoading(true)
     axios
-      .get(`http://192.168.88.250:8081/inventory/detail?id=${userID}`, {
+      .get(`${apiUrl}/inventory/detail?id=${userID}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -68,7 +70,7 @@ const SparepartReturn = () => {
     }
 
     axios
-      .post(`http://192.168.88.250:8081/return-inventory/return`, body, {
+      .post(`${apiUrl}/return-inventory/return`, body, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -30,6 +30,8 @@ import { Link, useParams } from 'react-router-dom'
 
 const DetailSupplier = () => {
   const token = sessionStorage.getItem('token')
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
+
   const [isLoading, setIsLoading] = useState(false)
   const [supplierDetail, setSupplierDetail] = useState([])
 
@@ -41,7 +43,7 @@ const DetailSupplier = () => {
 
   useEffect(() => {
     setIsLoading(true)
-    const url = `http://192.168.88.250:8081/purchase/supplier/${id_supplier}`
+    const url = `${apiUrl}/purchase/supplier/${id_supplier}`
 
     axios
       .get(url, {

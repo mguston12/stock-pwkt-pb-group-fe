@@ -23,10 +23,12 @@ const Login = () => {
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
+
   const login = async () => {
     setLoading(true)
     try {
-      const response = await fetch('http://192.168.88.250:8081/users/login', {
+      const response = await fetch(`${apiUrl}/users/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
@@ -63,7 +65,7 @@ const Login = () => {
   // const login = async () => {
   //   setLoading(true) // Start loading
   //   try {
-  // const response = await fetch('http://192.168.88.250:8081/users/login', {
+  // const response = await fetch('${apiUrl}/users/login', {
   //   method: 'POST',
   //   headers: {
   //     'Content-Type': 'application/json',

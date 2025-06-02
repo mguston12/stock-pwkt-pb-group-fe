@@ -37,9 +37,11 @@ const DetailMachine = () => {
   let { id_machine } = useParams()
   const token = sessionStorage.getItem('token')
 
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
+
   useEffect(() => {
     setIsLoading(true)
-    const url = `http://192.168.88.250:8081/machines/detail?id=${id_machine}`
+    const url = `${apiUrl}/machines/detail?id=${id_machine}`
 
     axios
       .get(url, {
@@ -66,7 +68,7 @@ const DetailMachine = () => {
 
   useEffect(() => {
     setIsLoading(true)
-    const url = `http://192.168.88.250:8081/machine-history/detail?id=${id_machine}`
+    const url = `${apiUrl}/machine-history/detail?id=${id_machine}`
 
     axios
       .get(url, {

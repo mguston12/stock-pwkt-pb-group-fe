@@ -27,6 +27,8 @@ import axios from 'axios'
 
 const Supplier = () => {
   const token = sessionStorage.getItem('token')
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
+
   const [listSupplier, setListSupplier] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [inputSearch, setInputSearch] = useState('')
@@ -49,7 +51,7 @@ const Supplier = () => {
 
   const SearchSupplier = () => {
     setIsLoading(true)
-    const url = `http://192.168.88.250:8081/suppliers?keyword=${inputSearch}&page=${currentPage}&length=${itemsPerPage}`
+    const url = `${apiUrl}/suppliers?keyword=${inputSearch}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
       .get(url, {
@@ -110,7 +112,7 @@ const Supplier = () => {
     var obj = {
       nama_supplier: inputSupplierName,
     }
-    var url = `http://192.168.88.250:8081/suppliers/create`
+    var url = `${apiUrl}/suppliers/create`
 
     axios
       .post(url, obj, {
@@ -146,7 +148,7 @@ const Supplier = () => {
       id_supplier: supplierID,
       nama_supplier: inputSupplierName,
     }
-    var url = `http://192.168.88.250:8081/suppliers/update`
+    var url = `${apiUrl}/suppliers/update`
 
     axios
       .put(url, obj, {

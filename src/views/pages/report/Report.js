@@ -50,6 +50,8 @@ const Report = () => {
   const [selectedMonth, setSelectedMonth] = useState(null)
   const [selectedYear, setSelectedYear] = useState(null)
 
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
+
   const handleDownloadExcel = async () => {
     if (!selectedMonth || !selectedYear) {
       setResponseMessage('Harap pilih bulan dan tahun terlebih dahulu!')
@@ -60,7 +62,7 @@ const Report = () => {
 
     setIsLoading(true)
 
-    const url = `http://192.168.88.250:8081/histories/report?bulan=${selectedMonth.value}&tahun=${selectedYear.value}`
+    const url = `${apiUrl}/histories/report?bulan=${selectedMonth.value}&tahun=${selectedYear.value}`
 
     try {
       const response = await axios.get(url, {

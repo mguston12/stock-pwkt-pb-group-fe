@@ -49,6 +49,8 @@ const Inventory = () => {
 
   const token = sessionStorage.getItem('token')
 
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
+
   useEffect(() => {
     if (userID !== 'admin') {
       SearchInventory()
@@ -59,7 +61,7 @@ const Inventory = () => {
 
   const SearchInventory = () => {
     setIsLoading(true)
-    const url = `http://192.168.88.250:8081/inventory/detail?id=${userID}`
+    const url = `${apiUrl}/inventory/detail?id=${userID}`
 
     axios
       .get(url, {
@@ -84,7 +86,7 @@ const Inventory = () => {
 
   const SearchInventoryAdmin = () => {
     setIsLoading(true)
-    const url = `http://192.168.88.250:8081/inventory?keyword=${inputSearch}&page=${currentPage}&length=${itemsPerPage}`
+    const url = `${apiUrl}/inventory?keyword=${inputSearch}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
       .get(url, {
@@ -167,7 +169,7 @@ const Inventory = () => {
       nama_inventory: inventoryName,
       quantity: parseInt(quantity),
     }
-    var url = `http://192.168.88.250:8081/inventory/create`
+    var url = `${apiUrl}/inventory/create`
 
     axios
       .post(url, obj, {
@@ -204,7 +206,7 @@ const Inventory = () => {
       nama_inventory: inventoryName,
       quantity: parseInt(quantity),
     }
-    var url = `http://192.168.88.250:8081/inventory/update`
+    var url = `${apiUrl}/inventory/update`
 
     axios
       .put(url, obj, {

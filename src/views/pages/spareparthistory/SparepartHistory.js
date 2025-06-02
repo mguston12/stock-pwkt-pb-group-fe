@@ -27,6 +27,8 @@ import moment from 'moment'
 
 const SparepartHistory = () => {
   const token = sessionStorage.getItem('token')
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
+
   const [listSparepartHistory, setListSparepartHistory] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [inputTeknisi, setInputTeknisi] = useState('')
@@ -43,7 +45,7 @@ const SparepartHistory = () => {
 
   const SearchSparepartHistory = () => {
     setIsLoading(true)
-    const url = `http://192.168.88.250:8081/histories?teknisi=${inputTeknisi}&mesin=${inputMesin}&sparepart=${inputSparepart}&page=${currentPage}&length=${itemsPerPage}`
+    const url = `${apiUrl}/histories?teknisi=${inputTeknisi}&mesin=${inputMesin}&sparepart=${inputSparepart}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
       .get(url, {

@@ -25,6 +25,7 @@ const SetPassword = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const navigate = useNavigate()
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
 
   const handleSubmit = async () => {
     // Basic validation
@@ -58,7 +59,7 @@ const SetPassword = () => {
 
     try {
       // Replace the URL with your actual API endpoint for setting password
-      const response = await fetch('http://192.168.88.250:8081/users/update', {
+      const response = await fetch(`${apiUrl}/users/update`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

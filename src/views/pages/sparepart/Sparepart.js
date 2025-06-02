@@ -32,6 +32,7 @@ import { useNavigate } from 'react-router-dom'
 const Sparepart = () => {
   const navigate = useNavigate()
   const token = sessionStorage.getItem('token')
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
 
   const [listSparepart, setListSparepart] = useState([])
   const [listAllSparepart, setListAllSparepart] = useState([])
@@ -67,7 +68,7 @@ const Sparepart = () => {
 
   const SearchSparepart = () => {
     setIsLoading(true)
-    const url = `http://192.168.88.250:8081/spareparts?keyword=${inputSearch}&page=${currentPage}&length=${itemsPerPage}`
+    const url = `${apiUrl}/spareparts?keyword=${inputSearch}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
       .get(url, {
@@ -92,7 +93,7 @@ const Sparepart = () => {
 
   const ListAllSparepart = () => {
     setIsLoading(true)
-    const url = `http://192.168.88.250:8081/spareparts`
+    const url = `${apiUrl}/spareparts`
 
     axios
       .get(url, {
@@ -179,7 +180,7 @@ const Sparepart = () => {
       nama_sparepart: sparepartName,
       quantity: 0,
     }
-    var url = `http://192.168.88.250:8081/spareparts/create`
+    var url = `${apiUrl}/spareparts/create`
 
     axios
       .post(url, obj, {
@@ -216,7 +217,7 @@ const Sparepart = () => {
       nama_sparepart: sparepartName,
       quantity: parseInt(quantity),
     }
-    var url = `http://192.168.88.250:8081/spareparts/update`
+    var url = `${apiUrl}/spareparts/update`
 
     axios
       .put(url, obj, {
@@ -255,7 +256,7 @@ const Sparepart = () => {
       quantity: parseInt(quantity),
       harga_per_unit: parseFloat(pricePerUnit),
     }
-    var url = `http://192.168.88.250:8081/purchase/create`
+    var url = `${apiUrl}/purchase/create`
 
     axios
       .post(url, obj, {
@@ -290,7 +291,7 @@ const Sparepart = () => {
   function deleteSparepart(id) {
     setIsLoading(true)
 
-    var url = `http://192.168.88.250:8081/spareparts/delete?id=${id}`
+    var url = `${apiUrl}/spareparts/delete?id=${id}`
 
     axios
       .delete(url, {

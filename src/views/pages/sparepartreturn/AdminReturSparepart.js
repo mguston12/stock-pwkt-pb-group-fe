@@ -32,6 +32,7 @@ const AdminReturSparepart = () => {
   const [modalResponse, setModalResponse] = useState(false)
   const [responseMessage, setResponseMessage] = useState('')
   const [responseType, setResponseType] = useState(false)
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
 
   useEffect(() => {
     fetchRetur()
@@ -40,7 +41,7 @@ const AdminReturSparepart = () => {
   const fetchRetur = () => {
     setIsLoading(true)
     axios
-      .get('http://192.168.88.250:8081/return-inventory', {
+      .get(`${apiUrl}/return-inventory`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -60,7 +61,7 @@ const AdminReturSparepart = () => {
     setIsLoading(true)
     axios
       .post(
-        'http://192.168.88.250:8081/return-inventory/approve',
+        `${apiUrl}/return-inventory/approve`,
         {
           id_return: selectedRetur.id_return,
           id_inventory: selectedRetur.id_inventory,

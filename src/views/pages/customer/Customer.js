@@ -54,6 +54,8 @@ const Customer = () => {
 
   const token = sessionStorage.getItem('token')
 
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
+
   useEffect(() => {
     // if (selectedCompany.value === '' || selectedCompany.value === undefined) {
     //   setModalOpen(true)
@@ -91,7 +93,7 @@ const Customer = () => {
 
   const SearchCustomer = () => {
     setIsLoading(true)
-    const url = `http://192.168.88.250:8081/customers?keyword=${inputSearch}&page=${currentPage}&length=${itemsPerPage}`
+    const url = `${apiUrl}/customers?keyword=${inputSearch}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
       .get(url, {
@@ -141,7 +143,7 @@ const Customer = () => {
       alamat: singleData.alamat,
       updated_by: userID,
     }
-    var url = `http://192.168.88.250:8081/customers/update`
+    var url = `${apiUrl}/customers/update`
 
     axios
       .put(url, obj)
@@ -178,7 +180,7 @@ const Customer = () => {
       alamat: singleData.alamat,
       updated_by: userID,
     }
-    var url = `http://192.168.88.250:8081/customers/create`
+    var url = `${apiUrl}/customers/create`
 
     axios
       .post(url, obj)
