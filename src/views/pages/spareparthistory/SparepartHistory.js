@@ -101,6 +101,12 @@ const SparepartHistory = () => {
     return pages
   }
 
+  // Fungsi untuk menampilkan angka dengan titik
+  const formatRibuan = (angka) => {
+    if (!angka) return ''
+    return angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+  }
+
   return (
     <CCard>
       <CCardHeader>
@@ -205,7 +211,7 @@ const SparepartHistory = () => {
                     <CTableDataCell>
                       {item.quantity} ({item.id_sparepart} - {item.nama_sparepart})
                     </CTableDataCell>
-                    <CTableDataCell>{item.counter}</CTableDataCell>
+                    <CTableDataCell>{formatRibuan(item.counter)}</CTableDataCell>
                     <CTableDataCell>{moment(item.updated_at).format('DD-MMM-YYYY')}</CTableDataCell>
                     <CTableDataCell>
                       <Link

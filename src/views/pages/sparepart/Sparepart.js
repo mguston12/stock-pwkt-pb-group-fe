@@ -28,12 +28,15 @@ import axios from 'axios'
 import * as XLSX from 'xlsx'
 import { saveAs } from 'file-saver'
 import { useNavigate } from 'react-router-dom'
+import ReactSelect from 'react-select'
 
 const Sparepart = () => {
   const navigate = useNavigate()
   const token = sessionStorage.getItem('token')
   const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
 
+  const [selectedSupplier, setSelectedSupplier] = useState('')
+  const [listSupplier, setListSupplier] = useState([])
   const [listSparepart, setListSparepart] = useState([])
   const [listAllSparepart, setListAllSparepart] = useState([])
   const [isLoading, setIsLoading] = useState(false)
@@ -52,7 +55,7 @@ const Sparepart = () => {
   const [sparepartID, setSparepartID] = useState('')
   const [sparepartName, setSparepartName] = useState('')
   const [quantity, setQuantity] = useState(0)
-  const [pricePerUnit, setPricePerUnit] = useState(0)
+  const [pricePerUnit, setPricePerUnit] = useState('')
 
   const [modalResponseIsOpen, setModalResponseIsOpen] = useState(false)
   const [responseMessage, setResponseMessage] = useState('')
@@ -64,6 +67,7 @@ const Sparepart = () => {
 
   useEffect(() => {
     ListAllSparepart()
+    GetListSupplier()
   }, [])
 
   const SearchSparepart = () => {
@@ -88,6 +92,29 @@ const Sparepart = () => {
         setIsLoading(false)
         setListSparepart([])
         setTotalPage(1)
+      })
+  }
+
+  const GetListSupplier = () => {
+    setIsLoading(true)
+    const url = `${apiUrl}/suppliers`
+
+    axios
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        const { data } = response.data
+        setListSupplier(data || [])
+        setIsLoading(false)
+      })
+      .catch((error) => {
+        console.error(error)
+        alert('Error searching suppliers: ' + error.message)
+        setIsLoading(false)
+        setListSupplier([])
       })
   }
 
@@ -255,6 +282,7 @@ const Sparepart = () => {
       id_sparepart: sparepartID,
       quantity: parseInt(quantity),
       harga_per_unit: parseFloat(pricePerUnit),
+      id_supplier: selectedSupplier.value.id_supplier,
     }
     var url = `${apiUrl}/purchase/create`
 
@@ -346,6 +374,18 @@ const Sparepart = () => {
     setModalDeleteIsOpen(true)
   }
 
+  // Fungsi untuk menampilkan angka dengan titik
+  const formatRibuan = (angka) => {
+    if (!angka) return ''
+    return angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+  }
+
+  // Handle input tetap simpan angka murni
+  const handlePriceChange = (e) => {
+    const rawValue = e.target.value.replace(/\D/g, '') // Ambil angka saja
+    setPricePerUnit(rawValue) // Simpan tanpa format
+  }
+
   return (
     <CCard>
       <CCardHeader style={{ fontSize: '20px', fontWeight: 'bold' }}>
@@ -401,7 +441,7 @@ const Sparepart = () => {
               <CTableHead>
                 <CTableRow>
                   <CTableHeaderCell className="text-center">Kode Sparepart</CTableHeaderCell>
-                  <CTableHeaderCell className="text-center">Sparepart</CTableHeaderCell>
+                  <CTableHeaderCell className="text-center"  style={{ width: '35%' }}>Sparepart</CTableHeaderCell>
                   <CTableHeaderCell className="text-center">Quantity</CTableHeaderCell>
                   <CTableHeaderCell className="text-center">Average Cost</CTableHeaderCell>
                   <CTableHeaderCell className="text-center">Action</CTableHeaderCell>
@@ -413,7 +453,7 @@ const Sparepart = () => {
                     <CTableDataCell>{item.id_sparepart}</CTableDataCell>
                     <CTableDataCell>{item.nama_sparepart}</CTableDataCell>
                     <CTableDataCell>{item.quantity}</CTableDataCell>
-                    <CTableDataCell>Rp {item.average_cost.toFixed(2)}</CTableDataCell>
+                    <CTableDataCell>Rp {formatRibuan(item.average_cost.toFixed(2))}</CTableDataCell>
                     <CTableDataCell>
                       <CButton
                         className="btn btn-warning btn-sm text-white"
@@ -584,6 +624,24 @@ const Sparepart = () => {
           </CRow>
           <CRow className="mt-3">
             <CCol>
+              <CFormLabel style={{ fontWeight: 'bold' }}>Supplier</CFormLabel>
+            </CCol>
+            <CCol>
+              <ReactSelect
+                // options={listSupplier}
+                options={listSupplier.map((supplier) => ({
+                  value: supplier,
+                  label: `${supplier.nama_supplier}`,
+                }))}
+                value={selectedSupplier}
+                onChange={setSelectedSupplier}
+                isSearchable
+                placeholder="Pilih Supplier..."
+              />
+            </CCol>
+          </CRow>
+          <CRow className="mt-3">
+            <CCol>
               <CForm>
                 <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>Quantity</CFormLabel>
               </CForm>
@@ -607,9 +665,9 @@ const Sparepart = () => {
             </CCol>
             <CCol>
               <CFormInput
-                value={pricePerUnit}
-                type="number"
-                onChange={(e) => setPricePerUnit(e.target.value)}
+                value={formatRibuan(pricePerUnit)}
+                type="text"
+                onChange={handlePriceChange}
               ></CFormInput>
             </CCol>
           </CRow>

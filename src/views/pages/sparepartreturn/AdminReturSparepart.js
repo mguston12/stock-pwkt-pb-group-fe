@@ -148,7 +148,7 @@ const AdminReturSparepart = () => {
                             setModalVisible(true)
                           }}
                         >
-                          Tinjau
+                          Proses
                         </CButton>
                       ) : (
                         <span>-</span>

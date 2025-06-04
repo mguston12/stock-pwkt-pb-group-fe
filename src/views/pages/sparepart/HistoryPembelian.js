@@ -67,6 +67,12 @@ const HistoryPembelian = () => {
       })
   }, [id_sparepart])
 
+  // Fungsi untuk menampilkan angka dengan titik
+  const formatRibuan = (angka) => {
+    if (!angka) return ''
+    return angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+  }
+
   return (
     <>
       <CCard>
@@ -120,7 +126,7 @@ const HistoryPembelian = () => {
                         {moment(item.tanggal_pembelian).format('DD-MMM-YYYY')}
                       </CTableDataCell>
                       <CTableDataCell>{item.quantity}</CTableDataCell>
-                      <CTableDataCell>{item.harga_per_unit}</CTableDataCell>
+                      <CTableDataCell>Rp {formatRibuan(item.harga_per_unit)}</CTableDataCell>
                       <CTableDataCell>{item.nama_supplier}</CTableDataCell>
                     </CTableRow>
                   ))}

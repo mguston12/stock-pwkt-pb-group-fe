@@ -275,9 +275,12 @@ const Request = () => {
             <CTable striped bordered hover responsive>
               <CTableHead>
                 <CTableRow>
-                  <CTableHeaderCell className="text-center">Kode Request</CTableHeaderCell>
+                  {/* <CTableHeaderCell className="text-center">Kode Request</CTableHeaderCell> */}
+                  {userID === 'admin' && (
+                    <CTableHeaderCell className="text-center">Stock Sparepart</CTableHeaderCell>
+                  )}
                   <CTableHeaderCell className="text-center">Request</CTableHeaderCell>
-                  <CTableHeaderCell className="text-center">Untuk</CTableHeaderCell>
+                  {/* <CTableHeaderCell className="text-center">Untuk</CTableHeaderCell> */}
                   <CTableHeaderCell className="text-center">Tanggal Request</CTableHeaderCell>
                   <CTableHeaderCell className="text-center">Tanggal Respon</CTableHeaderCell>
                   <CTableHeaderCell className="text-center">Status</CTableHeaderCell>
@@ -289,13 +292,18 @@ const Request = () => {
               <CTableBody>
                 {listRequest.map((item, index) => (
                   <CTableRow key={index} className="text-center">
-                    <CTableDataCell>{item.id_request}</CTableDataCell>
+                    {/* <CTableDataCell>{item.id_request}</CTableDataCell> */}
+                    {userID === 'admin' && (
+                      <CTableDataCell>
+                        {item.status_request === 'Request' ? <b>{item.stock_quantity}</b> : <b>-</b>}
+                      </CTableDataCell>
+                    )}
                     <CTableDataCell>
                       {item.nama_teknisi} - {item.quantity} {item.nama_sparepart}
                     </CTableDataCell>
-                    <CTableDataCell>
+                    {/* <CTableDataCell>
                       {item.nama_customer !== '' ? item.nama_customer : 'Persediaan'}
-                    </CTableDataCell>
+                    </CTableDataCell> */}
                     <CTableDataCell>
                       {moment(item.tanggal_request).format('DD MMM YYYY')}
                     </CTableDataCell>
@@ -324,7 +332,7 @@ const Request = () => {
                             className="btn btn-warning btn-sm text-white"
                             onClick={() => handleModal('Edit', item)}
                           >
-                            Ubah
+                            Proses
                           </CButton>
                         )}
                         {(item.status_request === 'Disetujui' ||

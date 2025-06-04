@@ -68,14 +68,14 @@ const DetailSupplier = () => {
 
   return (
     <>
-      {!supplierDetail && (
+      {supplierDetail === null && (
         <CCard>
           <CCardHeader style={{ fontSize: '20px', fontWeight: 'bold' }}>
             Tidak ada data yang ditemukan
           </CCardHeader>
         </CCard>
       )}
-      {supplierDetail.length !== 0 && (
+      {supplierDetail && supplierDetail.length !== 0 && (
         <>
           <CCard>
             <CCardHeader style={{ fontSize: '20px', fontWeight: 'bold' }}>
