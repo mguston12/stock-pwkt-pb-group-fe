@@ -152,7 +152,7 @@ const DetailMachine = () => {
                           {moment(item.tanggal_mulai).format('DD-MMM-YYYY')}
                         </CTableDataCell>
                         <CTableDataCell>
-                          {moment(item.tanggal_selesai).format('DD-MMM-YYYY')}
+                          {item.tanggal_selesai !== null ? moment(item.tanggal_selesai).format('DD-MMM-YYYY') : "Mesin Masih Aktif"}
                         </CTableDataCell>
                       </CTableRow>
                     ))}

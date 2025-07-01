@@ -159,7 +159,7 @@ const Machine = () => {
         setResponseMessage('Berhasil Tukar Mesin')
         setModalResponseIsOpen(true)
         setShowDeactivateModal(false)
-        GetMachines() // Memuat ulang daftar mesin
+        SearchMachine() // Memuat ulang daftar mesin
       })
       .catch((error) => {
         setIsLoading(false)
@@ -226,7 +226,7 @@ const Machine = () => {
         setResponseMessage('Berhasil Membuat Request Baru')
         setModalResponseIsOpen(true)
         setShowDeactivateModal(false)
-        GetMachines() // Memuat ulang daftar mesin
+        GetMachines() 
       })
       .catch((error) => {
         setIsLoading(false)
@@ -287,6 +287,7 @@ const Machine = () => {
     var obj = {
       id_machine: singleData.id_machine,
       tipe_machine: singleData.tipe_machine,
+      serial_number: singleData.serial_number,
       updated_by: userID,
     }
     var url = `${apiUrl}/machines/create`
@@ -369,6 +370,7 @@ const Machine = () => {
                   <CTableHeaderCell className="text-center">ID Mesin</CTableHeaderCell>
                   <CTableHeaderCell className="text-center">Tipe Mesin</CTableHeaderCell>
                   <CTableHeaderCell className="text-center">Customer</CTableHeaderCell>
+                  <CTableHeaderCell className="text-center">Serial Number</CTableHeaderCell>
                   <CTableHeaderCell className="text-center">Action</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
@@ -380,6 +382,7 @@ const Machine = () => {
                     <CTableDataCell>
                       {item.id_customer} - {item.nama_customer}
                     </CTableDataCell>
+                    <CTableDataCell>{item.serial_number}</CTableDataCell>
                     <CTableDataCell>
                       {/* {item.id_customer === 'N/A' && (
                         <CButton
@@ -523,6 +526,21 @@ const Machine = () => {
               <CFormInput
                 value={singleData.tipe_machine}
                 onChange={(e) => setSingleData({ ...singleData, tipe_machine: e.target.value })}
+              ></CFormInput>
+            </CCol>
+          </CRow>
+          <CRow className="mt-3">
+            <CCol>
+              <CForm>
+                <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
+                  Serial Number
+                </CFormLabel>
+              </CForm>
+            </CCol>
+            <CCol>
+              <CFormInput
+                value={singleData.serial_number}
+                onChange={(e) => setSingleData({ ...singleData, serial_number: e.target.value })}
               ></CFormInput>
             </CCol>
           </CRow>
