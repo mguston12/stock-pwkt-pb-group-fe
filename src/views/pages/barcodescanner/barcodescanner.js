@@ -176,7 +176,7 @@ const BarcodeScanner = () => {
                 muted
                 style={{
                   width: '100%',
-                  height: 'auto',
+                  height: '500px',
                   maxWidth: '500px',
                   margin: '0 auto',
                   objectFit: 'contain',

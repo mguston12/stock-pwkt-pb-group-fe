@@ -223,10 +223,10 @@ const Machine = () => {
         // Tanggapi respons dari server
 
         setResponseType(true)
-        setResponseMessage('Berhasil Membuat Request Baru')
+        setResponseMessage('Berhasil Membuat Non Aktif Mesin')
         setModalResponseIsOpen(true)
         setShowDeactivateModal(false)
-        GetMachines() 
+        SearchMachine() 
       })
       .catch((error) => {
         setIsLoading(false)
