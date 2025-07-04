@@ -127,40 +127,37 @@ const DetailMachine = () => {
           </CRow>
         </CCardHeader>
         <CCardBody>
-          {listHistory === null && (
-            <CCol style={{ textAlign: 'center' }}>Maaf Data Tidak Ditemukan</CCol>
-          )}
-          {listHistory !== null && listHistory.length >= 1 && (
-            <CCol>
-              {listPemakaian === null && (
-                <CCol style={{ textAlign: 'center' }}>Maaf Data Tidak Ditemukan</CCol>
-              )}
-              {listPemakaian !== null && (
-                <CTable striped bordered hover responsive>
-                  <CTableHead>
-                    <CTableRow>
-                      <CTableHeaderCell className="text-center">Nama Customer</CTableHeaderCell>
-                      <CTableHeaderCell className="text-center">Tanggal Mulai</CTableHeaderCell>
-                      <CTableHeaderCell className="text-center">Tanggal Selesai</CTableHeaderCell>
+          <CCol>
+            {listPemakaian === null && (
+              <CCol style={{ textAlign: 'center' }}>Maaf Data Tidak Ditemukan</CCol>
+            )}
+            {listPemakaian !== null && (
+              <CTable striped bordered hover responsive>
+                <CTableHead>
+                  <CTableRow>
+                    <CTableHeaderCell className="text-center">Nama Customer</CTableHeaderCell>
+                    <CTableHeaderCell className="text-center">Tanggal Mulai</CTableHeaderCell>
+                    <CTableHeaderCell className="text-center">Tanggal Selesai</CTableHeaderCell>
+                  </CTableRow>
+                </CTableHead>
+                <CTableBody>
+                  {listPemakaian.map((item, index) => (
+                    <CTableRow key={index} className="text-center">
+                      <CTableDataCell>{item.nama_customer}</CTableDataCell>
+                      <CTableDataCell>
+                        {moment(item.tanggal_mulai).format('DD-MMM-YYYY')}
+                      </CTableDataCell>
+                      <CTableDataCell>
+                        {item.tanggal_selesai !== null
+                          ? moment(item.tanggal_selesai).format('DD-MMM-YYYY')
+                          : 'Mesin Masih Aktif'}
+                      </CTableDataCell>
                     </CTableRow>
-                  </CTableHead>
-                  <CTableBody>
-                    {listPemakaian.map((item, index) => (
-                      <CTableRow key={index} className="text-center">
-                        <CTableDataCell>{item.nama_customer}</CTableDataCell>
-                        <CTableDataCell>
-                          {moment(item.tanggal_mulai).format('DD-MMM-YYYY')}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {item.tanggal_selesai !== null ? moment(item.tanggal_selesai).format('DD-MMM-YYYY') : "Mesin Masih Aktif"}
-                        </CTableDataCell>
-                      </CTableRow>
-                    ))}
-                  </CTableBody>
-                </CTable>
-              )}
-            </CCol>
-          )}
+                  ))}
+                </CTableBody>
+              </CTable>
+            )}
+          </CCol>
         </CCardBody>
       </CCard>
       <CCard style={{ marginTop: '20px' }}>
