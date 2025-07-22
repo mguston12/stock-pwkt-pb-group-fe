@@ -178,8 +178,7 @@ const Customer = () => {
     setModalEditIsOpen(false)
     setIsLoading(true)
     var obj = {
-      id_customer: singleData.id_customer,
-      id_company: singleData.id_company,
+      company_id: parseInt(singleData.id_company),
       nama_customer: singleData.nama_customer,
       alamat: singleData.alamat,
       updated_by: userID,
@@ -331,7 +330,7 @@ const Customer = () => {
             Tambah Customer
           </CFormLabel>
           <hr />
-          <CRow className="mt-3">
+          {/* <CRow className="mt-3">
             <CCol>
               <CForm>
                 <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
@@ -345,7 +344,7 @@ const Customer = () => {
                 onChange={(e) => setSingleData({ ...singleData, id_customer: e.target.value })}
               ></CFormInput>
             </CCol>
-          </CRow>
+          </CRow> */}
           <CRow className="mt-3">
             <CCol>
               <CForm>
