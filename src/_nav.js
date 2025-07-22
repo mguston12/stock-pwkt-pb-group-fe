@@ -66,13 +66,13 @@ const _nav = [
     icon: <CIcon icon={cilPrint} customClassName="nav-icon" />,
     hidden: !isAdmin(),
   },
-  {
-    component: CNavItem,
-    name: 'Penggunaan Sparepart',
-    to: '/sparepart-usage',
-    icon: <CIcon icon={cilTask} customClassName="nav-icon" />,
-    hidden: isAdmin(),
-  },
+  // {
+  //   component: CNavItem,
+  //   name: 'Penggunaan Sparepart',
+  //   to: '/sparepart-usage',
+  //   icon: <CIcon icon={cilTask} customClassName="nav-icon" />,
+  //   hidden: isAdmin(),
+  // },
   {
     component: CNavItem,
     name: 'Persediaan',
