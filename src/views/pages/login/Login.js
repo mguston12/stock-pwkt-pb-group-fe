@@ -53,8 +53,11 @@ const Login = () => {
       sessionStorage.setItem('user', payload.username)
       sessionStorage.setItem('role', payload.role)
       sessionStorage.setItem('isLoggedIn', true)
-
-      window.location.replace('/request')
+      if (username === 'admin') {
+        window.location.replace('/request')
+      } else {
+        window.location.replace('/dashboard')
+      }
     } catch (error) {
       toast.error(error.message)
     } finally {

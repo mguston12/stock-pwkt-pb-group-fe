@@ -4,22 +4,31 @@ import { Link } from 'react-router-dom'
 const Dashboard = () => {
   const baseBoxStyle = {
     display: 'flex',
+    flexDirection: 'column', // gambar di atas, teks di bawah
     alignItems: 'center',
     justifyContent: 'center',
     height: '150px',
     borderRadius: '8px',
-    fontSize: '18px',
+    fontSize: '16px',
     fontWeight: 'bold',
     textDecoration: 'none',
     color: 'white',
+    padding: '10px',
+    textAlign: 'center',
   }
 
   const boxStyles = [
-    { ...baseBoxStyle, backgroundColor: '#1d78b6ff' }, // Biru
-    { ...baseBoxStyle, backgroundColor: '#27ae60' }, // Hijau
-    { ...baseBoxStyle, backgroundColor: '#f31212ff' }, // Orange
-    { ...baseBoxStyle, backgroundColor: '#0a07acff' }, // Abu
+    { ...baseBoxStyle, backgroundColor: 'rgba(95,199,208,255)' }, // 
+    { ...baseBoxStyle, backgroundColor: '#544336' }, // 
+    { ...baseBoxStyle, backgroundColor: '#f38612ff' }, // Merah
+    { ...baseBoxStyle, backgroundColor: '#7350f1ff' }, // Biru tua
   ]
+
+  const iconStyle = {
+    width: '55px',
+    height: '55px',
+    marginBottom: '10px',
+  }
 
   return (
     <div style={{ padding: '20px' }}>
@@ -32,19 +41,23 @@ const Dashboard = () => {
         }}
       >
         <Link to="/barcodescanner" style={boxStyles[0]}>
-          Scan Barcode (Ganti Sparepart)
+          <img src="/scan-barcode.jpg" alt="Scan Barcode" style={iconStyle} />
+          Scan Barcode<br />(Ganti Sparepart)
         </Link>
 
         <Link to="/inventory" style={boxStyles[1]}>
-          Persediaan (Sparepart di Tas)
+          <img src="/Inventory.png" alt="Persediaan" style={iconStyle} />
+          Persediaan<br />(Sparepart di Tas)
         </Link>
 
         <Link to="/request" style={boxStyles[2]}>
-          Request (Sparepart dari Gudang)
+          <img src="/request.png" alt="Request" style={iconStyle} />
+          Request<br />(Sparepart dari Gudang)
         </Link>
 
-         <Link to="/sparepart-return" style={boxStyles[3]}>
-          Retur / Pengembalian (Sparepart)
+        <Link to="/sparepart-return" style={boxStyles[3]}>
+          <img src="/retur.png" alt="Retur" style={iconStyle} />
+          Retur / Pengembalian<br />(Sparepart)
         </Link>
       </div>
     </div>
