@@ -4,7 +4,6 @@ import {
   cilDescription,
   cilPeople,
   cilPrint,
-  // cilHome,
   cilPaintBucket,
   cilWalk,
   cilQrCode,
@@ -14,6 +13,7 @@ import {
   cilBasket,
   cilBellExclamation,
   cilMoodVeryGood,
+  cilHome,
 } from '@coreui/icons'
 import { CNavItem } from '@coreui/react'
 
@@ -43,6 +43,13 @@ const _nav = [
     name: 'Barcode Scanner',
     to: '/barcodescanner',
     icon: <CIcon icon={cilQrCode} customClassName="nav-icon" />,
+    hidden: isAdmin(),
+  },
+  {
+    component: CNavItem,
+    name: 'Halaman Awal',
+    to: '/dashboard',
+    icon: <CIcon icon={cilHome} customClassName="nav-icon" />,
     hidden: isAdmin(),
   },
   {

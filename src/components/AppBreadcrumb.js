@@ -8,6 +8,8 @@ import { CBreadcrumb, CBreadcrumbItem } from '@coreui/react'
 const AppBreadcrumb = () => {
   const currentLocation = useLocation().pathname
 
+  const role = sessionStorage.getItem('role')
+
   const getRouteName = (pathname, routes) => {
     const currentRoute = routes.find((route) => route.path === pathname)
     return currentRoute ? currentRoute.name : false
@@ -33,7 +35,8 @@ const AppBreadcrumb = () => {
 
   return (
     <CBreadcrumb className="my-0">
-      <CBreadcrumbItem href="/request">Home</CBreadcrumbItem>
+      {role === 'admin' && <CBreadcrumbItem href="/request">Home</CBreadcrumbItem>}
+      {role === 'teknisi' && <CBreadcrumbItem href="/dashboard">Home</CBreadcrumbItem>}
       {breadcrumbs.map((breadcrumb, index) => {
         return (
           <CBreadcrumbItem

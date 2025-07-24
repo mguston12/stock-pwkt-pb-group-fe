@@ -13,6 +13,7 @@ const Register = React.lazy(() => import('./views/pages/register/Register'))
 const Page404 = React.lazy(() => import('./views/pages/page404/Page404'))
 const Page500 = React.lazy(() => import('./views/pages/page500/Page500'))
 const SetPassword = React.lazy(() => import('./views/pages/setpassword/SetPassword'))
+const Dashboard = React.lazy(() => import('./views/pages/dashboard/Dashboard'))
 
 const App = () => {
   const storedTheme = useSelector((state) => state.theme)
@@ -41,7 +42,7 @@ const App = () => {
             </>
           ) : (
             <>
-              <Route path="/*" element={<DefaultLayout />} />
+              <Route path="/*" element={<DefaultLayout  />} />
             </>
           )}
         </Routes>

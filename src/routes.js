@@ -37,9 +37,11 @@ const Inventory = React.lazy(() => import('./views/pages/inventory/Inventory'))
 const Supplier = React.lazy(() => import('./views/pages/supplier/Supplier'))
 const DetailSupplier = React.lazy(() => import('./views/pages/supplier/DetailSupplier'))
 
+const Dashboard = React.lazy(() => import('./views/pages/dashboard/Dashboard'))
+
 const routes = [
-  { path: '/request', exact: true, name: 'Home' },
-  // { path: '/dashboard', name: 'Dashboard', element: Dashboard, exact: true },
+  { path: '/request', exact: true, name: 'Request' },
+  { path: '/dashboard', name: 'Dashboard', element: Dashboard, exact: true },
 
   { path: '/machine', name: 'Machine', element: Machine, exact: true },
   {

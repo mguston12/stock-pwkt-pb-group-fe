@@ -168,7 +168,7 @@ const BarcodeScanner = () => {
       ) : (
         <div>
           {isCameraReady ? (
-            <div>
+            <div style={{ width: '100%', maxWidth: '600px', margin: '0 auto' }}>
               <video
                 ref={videoRef}
                 autoPlay
@@ -176,10 +176,11 @@ const BarcodeScanner = () => {
                 muted
                 style={{
                   width: '100%',
-                  height: '500px',
-                  maxWidth: '500px',
+                  height: '300px',
+                  maxWidth: '100%',
                   margin: '0 auto',
-                  objectFit: 'contain',
+                  objectFit: 'cover',
+                  display: 'block',
                 }}
               />
               <button
