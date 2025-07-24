@@ -35,8 +35,8 @@ const AppBreadcrumb = () => {
 
   return (
     <CBreadcrumb className="my-0">
-      {role === 'admin' && <CBreadcrumbItem href="/request">Home</CBreadcrumbItem>}
-      {role === 'teknisi' && <CBreadcrumbItem href="/dashboard">Home</CBreadcrumbItem>}
+      {role === 'admin' && <CBreadcrumbItem href="/request">Halaman Utama</CBreadcrumbItem>}
+      {role === 'teknisi' && <CBreadcrumbItem href="/dashboard">Halaman Utama</CBreadcrumbItem>}
       {breadcrumbs.map((breadcrumb, index) => {
         return (
           <CBreadcrumbItem
