@@ -45,6 +45,11 @@ const AppHeader = () => {
   }, [])
 
   useEffect(() => {
+  setColorMode('light')
+}, [setColorMode])
+
+
+  useEffect(() => {
     if (sessionStorage.getItem('PT')) {
       setSelectedCompany(JSON.parse(decodeURIComponent(sessionStorage.getItem('PT'))))
     }
@@ -74,7 +79,7 @@ const AppHeader = () => {
           <li className="nav-item py-1">
             <div className="vr h-100 mx-2 text-body text-opacity-75"></div>
           </li>
-          <CDropdown variant="nav-item" placement="bottom-end">
+          {/* <CDropdown variant="nav-item" placement="bottom-end">
             <CDropdownToggle caret={false}>
               {colorMode === 'dark' ? (
                 <CIcon icon={cilMoon} size="lg" />
@@ -113,7 +118,7 @@ const AppHeader = () => {
                 <CIcon className="me-2" icon={cilContrast} size="lg" /> Auto
               </CDropdownItem>
             </CDropdownMenu>
-          </CDropdown>
+          </CDropdown> */}
           <li className="nav-item py-1">
             <div className="vr h-100 mx-2 text-body text-opacity-75"></div>
           </li>

@@ -176,7 +176,35 @@ const SparepartUsageAfterScan = () => {
                 </CRow>
                 {machineDetail && (
                   <CCol>
-                    <CRow className="mt-3">
+                    <CRow className="mt-1">
+                      <CCol>
+                        <CForm>
+                          <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
+                            Nama Customer
+                          </CFormLabel>
+                        </CForm>
+                      </CCol>
+                    </CRow>
+                    <CRow>
+                      <CCol>
+                        <CFormInput disabled value={machineDetail.nama_customer}></CFormInput>
+                      </CCol>
+                    </CRow>
+                    <CRow className="mt-1">
+                      <CCol>
+                        <CForm>
+                          <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
+                            Alamat
+                          </CFormLabel>
+                        </CForm>
+                      </CCol>
+                    </CRow>
+                    <CRow>
+                      <CCol>
+                        <CFormInput disabled value={machineDetail.alamat}></CFormInput>
+                      </CCol>
+                    </CRow>
+                    <CRow className="mt-1">
                       <CCol>
                         <CForm>
                           <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
@@ -256,7 +284,7 @@ const SparepartUsageAfterScan = () => {
                         ></CFormInput>
                       </CCol>
                     </CRow>
-                    <CRow className="mt-3">
+                    <CRow className="mt-1">
                       <CCol>
                         <CForm>
                           <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
@@ -284,16 +312,18 @@ const SparepartUsageAfterScan = () => {
             </CCardBody>
             <CCardFooter>
               <CRow className="justify-content-center">
-                <CCol xs="auto">
-                  <CButton
-                    type="button"
-                    color="info"
-                    className="text-white"
-                    onClick={() => GetDataMachine('search')}
-                  >
-                    Cari Mesin
-                  </CButton>
-                </CCol>
+                {!machineDetail && (
+                  <CCol xs="auto">
+                    <CButton
+                      type="button"
+                      color="info"
+                      className="text-white"
+                      onClick={() => GetDataMachine('search')}
+                    >
+                      Cari Mesin
+                    </CButton>
+                  </CCol>
+                )}
                 {machineDetail && (
                   <CCol xs="auto">
                     <CButton

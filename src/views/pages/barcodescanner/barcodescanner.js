@@ -138,6 +138,13 @@ const BarcodeScanner = () => {
     setIsScanning((prev) => !prev)
   }
 
+  useEffect(() => {
+  if (isCameraReady && !isScanning) {
+    setIsScanning(true)
+  }
+}, [isCameraReady])
+
+
   return (
     <div style={{ textAlign: 'center', marginTop: '20px' }}>
       <h1>Scan Barcode</h1>
@@ -183,12 +190,12 @@ const BarcodeScanner = () => {
                   display: 'block',
                 }}
               />
-              <button
+              {/* <button
                 onClick={toggleScanning}
                 style={{ marginTop: '10px', padding: '10px', fontSize: '16px' }}
               >
                 {isScanning ? 'Stop Scanning' : 'Start Scanning'}
-              </button>
+              </button> */}
             </div>
           ) : (
             <p>Loading Camera...</p>
