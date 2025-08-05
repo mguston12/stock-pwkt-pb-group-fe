@@ -74,6 +74,8 @@ const Request = () => {
   useEffect(() => {
     if (userID !== 'admin') {
       SearchRequest()
+    } else if (inputSearch !== '') {
+      SearchRequest()
     } else {
       SearchRequestAdmin()
     }
@@ -107,8 +109,7 @@ const Request = () => {
 
   const SearchRequest = () => {
     setIsLoading(true)
-
-    const url = `${apiUrl}/requests?keyword=${userID}&status=${status}&page=${currentPage}&length=${itemsPerPage}`
+    const url = `${apiUrl}/requests?keyword=${inputSearch}&status=${status}&page=${currentPage}&length=${itemsPerPage}`
 
     axios
       .get(url, {
@@ -210,6 +211,13 @@ const Request = () => {
       })
   }
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      setCurrentPage(1)
+      SearchRequest()
+    }
+  }
+
   return (
     <CCard>
       <CCardHeader style={{ fontSize: '20px', fontWeight: 'bold' }}>
@@ -223,6 +231,24 @@ const Request = () => {
             </CCol>
           )}
         </CRow>
+        {userID === 'admin' && (
+          <CRow className="mt-3">
+            <CCol md={10}>
+              <CFormInput
+                placeholder="Input Nama Teknisi lalu Tekan Enter atau Tekan Cari"
+                style={{ display: 'inline' }}
+                value={inputSearch}
+                onChange={(e) => setInputSearch(e.target.value)}
+                onKeyDown={handleKeyDown}
+              />
+            </CCol>
+            <CCol className="d-grid gap-2" md={2}>
+              <CButton className="btn-block text-white" color="info" onClick={SearchRequest}>
+                Cari
+              </CButton>
+            </CCol>
+          </CRow>
+        )}
         <CRow className="mt-3">
           <CCol>
             <CNav variant="tabs" className="d-flex w-100">
@@ -295,7 +321,11 @@ const Request = () => {
                     {/* <CTableDataCell>{item.id_request}</CTableDataCell> */}
                     {userID === 'admin' && (
                       <CTableDataCell>
-                        {item.status_request === 'Request' ? <b>{item.stock_quantity}</b> : <b>-</b>}
+                        {item.status_request === 'Request' ? (
+                          <b>{item.stock_quantity}</b>
+                        ) : (
+                          <b>-</b>
+                        )}
                       </CTableDataCell>
                     )}
                     <CTableDataCell>

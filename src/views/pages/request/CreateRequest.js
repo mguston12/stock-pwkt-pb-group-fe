@@ -229,6 +229,12 @@ const CreateRequest = () => {
                     onChange={(e) => setSelectedSparepart(e)}
                     isSearchable={true}
                     placeholder="Tekan dan Pilih Sparepart..."
+                    filterOption={(option, inputValue) => {
+                      const label = option.label.toLowerCase()
+                      const terms = inputValue.toLowerCase().split(' ')
+
+                      return terms.every((term) => label.includes(term))
+                    }}
                   />
                 </CForm>
               </CCol>
