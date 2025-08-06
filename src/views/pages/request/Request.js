@@ -72,9 +72,9 @@ const Request = () => {
   const [responseType, setResponseType] = useState(false)
 
   useEffect(() => {
-    if (userID !== 'admin') {
-      SearchRequest()
-    } else if (inputSearch !== '') {
+    if (userID !== '' && userID !== 'admin') {
+      SearchRequestTeknisi()
+    } else if (userID !== '' && userID !== 'admin' && inputSearch !== '') {
       SearchRequest()
     } else {
       SearchRequestAdmin()
@@ -110,7 +110,7 @@ const Request = () => {
   const SearchRequest = () => {
     setIsLoading(true)
     const url = `${apiUrl}/requests?keyword=${inputSearch}&status=${status}&page=${currentPage}&length=${itemsPerPage}`
-
+    
     axios
       .get(url, {
         headers: {
@@ -131,6 +131,32 @@ const Request = () => {
         setTotalPage(1)
       })
   }
+
+   const SearchRequestTeknisi = () => {
+    setIsLoading(true)
+    const url = `${apiUrl}/requests?keyword=${userID}&status=${status}&page=${currentPage}&length=${itemsPerPage}`
+    
+    axios
+      .get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        const { data, metadata } = response.data
+        setListRequest(data || [])
+        setTotalPage(metadata || 1)
+        setIsLoading(false)
+      })
+      .catch((error) => {
+        console.error(error)
+        alert('Error searching machines: ' + error.message)
+        setIsLoading(false)
+        setListRequest([])
+        setTotalPage(1)
+      })
+  }
+
 
   const handlePageChange = (newPage) => {
     if (newPage < 1 || newPage > totalPage) return // Prevent out-of-bounds page numbers
