@@ -46,6 +46,87 @@ const CreateRequest = () => {
 
   const [selectedSparepart, setSelectedSparepart] = useState('')
   const [listSparepart, setListSparepart] = useState([])
+  const [sparepartList, setSparepartList] = useState([])
+
+  function addSparepartToList() {
+    if (!selectedSparepart || quantity < 1) return
+
+    const idSparepart = selectedSparepart.value.id_sparepart
+    const namaSparepart = selectedSparepart.value.nama_sparepart
+    const qtyToAdd = parseInt(quantity)
+
+    setSparepartList((prevList) => {
+      const index = prevList.findIndex((item) => item.id_sparepart === idSparepart)
+
+      if (index !== -1) {
+        // Jika sudah ada, tambahkan quantity
+        const updatedList = [...prevList]
+        updatedList[index].quantity += qtyToAdd
+        return updatedList
+      }
+
+      // Jika belum ada, tambahkan sebagai item baru
+      return [
+        ...prevList,
+        {
+          id_sparepart: idSparepart,
+          nama_sparepart: namaSparepart,
+          quantity: qtyToAdd,
+        },
+      ]
+    })
+
+    setSelectedSparepart('')
+    setQuantity(1)
+  }
+
+  function removeSparepart(index) {
+    const newList = [...sparepartList]
+    newList.splice(index, 1)
+    setSparepartList(newList)
+  }
+
+  function submitAllRequests() {
+    if (sparepartList.length === 0) {
+      alert('Daftar sparepart kosong.')
+      return
+    }
+
+    setIsLoading(true)
+
+    const requests = sparepartList.map((item) => ({
+      id_teknisi: userID,
+      id_mesin: '', // bisa disesuaikan kalau mesin dipilih
+      id_sparepart: item.id_sparepart,
+      quantity: item.quantity,
+      status_request: 'Request',
+      updated_by: userID,
+    }))
+
+    axios
+      .post(`${apiUrl}/requests/batch`, requests, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        if (response.data.error?.status) {
+          setResponseType(false)
+          setResponseMessage(response.data.error.msg)
+        } else {
+          setResponseType(true)
+          setResponseMessage('Berhasil Mengirim Semua Request')
+        }
+        setIsLoading(false)
+        setModalResponseIsOpen(true)
+      })
+      .catch((error) => {
+        setIsLoading(false)
+        setResponseType(false)
+        setResponseMessage(error.message)
+        setModalResponseIsOpen(true)
+      })
+  }
 
   // useEffect(() => {
   //   GetListCustomer()
@@ -253,6 +334,54 @@ const CreateRequest = () => {
               </CForm>
             </CRow>
           )}
+          <CRow className="mt-3 text-center">
+            <CCol md={12}>
+              <CButton
+                className="text-white"
+                color="info"
+                onClick={addSparepartToList}
+                disabled={!selectedSparepart}
+              >
+                Tambah ke Daftar
+              </CButton>
+            </CCol>
+          </CRow>
+          {sparepartList.length > 0 && (
+            <CRow className="mt-4 text-center">
+              <CCol>
+                <table className="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>No</th>
+                      <th>Nama Sparepart</th>
+                      <th>Jumlah</th>
+                      <th>Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sparepartList.map((item, index) => (
+                      <tr key={index}>
+                        <td>{index + 1}</td>
+                        <td>{item.nama_sparepart}</td>
+                        <td>{item.quantity}</td>
+                        <td>
+                          <CButton
+                            className="text-white"
+                            color="danger"
+                            size="sm"
+                            onClick={() => removeSparepart(index)}
+                          >
+                            Hapus
+                          </CButton>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </CCol>
+            </CRow>
+          )}
+
           {/* {selectedSparepart.length !== 0 && selectedCustomer.value.id_customer !== 'Inventory' && (
             <CRow className="mt-3">
               <CForm>
@@ -270,7 +399,18 @@ const CreateRequest = () => {
           )} */}
         </CCardBody>
         <CCardFooter>
-          <CRow>
+          <CCol md={12}>
+            <CButton
+              className="btn btn-success text-white"
+              style={{ width: '100%', display: 'block' }}
+              onClick={submitAllRequests}
+              hidden={sparepartList.length === 0}
+            >
+              Kirim Request
+            </CButton>
+          </CCol>
+
+          {/* <CRow>
             <CCol md={4}></CCol>
             <CCol md={4}>
               <CButton
@@ -283,7 +423,7 @@ const CreateRequest = () => {
               </CButton>
             </CCol>
             <CCol md={4}></CCol>
-          </CRow>
+          </CRow> */}
         </CCardFooter>
       </CCard>
 

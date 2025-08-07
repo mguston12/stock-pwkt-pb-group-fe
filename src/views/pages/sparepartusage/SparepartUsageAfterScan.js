@@ -39,8 +39,14 @@ const SparepartUsageAfterScan = () => {
   const [responseMessage, setResponseMessage] = useState('')
   const [responseType, setResponseType] = useState(false)
 
+  const [usageList, setUsageList] = useState([])
+
   const userID = sessionStorage.getItem('user')
   let { id_machine } = useParams()
+
+  const [quantity, setQuantity] = useState(1)
+  const [quantityErrorModalOpen, setQuantityErrorModalOpen] = useState(false)
+  const [quantityErrorMessage, setQuantityErrorMessage] = useState('')
 
   useEffect(() => {
     if (machineDetail !== '' || machineDetail !== undefined) {
@@ -138,6 +144,83 @@ const SparepartUsageAfterScan = () => {
           setResponseMessage('Berhasil Memakai Sparepart')
           setModalResponseIsOpen(true)
         }
+      })
+      .catch((error) => {
+        setIsLoading(false)
+        setModalResponseIsOpen(true)
+        setResponseType(false)
+        setResponseMessage(error.message)
+      })
+  }
+
+  const addSparepartToUsageList = () => {
+    if (!selectedInventory || quantity < 1) return
+
+    const inventory = selectedInventory.value
+    const existsIndex = usageList.findIndex((item) => item.id_inventory === inventory.id_inventory)
+
+    if (existsIndex !== -1) {
+      const existingItem = usageList[existsIndex]
+      const total = existingItem.quantity + quantity
+
+      if (total > inventory.quantity) {
+        setQuantityErrorMessage('Jumlah melebihi persediaan yang tersedia di tas Anda.')
+        setQuantityErrorModalOpen(true)
+
+        return
+      }
+
+      const updatedList = [...usageList]
+      updatedList[existsIndex].quantity = total
+      setUsageList(updatedList)
+    } else {
+      const newItem = {
+        id_inventory: inventory.id_inventory,
+        id_machine: machineDetail.id_machine,
+        id_sparepart: inventory.id_sparepart,
+        nama_sparepart: inventory.nama_sparepart,
+        quantity: quantity,
+        counter: parseInt(counter) || 0,
+        counter_colour: parseInt(counterColour) || 0,
+        counter_colour_a3: parseInt(counterColourA3) || 0,
+        updated_by: userID,
+      }
+      setUsageList((prev) => [...prev, newItem])
+    }
+
+    // Reset input
+    setSelectedInventory('')
+    setQuantity(1)
+  }
+
+  const removeSparepart = (indexToRemove) => {
+    setUsageList((prev) => prev.filter((_, index) => index !== indexToRemove))
+  }
+
+  function UseSparepart() {
+    if (usageList.length === 0) return
+
+    setIsLoading(true)
+    const url = `${apiUrl}/inventory/usage-batch` // pastikan endpoint sesuai
+
+    axios
+      .post(url, usageList, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setIsLoading(false)
+        const { error } = response.data
+        if (error?.status) {
+          setResponseType(false)
+          setResponseMessage(error.msg)
+        } else {
+          setResponseType(true)
+          setResponseMessage('Berhasil Memakai Sparepart')
+          setUsageList([])
+        }
+        setModalResponseIsOpen(true)
       })
       .catch((error) => {
         setIsLoading(false)
@@ -304,8 +387,79 @@ const SparepartUsageAfterScan = () => {
                           isSearchable={true}
                           placeholder="Tekan dan Pilih Sparepart..."
                         />
+                        {selectedInventory && (
+                          <CRow className="mt-2">
+                            <CCol>
+                              <CFormLabel style={{ fontWeight: 'bold' }}>
+                                Jumlah yang Dipakai
+                              </CFormLabel>
+                              <CFormInput
+                                type="number"
+                                min="1"
+                                max={selectedInventory.value.quantity} // batasi sesuai stok
+                                value={quantity}
+                                onChange={(e) => {
+                                  const val = parseInt(e.target.value)
+                                  if (val > selectedInventory.value.quantity) {
+                                    alert('Jumlah melebihi stok tersedia')
+                                    return
+                                  }
+                                  setQuantity(val)
+                                }}
+                              />
+                              <p style={{ fontSize: '12px', color: 'gray' }}>
+                                Maksimal tersedia: {selectedInventory.value.quantity}
+                              </p>
+                            </CCol>
+                          </CRow>
+                        )}
                       </CCol>
                     </CRow>
+                    <CRow className="mt-2 text-center">
+                      <CCol>
+                        <CButton
+                          color="primary"
+                          className="text-white"
+                          onClick={addSparepartToUsageList}
+                          disabled={!selectedInventory}
+                        >
+                          Tambahkan ke Daftar
+                        </CButton>
+                      </CCol>
+                    </CRow>
+                    {usageList.length > 0 && (
+                      <CRow className="mt-3">
+                        <CCol>
+                          <table className="text-center table table-bordered">
+                            <thead>
+                              <tr>
+                                <th>Nama Sparepart</th>
+                                <th>Jumlah</th>
+                                <th>Aksi</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {usageList.map((item, index) => (
+                                <tr key={index}>
+                                  <td>{item.nama_sparepart}</td>
+                                  <td>{item.quantity}</td>
+                                  <td>
+                                    <CButton
+                                      className="text-white"
+                                      color="danger"
+                                      size="sm"
+                                      onClick={() => removeSparepart(index)}
+                                    >
+                                      Hapus
+                                    </CButton>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </CCol>
+                      </CRow>
+                    )}
                   </CCol>
                 )}
               </CCol>
@@ -326,12 +480,21 @@ const SparepartUsageAfterScan = () => {
                 )}
                 {machineDetail && (
                   <CCol xs="auto">
-                    <CButton
+                    {/* <CButton
                       type="button"
                       color="success"
                       className="text-white"
                       onClick={() => UseSparepart()}
                       disabled={selectedInventory === '' || counter === ''}
+                    >
+                      Gunakan
+                    </CButton> */}
+                    <CButton
+                      type="button"
+                      color="success"
+                      className="text-white"
+                      onClick={() => UseSparepart()}
+                      disabled={usageList.length === 0 || counter === ''}
                     >
                       Gunakan
                     </CButton>
@@ -407,6 +570,28 @@ const SparepartUsageAfterScan = () => {
         </CModalFooter>
       </CModal>
       {/* MODAL RESPONSE */}
+      <CModal
+        size="sm"
+        alignment="center"
+        visible={quantityErrorModalOpen}
+        onClose={() => setQuantityErrorModalOpen(false)}
+      >
+        <CModalBody style={{ justifyContent: 'center', textAlign: 'center' }}>
+          <CFormLabel style={{ fontWeight: 'bold', fontSize: '18px' }}>
+            {quantityErrorMessage}
+          </CFormLabel>
+          <CIcon icon={cilXCircle} style={{ color: 'red', width: '3rem', height: '3rem' }} />
+        </CModalBody>
+        <CModalFooter style={{ justifyContent: 'center' }}>
+          <CButton
+            color="danger"
+            className="text-white"
+            onClick={() => setQuantityErrorModalOpen(false)}
+          >
+            Tutup
+          </CButton>
+        </CModalFooter>
+      </CModal>
     </>
   )
 }
