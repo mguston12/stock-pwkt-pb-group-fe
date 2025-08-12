@@ -74,7 +74,7 @@ const Request = () => {
   useEffect(() => {
     if (userID !== '' && userID !== 'admin') {
       SearchRequestTeknisi()
-    } else if (userID !== '' && userID !== 'admin' && inputSearch !== '') {
+    } else if (userID !== '' && inputSearch !== '') {
       SearchRequest()
     } else {
       SearchRequestAdmin()
