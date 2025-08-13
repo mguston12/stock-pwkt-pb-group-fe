@@ -11,6 +11,10 @@ const SparepartUsageAfterScan = React.lazy(
   () => import('./views/pages/sparepartusage/SparepartUsageAfterScan'),
 )
 const SparepartHistory = React.lazy(() => import('./views/pages/spareparthistory/SparepartHistory'))
+const SparepartHistoryTeknisi = React.lazy(
+  () => import('./views/pages/spareparthistory/SparepartHistoryTeknisi'),
+)
+
 const SparepartPurchase = React.lazy(() => import('./views/pages/sparepart/HistoryPembelian'))
 const SparepartReturn = React.lazy(() => import('./views/pages/sparepartreturn/SparepartReturn'))
 const AdminReturSparepart = React.lazy(
@@ -27,6 +31,9 @@ const Customer = React.lazy(() => import('./views/pages/customer/Customer'))
 const CreateCustomer = React.lazy(() => import('./views/pages/customer/CreateCustomer'))
 
 const BarcodeScanner = React.lazy(() => import('./views/pages/barcodescanner/barcodescanner'))
+const BarcodeScannerVisit = React.lazy(
+  () => import('./views/pages/barcodescanner/barcodescannervisit'),
+)
 
 const SetPassword = React.lazy(() => import('./views/pages/setpassword/SetPassword'))
 
@@ -38,6 +45,8 @@ const Supplier = React.lazy(() => import('./views/pages/supplier/Supplier'))
 const DetailSupplier = React.lazy(() => import('./views/pages/supplier/DetailSupplier'))
 
 const Dashboard = React.lazy(() => import('./views/pages/dashboard/Dashboard'))
+
+const Visit = React.lazy(() => import('./views/pages/visit/Visit'))
 
 const routes = [
   { path: '/request', exact: true, name: 'Request' },
@@ -84,6 +93,12 @@ const routes = [
     element: SparepartHistory,
     exact: true,
   },
+  {
+    path: '/sparepart-history-teknisi',
+    name: 'History Penggunaan Sparepart',
+    element: SparepartHistoryTeknisi,
+    exact: true,
+  },
 
   { path: '/request', name: 'Request', element: Request, exact: true },
   { path: '/request/create', name: 'Buat Request Baru', element: CreateRequest, exact: true },
@@ -94,6 +109,7 @@ const routes = [
   { path: '/teknisi', name: 'Teknisi', element: Teknisi, exact: true },
 
   { path: '/inventory', name: 'Persediaan', element: Inventory, exact: true },
+  { path: '/visit/:id_machine', name: 'Visit', element: Visit, exact: true },
 
   {
     path: '/setpassword/:usernames',
@@ -119,6 +135,12 @@ const routes = [
   },
 
   { path: '/barcodescanner', name: 'BarcodeScanner', element: BarcodeScanner, exact: true },
+  {
+    path: '/barcodescannervisit',
+    name: 'BarcodeScannerVisit',
+    element: BarcodeScannerVisit,
+    exact: true,
+  },
 ]
 
 export default routes

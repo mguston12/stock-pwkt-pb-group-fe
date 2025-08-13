@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { BrowserMultiFormatReader, NotFoundException } from '@zxing/library'
 import { Link } from 'react-router-dom'
 
-const BarcodeScanner = () => {
+const BarcodeScannerVisit = () => {
   const [barcodeData, setBarcodeData] = useState(null)
   const [isCameraReady, setIsCameraReady] = useState(false)
   const [facingMode, setFacingMode] = useState('environment') // Default to back camera
@@ -122,13 +122,6 @@ const BarcodeScanner = () => {
     setIsScanning((prev) => !prev)
   }
 
-//   useEffect(() => {
-//   if (isCameraReady && !isScanning) {
-//     setIsScanning(true)
-//   }
-// }, [isCameraReady])
-
-
   return (
     <div style={{ textAlign: 'center', marginTop: '20px' }}>
       <h1>Scan Barcode</h1>
@@ -150,7 +143,7 @@ const BarcodeScanner = () => {
         >
           <h3>Scanned Data:</h3>
           <Link
-            to={`/sparepart-usage/${barcodeData}`}
+            to={`/visit/${barcodeData}`}
             className="btn btn-warning btn-sm text-white"
           >
             {barcodeData}
@@ -190,4 +183,4 @@ const BarcodeScanner = () => {
   )
 }
 
-export default BarcodeScanner
+export default BarcodeScannerVisit

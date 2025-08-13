@@ -2,6 +2,8 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 const Dashboard = () => {
+  const userID = sessionStorage.getItem('user')
+
   const baseBoxStyle = {
     display: 'flex',
     flexDirection: 'column',
@@ -21,9 +23,11 @@ const Dashboard = () => {
 
   const boxStyles = [
     { ...baseBoxStyle, backgroundColor: 'rgba(95,199,208,255)' }, //
-    { ...baseBoxStyle, backgroundColor: '#544336' }, //
-    { ...baseBoxStyle, backgroundColor: '#f38612ff' }, // Merah
-    { ...baseBoxStyle, backgroundColor: '#7350f1ff' }, // Biru tua
+    { ...baseBoxStyle, backgroundColor: '#544336' },
+    { ...baseBoxStyle, backgroundColor: '#f38612ff' },
+    { ...baseBoxStyle, backgroundColor: '#7350f1ff' },
+    { ...baseBoxStyle, backgroundColor: '#47d574ff' },
+    { ...baseBoxStyle, backgroundColor: '#e43e3eff' },
   ]
 
   const iconStyle = {
@@ -69,6 +73,22 @@ const Dashboard = () => {
           <br />
           (Sparepart)
         </Link>
+
+        <Link to="/sparepart-history-teknisi" style={boxStyles[4]}>
+          <img src="/history.png" alt="history" style={iconStyle} />
+          History Penggunaan
+          <br />
+          (Sparepart)
+        </Link>
+
+        {userID === 'T-099' && (
+          <Link to="/barcodescannervisit" style={boxStyles[5]}>
+            <img src="/kunjungan.png" alt="kunjungan" style={iconStyle} />
+            Notes <br /> Kunjungan
+            <br />
+            (Mesin)
+          </Link>
+        )}
       </div>
     </div>
   )
