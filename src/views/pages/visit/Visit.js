@@ -13,580 +13,347 @@ import {
   CModalFooter,
   CRow,
   CSpinner,
+  CTable,
+  CTableBody,
+  CTableDataCell,
+  CTableHead,
+  CTableHeaderCell,
+  CTableRow,
+  CModalHeader,
+  CFormTextarea,
 } from '@coreui/react'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-
-import { cilCheckCircle, cilXCircle } from '@coreui/icons'
-import CIcon from '@coreui/icons-react'
-import ReactSelect from 'react-select'
 import { useParams } from 'react-router-dom'
 
+import { cilCheckCircle, cilPencil, cilTrash, cilXCircle, cilPlus } from '@coreui/icons'
+import CIcon from '@coreui/icons-react'
+
 const Visit = () => {
-  const token = sessionStorage.getItem('token')
   const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
 
   const [machineCode, setMachineCode] = useState('')
-  const [machineDetail, setMachineDetail] = useState('')
-  const [listInventory, setListInventory] = useState([])
-  const [selectedInventory, setSelectedInventory] = useState('')
-  const [counter, setCounter] = useState('')
-  const [counterColour, setCounterColour] = useState('')
-  const [counterColourA3, setCounterColourA3] = useState('')
+  const [machineVisits, setMachineVisits] = useState([])
+  const [newVisitNote, setNewVisitNote] = useState('')
+  const [editingVisit, setEditingVisit] = useState(0)
 
   const [isLoading, setIsLoading] = useState(false)
   const [modalResponseIsOpen, setModalResponseIsOpen] = useState(false)
+  const [modalCreateIsOpen, setModalCreateIsOpen] = useState(false)
+  const [modalConfirmDeleteIsOpen, setModalConfirmDeleteIsOpen] = useState(false)
+  const [visitToDelete, setVisitToDelete] = useState(0)
   const [responseMessage, setResponseMessage] = useState('')
   const [responseType, setResponseType] = useState(false)
 
-  const [usageList, setUsageList] = useState([])
-
   const userID = sessionStorage.getItem('user')
-  let { id_machine } = useParams()
+  const { id_machine } = useParams()
 
-  const [quantity, setQuantity] = useState(1)
-  const [quantityErrorModalOpen, setQuantityErrorModalOpen] = useState(false)
-  const [quantityErrorMessage, setQuantityErrorMessage] = useState('')
-
-  useEffect(() => {
-    if (machineDetail !== '' || machineDetail !== undefined) {
-      GetListInventory()
-    }
-  }, [machineDetail])
-
+  // useEffect pertama: untuk mengatur machineCode saat komponen pertama kali dimuat
   useEffect(() => {
     if (userID === 'ws') {
-      GetDataMachine()
       setMachineCode('WS')
-      setCounter(0)
     }
     if (id_machine) {
       setMachineCode(id_machine)
     }
   }, [userID, id_machine])
 
-  const GetDataMachine = () => {
-    if (machineCode !== '') {
-      setIsLoading(true)
-      const url = `${apiUrl}/machines/detail?id=${machineCode}`
-
-      axios
-        .get(url, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((response) => {
-          console.log(response)
-
-          setIsLoading(false)
-          const { data } = response.data
-          setMachineDetail(data)
-        })
-        .catch((error) => {
-          console.error(error)
-          alert('Error fetching machines: ' + error.message)
-          setIsLoading(false)
-          setMachineDetail('')
-        })
+  // useEffect kedua: untuk memuat data kunjungan setiap kali machineCode berubah
+  // Ini adalah perbaikan utamanya
+  useEffect(() => {
+    if (machineCode) {
+      getMachineVisits()
     }
-  }
+  }, [machineCode]) // Dependency array diisi dengan machineCode
 
-  const GetListInventory = () => {
+  const getMachineVisits = () => {
     setIsLoading(true)
-    const url = `${apiUrl}/inventory/detail?id=${userID}`
+    const url = `${apiUrl}/visits?id=${machineCode}`
 
     axios
-      .get(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .get(url)
       .then((response) => {
-        const { data, metadata } = response.data
-        setListInventory(data || [])
         setIsLoading(false)
+        const { data } = response.data
+        setMachineVisits(data)
       })
       .catch((error) => {
         console.error(error)
         setIsLoading(false)
-        setListInventory([])
-      })
-  }
-
-  function UseSparepart() {
-    setIsLoading(true)
-    var obj = {
-      id_inventory: selectedInventory.value.id_inventory,
-      id_machine: machineDetail.id_machine,
-      counter: parseInt(counter),
-      counter_colour: parseInt(counterColour),
-      counter_colour_a3: parseInt(counterColourA3),
-      updated_by: userID,
-    }
-    var url = `${apiUrl}/inventory/usage`
-
-    axios
-      .post(url, obj, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        if (response.data.error.status === true) {
-          setIsLoading(false)
-          setResponseType(false)
-          setResponseMessage(response.data.error.msg)
-          setModalResponseIsOpen(true)
-        } else {
-          setIsLoading(false)
-          setResponseType(true)
-          setResponseMessage('Berhasil Memakai Sparepart')
-          setModalResponseIsOpen(true)
-        }
-      })
-      .catch((error) => {
-        setIsLoading(false)
-        setModalResponseIsOpen(true)
+        setMachineVisits([])
+        setResponseMessage('Error fetching visits: ' + error.message)
         setResponseType(false)
-        setResponseMessage(error.message)
+        setModalResponseIsOpen(true)
       })
   }
 
-  const addSparepartToUsageList = () => {
-    if (!selectedInventory || quantity < 1) return
+  const handleCreateOrUpdateVisit = () => {
+    setIsLoading(true)
+    const visitData = {
+      id_machine: machineCode,
+      desc_kunjungan: newVisitNote,
+    }
 
-    const inventory = selectedInventory.value
-    const existsIndex = usageList.findIndex((item) => item.id_inventory === inventory.id_inventory)
-
-    if (existsIndex !== -1) {
-      const existingItem = usageList[existsIndex]
-      const total = existingItem.quantity + quantity
-
-      if (total > inventory.quantity) {
-        setQuantityErrorMessage('Jumlah melebihi persediaan yang tersedia di tas Anda.')
-        setQuantityErrorModalOpen(true)
-
-        return
-      }
-
-      const updatedList = [...usageList]
-      updatedList[existsIndex].quantity = total
-      setUsageList(updatedList)
+    let request
+    if (editingVisit) {
+      visitData.id_kunjungan = editingVisit.id_kunjungan
+      request = axios.put(`${apiUrl}/visits/update`, visitData)
     } else {
-      const newItem = {
-        id_inventory: inventory.id_inventory,
-        id_machine: machineDetail.id_machine,
-        id_sparepart: inventory.id_sparepart,
-        nama_sparepart: inventory.nama_sparepart,
-        quantity: quantity,
-        counter: parseInt(counter) || 0,
-        counter_colour: parseInt(counterColour) || 0,
-        counter_colour_a3: parseInt(counterColourA3) || 0,
-        updated_by: userID,
-      }
-      setUsageList((prev) => [...prev, newItem])
+      request = axios.post(`${apiUrl}/visits/create`, visitData)
     }
 
-    // Reset input
-    setSelectedInventory('')
-    setQuantity(1)
-  }
-
-  const removeSparepart = (indexToRemove) => {
-    setUsageList((prev) => prev.filter((_, index) => index !== indexToRemove))
-  }
-
-  function UseSparepart() {
-    if (usageList.length === 0) return
-
-    setIsLoading(true)
-    const url = `${apiUrl}/inventory/usage-batch` // pastikan endpoint sesuai
-
-    axios
-      .post(url, usageList, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+    request
       .then((response) => {
         setIsLoading(false)
-        const { error } = response.data
-        if (error?.status) {
-          setResponseType(false)
-          setResponseMessage(error.msg)
-        } else {
-          setResponseType(true)
-          setResponseMessage('Berhasil Memakai Sparepart')
-          setUsageList([])
-        }
+        setResponseMessage(
+          editingVisit ? 'Kunjungan berhasil diperbarui!' : 'Kunjungan baru berhasil ditambahkan!',
+        )
+        setResponseType(true)
         setModalResponseIsOpen(true)
+        setModalCreateIsOpen(false)
+        setNewVisitNote('')
+        setEditingVisit(null)
+        getMachineVisits()
       })
       .catch((error) => {
+        console.error(error)
         setIsLoading(false)
-        setModalResponseIsOpen(true)
+        setResponseMessage('Gagal menyimpan kunjungan: ' + error.message)
         setResponseType(false)
-        setResponseMessage(error.message)
+        setModalResponseIsOpen(true)
       })
+  }
+
+  const handleDeleteVisit = () => {
+    if (!visitToDelete) return
+
+    setIsLoading(true)
+    axios
+      .delete(`${apiUrl}/visits/delete?id=${visitToDelete.id_kunjungan}`)
+      .then((response) => {
+        setIsLoading(false)
+        setResponseMessage('Kunjungan berhasil dihapus!')
+        setResponseType(true)
+        setModalResponseIsOpen(true)
+        setModalConfirmDeleteIsOpen(false)
+        setVisitToDelete(0)
+        getMachineVisits()
+      })
+      .catch((error) => {
+        console.error(error)
+        setIsLoading(false)
+        setResponseMessage('Gagal menghapus kunjungan: ' + error.message)
+        setResponseType(false)
+        setModalResponseIsOpen(true)
+      })
+  }
+
+  const openEditModal = (visit) => {
+    setEditingVisit(visit)
+    setNewVisitNote(visit.desc_kunjungan)
+    setModalCreateIsOpen(true)
+  }
+
+  const openCreateModal = () => {
+    setEditingVisit(null)
+    setNewVisitNote('')
+    setModalCreateIsOpen(true)
+  }
+
+  const openDeleteConfirmModal = (visit) => {
+    setVisitToDelete(visit)
+    setModalConfirmDeleteIsOpen(true)
   }
 
   return (
     <>
-      <CRow>
-        <CCol md={3}></CCol>
-        <CCol md={6}>
-          <CCard style={{ marginTop: '100px' }}>
-            <CCardHeader style={{ fontSize: '20px', fontWeight: 'bold' }}>
-              Pakai Sparepart
-            </CCardHeader>
-            <CCardBody>
-              <CCol>
-                <CRow>
-                  <CCol>
-                    <CForm>
-                      <CFormLabel style={{ fontWeight: 'bold' }}>Kode Mesin</CFormLabel>
-                    </CForm>
-                  </CCol>
-                </CRow>
-                <CRow>
-                  <CCol>
-                    <CFormInput
-                      placeholder="Masukkan kode mesin..."
-                      value={machineCode}
-                      onChange={(e) => setMachineCode(e.target.value)}
-                    ></CFormInput>
-                  </CCol>
-                </CRow>
-                {machineDetail && (
-                  <CCol>
-                    <CRow className="mt-1">
-                      <CCol>
-                        <CForm>
-                          <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
-                            Nama Customer
-                          </CFormLabel>
-                        </CForm>
-                      </CCol>
-                    </CRow>
-                    <CRow>
-                      <CCol>
-                        <CFormInput disabled value={machineDetail.nama_customer}></CFormInput>
-                      </CCol>
-                    </CRow>
-                    <CRow className="mt-1">
-                      <CCol>
-                        <CForm>
-                          <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
-                            Alamat
-                          </CFormLabel>
-                        </CForm>
-                      </CCol>
-                    </CRow>
-                    <CRow>
-                      <CCol>
-                        <CFormInput disabled value={machineDetail.alamat}></CFormInput>
-                      </CCol>
-                    </CRow>
-                    <CRow className="mt-1">
-                      <CCol>
-                        <CForm>
-                          <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
-                            Tipe Mesin
-                          </CFormLabel>
-                        </CForm>
-                      </CCol>
-                    </CRow>
-                    <CRow>
-                      <CCol>
-                        <CFormInput disabled value={machineDetail.tipe_machine}></CFormInput>
-                      </CCol>
-                    </CRow>
-                    <CRow>
-                      <CCol>
-                        <CForm>
-                          <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
-                            Counter BW
-                          </CFormLabel>
-                        </CForm>
-                      </CCol>
-                    </CRow>
-                    <CRow>
-                      <CCol>
-                        <CFormInput
-                          type="number"
-                          placeholder="Masukkan counter mesin..."
-                          value={counter}
-                          onChange={(e) => setCounter(e.target.value)}
-                          disabled={userID === 'ws'}
-                        ></CFormInput>
-                      </CCol>
-                    </CRow>
-                    <CRow>
-                      <CCol>
-                        <CForm>
-                          <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
-                            Counter Colour A4/F4
-                            <span style={{ color: 'red', fontSize: '11px', marginLeft: '10px' }}>
-                              (*jika mesin colour*)
-                            </span>
-                          </CFormLabel>
-                        </CForm>
-                      </CCol>
-                    </CRow>
-                    <CRow>
-                      <CCol>
-                        <CFormInput
-                          type="number"
-                          placeholder="Masukkan counter colour mesin..."
-                          value={counterColour}
-                          onChange={(e) => setCounterColour(e.target.value)}
-                          disabled={userID === 'ws'}
-                        ></CFormInput>
-                      </CCol>
-                    </CRow>
-                    <CRow>
-                      <CCol>
-                        <CForm>
-                          <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
-                            Counter Colour A3
-                            <span style={{ color: 'red', fontSize: '11px', marginLeft: '10px' }}>
-                              (*jika mesin colour*)
-                            </span>
-                          </CFormLabel>
-                        </CForm>
-                      </CCol>
-                    </CRow>
-                    <CRow>
-                      <CCol>
-                        <CFormInput
-                          type="number"
-                          placeholder="Masukkan counter colour A3 mesin..."
-                          value={counterColourA3}
-                          onChange={(e) => setCounterColourA3(e.target.value)}
-                          disabled={userID === 'ws'}
-                        ></CFormInput>
-                      </CCol>
-                    </CRow>
-                    <CRow className="mt-1">
-                      <CCol>
-                        <CForm>
-                          <CFormLabel style={{ fontWeight: 'bold', paddingTop: '8px' }}>
-                            Sparepart yang digunakan
-                          </CFormLabel>
-                        </CForm>
-                      </CCol>
-                    </CRow>
-                    <CRow>
-                      <CCol>
-                        <ReactSelect
-                          options={listInventory.map((inventory) => ({
-                            value: inventory,
-                            label: inventory.nama_sparepart,
-                          }))}
-                          onChange={(e) => setSelectedInventory(e)}
-                          isSearchable={true}
-                          placeholder="Tekan dan Pilih Sparepart..."
-                        />
-                        {selectedInventory && (
-                          <CRow className="mt-2">
-                            <CCol>
-                              <CFormLabel style={{ fontWeight: 'bold' }}>
-                                Jumlah yang Dipakai
-                              </CFormLabel>
-                              <CFormInput
-                                type="number"
-                                min="1"
-                                max={selectedInventory.value.quantity} // batasi sesuai stok
-                                value={quantity}
-                                onChange={(e) => {
-                                  const val = parseInt(e.target.value)
-                                  if (val > selectedInventory.value.quantity) {
-                                    alert('Jumlah melebihi stok tersedia')
-                                    return
-                                  }
-                                  setQuantity(val)
-                                }}
-                              />
-                              <p style={{ fontSize: '12px', color: 'gray' }}>
-                                Maksimal tersedia: {selectedInventory.value.quantity}
-                              </p>
-                            </CCol>
-                          </CRow>
-                        )}
-                      </CCol>
-                    </CRow>
-                    <CRow className="mt-2 text-center">
-                      <CCol>
+      <CCard>
+        <CCardHeader style={{ textAlign: 'center' }}>
+          <CRow className="align-items-start">
+            {/* Label */}
+            <CCol xs="12" md="4" className="mb-2 mb-md-0">
+              <h5 className="mb-0">Daftar Kunjungan Mesin:</h5>
+            </CCol>
+
+            {/* Machine Code */}
+            <CCol xs="12" md="4" className="mb-2 mb-md-0">
+              <h5 className="mb-0">{machineCode}</h5>
+            </CCol>
+
+            {/* Tombol */}
+            <CCol xs="12" md="4" className="text-md-end">
+              <CButton
+                color="primary"
+                className="w-100 w-md-auto text-white"
+                onClick={openCreateModal}
+              >
+                <CIcon icon={cilPlus} className="me-2" />
+                Tambah Kunjungan
+              </CButton>
+            </CCol>
+          </CRow>
+        </CCardHeader>
+
+        <CCardBody>
+          {isLoading ? (
+            <div
+              className="d-flex justify-content-center align-items-center"
+              style={{ height: '200px' }}
+            >
+              <CSpinner size="xl" color="primary" />
+              <p className="ms-3 mb-0">Memuat data kunjungan...</p>
+            </div>
+          ) : machineVisits && machineVisits.length === 0 ? (
+            <div className="text-center p-4">
+              <h5 className="text-muted">Tidak ada data kunjungan untuk mesin ini.</h5>
+            </div>
+          ) : (
+            <CTable bordered hover responsive>
+              <CTableHead>
+                <CTableRow>
+                  <CTableHeaderCell className="text-center" scope="col">
+                    Tanggal
+                  </CTableHeaderCell>
+                  <CTableHeaderCell className="text-center" scope="col" style={{ width: '35%' }}>
+                    Catatan
+                  </CTableHeaderCell>
+                  <CTableHeaderCell className="text-center" scope="col">
+                    Aksi
+                  </CTableHeaderCell>
+                </CTableRow>
+              </CTableHead>
+              <CTableBody>
+                {machineVisits &&
+                  machineVisits.map((visit, index) => (
+                    <CTableRow
+                      key={visit.id_kunjungan}
+                      style={{ textAlign: 'center', justifyContent: 'center' }}
+                    >
+                      <CTableDataCell>
+                        {new Date(visit.tanggal_kunjungan).toLocaleDateString('id-ID', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        })}
+                      </CTableDataCell>
+                      <CTableDataCell>{visit.desc_kunjungan}</CTableDataCell>
+                      <CTableDataCell>
                         <CButton
-                          color="primary"
-                          className="text-white"
-                          onClick={addSparepartToUsageList}
-                          disabled={!selectedInventory}
+                          color="info"
+                          className="btn-sm me-2 text-white"
+                          onClick={() => openEditModal(visit)}
                         >
-                          Tambahkan ke Daftar
+                          <CIcon icon={cilPencil} />
                         </CButton>
-                      </CCol>
-                    </CRow>
-                    {usageList.length > 0 && (
-                      <CRow className="mt-3">
-                        <CCol>
-                          <table className="text-center table table-bordered">
-                            <thead>
-                              <tr>
-                                <th>Nama Sparepart</th>
-                                <th>Jumlah</th>
-                                <th>Aksi</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {usageList.map((item, index) => (
-                                <tr key={index}>
-                                  <td>{item.nama_sparepart}</td>
-                                  <td>{item.quantity}</td>
-                                  <td>
-                                    <CButton
-                                      className="text-white"
-                                      color="danger"
-                                      size="sm"
-                                      onClick={() => removeSparepart(index)}
-                                    >
-                                      Hapus
-                                    </CButton>
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </CCol>
-                      </CRow>
-                    )}
-                  </CCol>
-                )}
-              </CCol>
-            </CCardBody>
-            <CCardFooter>
-              <CRow className="justify-content-center">
-                {!machineDetail && (
-                  <CCol xs="auto">
-                    <CButton
-                      type="button"
-                      color="info"
-                      className="text-white"
-                      onClick={() => GetDataMachine('search')}
-                    >
-                      Cari Mesin
-                    </CButton>
-                  </CCol>
-                )}
-                {machineDetail && (
-                  <CCol xs="auto">
-                    {/* <CButton
-                      type="button"
-                      color="success"
-                      className="text-white"
-                      onClick={() => UseSparepart()}
-                      disabled={selectedInventory === '' || counter === ''}
-                    >
-                      Gunakan
-                    </CButton> */}
-                    <CButton
-                      type="button"
-                      color="success"
-                      className="text-white"
-                      onClick={() => UseSparepart()}
-                      disabled={usageList.length === 0 || counter === ''}
-                    >
-                      Gunakan
-                    </CButton>
-                  </CCol>
-                )}
-              </CRow>
-            </CCardFooter>
-          </CCard>
-        </CCol>
-        <CCol md={3}></CCol>
-      </CRow>
-      {/* MODAL LOADING*/}
-      <CModal size="xl" alignment="center" visible={isLoading} backdrop="static">
-        <CModalBody
-          style={{
-            textAlign: 'center',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            paddingBottom: '1px',
-          }}
-        >
-          <CFormLabel
-            style={{
-              fontWeight: 'bold',
-              fontSize: '1rem',
-            }}
-          >
-            Mohon Tunggu...
-          </CFormLabel>
-        </CModalBody>
-        <CModalFooter
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            border: '0px',
-            paddingTop: '0px',
-          }}
-        >
-          <CSpinner
-            size="sm"
-            color="success"
-            style={{
-              width: '4rem',
-              height: '4rem',
-            }}
-          />
-        </CModalFooter>
-      </CModal>
-      {/* MODAL LOADING */}
-      {/* MODAL RESPONSE*/}
-      <CModal size="lg" alignment="center" visible={modalResponseIsOpen} backdrop="static">
-        <CModalBody style={{ justifyContent: 'center', textAlign: 'center' }}>
-          <CFormLabel style={{ fontWeight: 'bold', fontSize: '20px' }}>
-            {responseMessage}
-          </CFormLabel>
-          <br />
-          {responseType && (
-            <CIcon
-              icon={cilCheckCircle}
-              style={{ color: 'green', width: '5rem', height: '5rem' }}
-            />
+                        {/* {userID === 'admin' && (
+                          <CButton
+                            color="danger"
+                            className="text-white"
+                            onClick={() => openDeleteConfirmModal(visit)}
+                          >
+                            <CIcon icon={cilTrash} />
+                          </CButton>
+                        )} */}
+                      </CTableDataCell>
+                    </CTableRow>
+                  ))}
+              </CTableBody>
+            </CTable>
           )}
-          {!responseType && (
-            <CIcon icon={cilXCircle} style={{ color: 'red', width: '3rem', height: '3rem' }} />
-          )}
+        </CCardBody>
+      </CCard>
+
+      {/* ... (Modal Components remain the same) ... */}
+
+      {/* MODAL UNTUK TAMBAH/EDIT KUNJUNGAN */}
+      <CModal
+        alignment="center"
+        visible={modalCreateIsOpen}
+        onClose={() => setModalCreateIsOpen(false)}
+      >
+        <CModalHeader
+          style={{ fontWeight: 'bold', fontSize: '20px', paddingTop: '8px', marginTop: '8px' }}
+        >
+          {editingVisit ? 'Edit Kunjungan' : 'Tambah Kunjungan Baru'}
+        </CModalHeader>
+        <CModalBody>
+          <CForm>
+            <div className="mb-3">
+              <CFormLabel style={{ fontWeight: 'bold' }}>Catatan Kunjungan</CFormLabel>
+              <CFormTextarea
+                type="text"
+                value={newVisitNote}
+                onChange={(e) => setNewVisitNote(e.target.value)}
+                placeholder="Masukkan catatan kunjungan..."
+              />
+            </div>
+          </CForm>
         </CModalBody>
         <CModalFooter style={{ justifyContent: 'center' }}>
-          <CButton color="success" className="text-white" onClick={() => window.location.reload()}>
-            Tutup
+          <CButton color="secondary" onClick={() => setModalCreateIsOpen(false)}>
+            Batal
+          </CButton>
+          <CButton color="primary" onClick={handleCreateOrUpdateVisit}>
+            {editingVisit ? 'Simpan Perubahan' : 'Simpan'}
           </CButton>
         </CModalFooter>
       </CModal>
+
+      {/* MODAL KONFIRMASI HAPUS */}
+      <CModal
+        alignment="center"
+        visible={modalConfirmDeleteIsOpen}
+        onClose={() => setModalConfirmDeleteIsOpen(false)}
+      >
+        <CModalHeader>Konfirmasi Hapus</CModalHeader>
+        <CModalBody>Apakah Anda yakin ingin menghapus kunjungan ini?</CModalBody>
+        <CModalFooter>
+          <CButton color="secondary" onClick={() => setModalConfirmDeleteIsOpen(false)}>
+            Batal
+          </CButton>
+          <CButton color="danger" className="text-white" onClick={handleDeleteVisit}>
+            Hapus
+          </CButton>
+        </CModalFooter>
+      </CModal>
+
+      {/* MODAL LOADING */}
+      <CModal size="xl" alignment="center" visible={isLoading} backdrop="static">
+        <CModalBody style={{ textAlign: 'center' }}>
+          <CSpinner size="xl" color="primary" style={{ width: '4rem', height: '4rem' }} />
+          <p className="mt-3">Mohon Tunggu...</p>
+        </CModalBody>
+      </CModal>
+
       {/* MODAL RESPONSE */}
       <CModal
-        size="sm"
+        size="lg"
         alignment="center"
-        visible={quantityErrorModalOpen}
-        onClose={() => setQuantityErrorModalOpen(false)}
+        visible={modalResponseIsOpen}
+        onClose={() => {
+          setModalResponseIsOpen(false)
+          window.location.reload()
+        }}
       >
-        <CModalBody style={{ justifyContent: 'center', textAlign: 'center' }}>
-          <CFormLabel style={{ fontWeight: 'bold', fontSize: '18px' }}>
-            {quantityErrorMessage}
+        <CModalBody style={{ textAlign: 'center', justifyContent: 'center' }}>
+          <CIcon
+            icon={responseType ? cilCheckCircle : cilXCircle}
+            style={{ color: responseType ? 'green' : 'red', width: '5rem', height: '5rem' }}
+          />
+          <br />
+
+          <CFormLabel className="mt-3" style={{ fontWeight: 'bold', fontSize: '20px' }}>
+            {responseMessage}
           </CFormLabel>
-          <CIcon icon={cilXCircle} style={{ color: 'red', width: '3rem', height: '3rem' }} />
         </CModalBody>
         <CModalFooter style={{ justifyContent: 'center' }}>
           <CButton
-            color="danger"
+            color="success"
             className="text-white"
-            onClick={() => setQuantityErrorModalOpen(false)}
+            onClick={() => {
+              setModalResponseIsOpen(false)
+              window.location.reload()
+            }}
           >
             Tutup
           </CButton>
