@@ -1,5 +1,5 @@
-import moment from "moment-timezone";
+import moment from 'moment-timezone'
 
 export const formatDateWIB = (date) => {
-  return moment(date).format("DD MMM YYYY");
-};
+  return moment(date.replace('Z', '')).format('DD MMM YYYY')
+}
