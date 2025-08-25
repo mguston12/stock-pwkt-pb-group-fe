@@ -184,7 +184,7 @@ const AdminReturSparepart = () => {
               <strong>Status:</strong> {selectedRetur.status}
             </p>
             <p>
-              <strong>Tanggal:</strong> {moment(selectedRetur.returned_at).format('DD MMM YYYY')}
+              <strong>Tanggal:</strong> {moment.utc(selectedRetur.returned_at).utcOffset('+07:00').format('DD MMM YYYY')}
             </p>
           </CModalBody>
           <CModalFooter>

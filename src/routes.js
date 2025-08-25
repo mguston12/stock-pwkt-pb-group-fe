@@ -74,7 +74,7 @@ const routes = [
   },
   {
     path: '/sparepart-usage/:id_machine',
-    name: 'Penggunaan Sparepart',
+    name: 'Penggunaan Sparepart Scan',
     element: SparepartUsageAfterScan,
     exact: true,
   },

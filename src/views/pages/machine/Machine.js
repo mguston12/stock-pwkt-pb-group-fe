@@ -196,12 +196,10 @@ const Machine = () => {
   }
 
   const handleReplace = (machineId) => {
-    // Tampilkan modal untuk mengganti mesin
     setSelectedMachineId(machineId)
     setShowReplaceModal(true)
   }
   const handleDeactivate = (machineId) => {
-    // Tampilkan modal konfirmasi untuk menonaktifkan mesin
     setSelectedMachineId(machineId)
     setShowDeactivateModal(true)
   }
@@ -220,7 +218,6 @@ const Machine = () => {
         },
       )
       .then((response) => {
-        // Tanggapi respons dari server
 
         setResponseType(true)
         setResponseMessage('Berhasil Membuat Non Aktif Mesin')
@@ -277,7 +274,6 @@ const Machine = () => {
   }
 
   const handleActivate = (machineId) => {
-    // Open the modal and set the selected machine ID
     setSelectedMachineId(machineId)
     setShowActivateModal(true)
   }
@@ -344,7 +340,7 @@ const Machine = () => {
         <CRow className="mt-3">
           <CCol md={10}>
             <CFormInput
-              placeholder="Input ID Mesin atau Tipe Mesin lalu Tekan Enter atau Tekan Cari"
+              placeholder="Input ID Mesin atau Tipe Mesin atau Nama Customer lalu Tekan Enter atau Tekan Cari"
               style={{ display: 'inline' }}
               value={inputSearch}
               onChange={(e) => setInputSearch(e.target.value)}

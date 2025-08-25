@@ -1,7 +1,4 @@
-import { cilCheckCircle, cilPlus, cilTrash, cilX, cilXCircle } from '@coreui/icons'
-import CIcon from '@coreui/icons-react'
 import {
-  CButton,
   CCard,
   CCardBody,
   CCardHeader,
@@ -9,24 +6,16 @@ import {
   CForm,
   CFormInput,
   CFormLabel,
-  CFormTextarea,
   CModal,
   CModalBody,
   CModalFooter,
   CRow,
   CSpinner,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
 } from '@coreui/react'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import ReactSelect from 'react-select'
-import moment from 'moment'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 const DetailTeknisi = () => {
   const token = sessionStorage.getItem('token')

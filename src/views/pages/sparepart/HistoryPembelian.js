@@ -123,7 +123,7 @@ const HistoryPembelian = () => {
                   {sparepartDetail.map((item, index) => (
                     <CTableRow key={index} className="text-center">
                       <CTableDataCell>
-                        {moment(item.tanggal_pembelian).format('DD-MMM-YYYY')}
+                        {moment.utc(item.tanggal_pembelian).utcOffset('+07:00').format('DD-MMM-YYYY')}
                       </CTableDataCell>
                       <CTableDataCell>{item.quantity}</CTableDataCell>
                       <CTableDataCell>Rp {formatRibuan(item.harga_per_unit)}</CTableDataCell>

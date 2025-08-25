@@ -145,11 +145,11 @@ const DetailMachine = () => {
                     <CTableRow key={index} className="text-center">
                       <CTableDataCell>{item.nama_customer}</CTableDataCell>
                       <CTableDataCell>
-                        {moment(item.tanggal_mulai).format('DD-MMM-YYYY')}
+                        {moment.utc(item.tanggal_mulai).utcOffset('+07:00').format('DD-MMM-YYYY')}
                       </CTableDataCell>
                       <CTableDataCell>
                         {item.tanggal_selesai !== null
-                          ? moment(item.tanggal_selesai).format('DD-MMM-YYYY')
+                          ? moment.utc(item.tanggal_selesai).utcOffset('+07:00').format('DD-MMM-YYYY')
                           : 'Mesin Masih Aktif'}
                       </CTableDataCell>
                     </CTableRow>
@@ -194,7 +194,7 @@ const DetailMachine = () => {
                       <CTableDataCell>{item.counter_colour}</CTableDataCell>
                       <CTableDataCell>{item.counter_colour_a3}</CTableDataCell>
                       <CTableDataCell>
-                        {moment(item.updated_at).format('DD-MMM-YYYY')}
+                        {moment.utc(item.updated_at).utcOffset('+07:00').format('DD-MMM-YYYY')}
                       </CTableDataCell>
                     </CTableRow>
                   ))}

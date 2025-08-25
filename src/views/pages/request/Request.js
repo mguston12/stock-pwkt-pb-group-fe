@@ -361,9 +361,9 @@ const Request = () => {
                       {item.nama_customer !== '' ? item.nama_customer : 'Persediaan'}
                     </CTableDataCell> */}
                     <CTableDataCell>
-                      {moment(item.tanggal_request).format('DD MMM YYYY')}
+                      {moment.utc(item.tanggal_request).utcOffset('+07:00').format('DD MMM YYYY')}
                     </CTableDataCell>
-                    <CTableDataCell>{moment(item.updated_at).format('DD MMM YYYY')}</CTableDataCell>
+                    <CTableDataCell>{moment.utc(item.updated_at).utcOffset('+07:00').format('DD MMM YYYY')}</CTableDataCell>
                     <CTableDataCell>
                       {item.status_request === 'Disetujui' && (
                         <CButton color="success" className="btn-sm text-white">
@@ -518,7 +518,7 @@ const Request = () => {
               </CCol>
               <CCol>
                 <CFormInput
-                  value={moment(data.updated_at).format('DD MMM YYYY')}
+                  value={moment.utc(data.updated_at).utcOffset('+07:00').format('DD MMM YYYY')}
                   disabled
                 ></CFormInput>
               </CCol>
@@ -623,7 +623,7 @@ const Request = () => {
               </CCol>
               <CCol>
                 <CFormInput
-                  value={moment(data.updated_at).format('DD MMM YYYY')}
+                  value={moment.utc(data.updated_at).utcOffset('+07:00').format('DD MMM YYYY')}
                   disabled
                 ></CFormInput>
               </CCol>

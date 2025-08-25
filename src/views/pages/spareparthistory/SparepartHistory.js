@@ -212,7 +212,7 @@ const SparepartHistory = () => {
                       {item.quantity} ({item.id_sparepart} - {item.nama_sparepart})
                     </CTableDataCell>
                     <CTableDataCell>{formatRibuan(item.counter)}</CTableDataCell>
-                    <CTableDataCell>{moment(item.updated_at).format('DD-MMM-YYYY')}</CTableDataCell>
+                    <CTableDataCell>{moment.utc(item.updated_at).utcOffset('+07:00').format('DD-MMM-YYYY')}</CTableDataCell>
                     <CTableDataCell>
                       <Link
                         to={`/machine/detail/${item.id_machine}`}

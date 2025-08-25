@@ -139,7 +139,7 @@ const SparepartHistoryTeknisi = () => {
                     <CTableDataCell>
                       {item.quantity} - {item.nama_sparepart}
                     </CTableDataCell>
-                    <CTableDataCell>{moment(item.updated_at).format('DD-MMM-YYYY')}</CTableDataCell>
+                    <CTableDataCell>{moment.utc(item.updated_at).utcOffset('+07:00').format('DD-MMM-YYYY')}</CTableDataCell>
                   </CTableRow>
                 ))}
               </CTableBody>

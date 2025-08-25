@@ -24,6 +24,7 @@ import {
 } from '@coreui/react'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import SignaturePadLib from '../../../components/SignaturePadLib'
 import { useParams } from 'react-router-dom'
 
 import { cilCheckCircle, cilPencil, cilTrash, cilXCircle, cilPlus } from '@coreui/icons'
@@ -48,7 +49,6 @@ const Visit = () => {
   const userID = sessionStorage.getItem('user')
   const { id_machine } = useParams()
 
-  // useEffect pertama: untuk mengatur machineCode saat komponen pertama kali dimuat
   useEffect(() => {
     if (userID === 'ws') {
       setMachineCode('WS')
@@ -58,13 +58,11 @@ const Visit = () => {
     }
   }, [userID, id_machine])
 
-  // useEffect kedua: untuk memuat data kunjungan setiap kali machineCode berubah
-  // Ini adalah perbaikan utamanya
   useEffect(() => {
     if (machineCode) {
       getMachineVisits()
     }
-  }, [machineCode]) // Dependency array diisi dengan machineCode
+  }, [machineCode])
 
   const getMachineVisits = () => {
     setIsLoading(true)
@@ -260,6 +258,9 @@ const Visit = () => {
               </CTableBody>
             </CTable>
           )}
+          <div style={{ padding: '20px' }}>
+            <SignaturePadLib />
+          </div>
         </CCardBody>
       </CCard>
 
