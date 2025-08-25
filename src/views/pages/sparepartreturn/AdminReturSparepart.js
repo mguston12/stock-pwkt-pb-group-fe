@@ -21,7 +21,7 @@ import {
 import CIcon from '@coreui/icons-react'
 import { cilCheckCircle, cilXCircle } from '@coreui/icons'
 import axios from 'axios'
-import moment from 'moment'
+import { formatDateWIB } from '../../../utils/date'
 
 const AdminReturSparepart = () => {
   const token = sessionStorage.getItem('token')
@@ -184,7 +184,7 @@ const AdminReturSparepart = () => {
               <strong>Status:</strong> {selectedRetur.status}
             </p>
             <p>
-              <strong>Tanggal:</strong> {moment.utc(selectedRetur.returned_at).utcOffset('+07:00').format('DD MMM YYYY')}
+              <strong>Tanggal:</strong> {formatDateWIB(selectedRetur.returned_at)}
             </p>
           </CModalBody>
           <CModalFooter>

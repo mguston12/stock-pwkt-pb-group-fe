@@ -25,7 +25,7 @@ import {
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import ReactSelect from 'react-select'
-import moment from 'moment'
+import { formatDateWIB } from '../../../utils/date'
 import { Link, useParams } from 'react-router-dom'
 
 const DetailMachine = () => {
@@ -144,12 +144,10 @@ const DetailMachine = () => {
                   {listPemakaian.map((item, index) => (
                     <CTableRow key={index} className="text-center">
                       <CTableDataCell>{item.nama_customer}</CTableDataCell>
-                      <CTableDataCell>
-                        {moment.utc(item.tanggal_mulai).utcOffset('+07:00').format('DD-MMM-YYYY')}
-                      </CTableDataCell>
+                      <CTableDataCell>{formatDateWIB(item.tanggal_mulai)}</CTableDataCell>
                       <CTableDataCell>
                         {item.tanggal_selesai !== null
-                          ? moment.utc(item.tanggal_selesai).utcOffset('+07:00').format('DD-MMM-YYYY')
+                          ? formatDateWIB(item.tanggal_selesai)
                           : 'Mesin Masih Aktif'}
                       </CTableDataCell>
                     </CTableRow>
@@ -194,7 +192,7 @@ const DetailMachine = () => {
                       <CTableDataCell>{item.counter_colour}</CTableDataCell>
                       <CTableDataCell>{item.counter_colour_a3}</CTableDataCell>
                       <CTableDataCell>
-                        {moment.utc(item.updated_at).utcOffset('+07:00').format('DD-MMM-YYYY')}
+                        {formatDateWIB(item.updated_at)}
                       </CTableDataCell>
                     </CTableRow>
                   ))}

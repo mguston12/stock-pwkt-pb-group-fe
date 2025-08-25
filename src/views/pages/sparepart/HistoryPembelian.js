@@ -25,7 +25,7 @@ import {
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import ReactSelect from 'react-select'
-import moment from 'moment'
+import { formatDateWIB } from '../../../utils/date'
 import { Link, useParams } from 'react-router-dom'
 
 const HistoryPembelian = () => {
@@ -122,9 +122,7 @@ const HistoryPembelian = () => {
                 <CTableBody>
                   {sparepartDetail.map((item, index) => (
                     <CTableRow key={index} className="text-center">
-                      <CTableDataCell>
-                        {moment.utc(item.tanggal_pembelian).utcOffset('+07:00').format('DD-MMM-YYYY')}
-                      </CTableDataCell>
+                      <CTableDataCell>{formatDateWIB(item.tanggal_pembelian)}</CTableDataCell>
                       <CTableDataCell>{item.quantity}</CTableDataCell>
                       <CTableDataCell>Rp {formatRibuan(item.harga_per_unit)}</CTableDataCell>
                       <CTableDataCell>{item.nama_supplier}</CTableDataCell>

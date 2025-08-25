@@ -23,7 +23,7 @@ import {
 } from '@coreui/react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
-import moment from 'moment'
+import { formatDateWIB } from '../../../utils/date'
 
 const SparepartHistoryTeknisi = () => {
   const token = sessionStorage.getItem('token')
@@ -139,7 +139,7 @@ const SparepartHistoryTeknisi = () => {
                     <CTableDataCell>
                       {item.quantity} - {item.nama_sparepart}
                     </CTableDataCell>
-                    <CTableDataCell>{moment.utc(item.updated_at).utcOffset('+07:00').format('DD-MMM-YYYY')}</CTableDataCell>
+                    <CTableDataCell>{formatDateWIB(item.updated_at)}</CTableDataCell>
                   </CTableRow>
                 ))}
               </CTableBody>

@@ -31,7 +31,7 @@ import CIcon from '@coreui/icons-react'
 import { cilCheckCircle, cilXCircle } from '@coreui/icons'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
-import moment from 'moment'
+import { formatDateWIB } from '../../../utils/date'
 
 const Request = () => {
   const token = sessionStorage.getItem('token')
@@ -110,7 +110,7 @@ const Request = () => {
   const SearchRequest = () => {
     setIsLoading(true)
     const url = `${apiUrl}/requests?keyword=${inputSearch}&status=${status}&page=${currentPage}&length=${itemsPerPage}`
-    
+
     axios
       .get(url, {
         headers: {
@@ -132,10 +132,10 @@ const Request = () => {
       })
   }
 
-   const SearchRequestTeknisi = () => {
+  const SearchRequestTeknisi = () => {
     setIsLoading(true)
     const url = `${apiUrl}/requests?keyword=${userID}&status=${status}&page=${currentPage}&length=${itemsPerPage}`
-    
+
     axios
       .get(url, {
         headers: {
@@ -156,7 +156,6 @@ const Request = () => {
         setTotalPage(1)
       })
   }
-
 
   const handlePageChange = (newPage) => {
     if (newPage < 1 || newPage > totalPage) return // Prevent out-of-bounds page numbers
@@ -360,10 +359,8 @@ const Request = () => {
                     {/* <CTableDataCell>
                       {item.nama_customer !== '' ? item.nama_customer : 'Persediaan'}
                     </CTableDataCell> */}
-                    <CTableDataCell>
-                      {moment.utc(item.tanggal_request).utcOffset('+07:00').format('DD MMM YYYY')}
-                    </CTableDataCell>
-                    <CTableDataCell>{moment.utc(item.updated_at).utcOffset('+07:00').format('DD MMM YYYY')}</CTableDataCell>
+                    <CTableDataCell>{formatDateWIB(item.tanggal_request)}</CTableDataCell>
+                    <CTableDataCell>{formatDateWIB(item.updated_at)}</CTableDataCell>
                     <CTableDataCell>
                       {item.status_request === 'Disetujui' && (
                         <CButton color="success" className="btn-sm text-white">
@@ -517,10 +514,7 @@ const Request = () => {
                 </CForm>
               </CCol>
               <CCol>
-                <CFormInput
-                  value={moment.utc(data.updated_at).utcOffset('+07:00').format('DD MMM YYYY')}
-                  disabled
-                ></CFormInput>
+                <CFormInput value={formatDateWIB(data.updated_at)} disabled></CFormInput>
               </CCol>
             </CRow>
           </CModalBody>
@@ -622,10 +616,7 @@ const Request = () => {
                 </CForm>
               </CCol>
               <CCol>
-                <CFormInput
-                  value={moment.utc(data.updated_at).utcOffset('+07:00').format('DD MMM YYYY')}
-                  disabled
-                ></CFormInput>
+                <CFormInput value={formatDateWIB(data.updated_at)} disabled></CFormInput>
               </CCol>
             </CRow>
           </CModalBody>
