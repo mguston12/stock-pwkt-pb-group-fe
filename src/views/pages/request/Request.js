@@ -514,7 +514,7 @@ const Request = () => {
                 </CForm>
               </CCol>
               <CCol>
-                <CFormInput value={formatDateWIB(data.updated_at)} disabled></CFormInput>
+                <CFormInput value={formatDateWIB(data.tanggal_request)} disabled></CFormInput>
               </CCol>
             </CRow>
           </CModalBody>
