@@ -236,6 +236,48 @@ const Request = () => {
       })
   }
 
+  function cancelRequest(status, item) {
+    setIsLoading(true)
+    var obj = {
+      id_teknisi: item.id_teknisi,
+      id_mesin: item.id_mesin,
+      id_sparepart: item.id_sparepart,
+      quantity: parseInt(item.quantity),
+      status_request: status,
+      updated_by: userID,
+      id_request: parseInt(item.id_request),
+    }
+    var url = `${apiUrl}/requests/cancel`
+
+    axios
+      .put(url, obj, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        if (response.data.error.status === true) {
+          console.log('Gagal Update Request', response)
+          setIsLoading(false)
+          setResponseType(false)
+          setResponseMessage(response.data.error.msg)
+          setModalResponseIsOpen(true)
+        } else {
+          setIsLoading(false)
+          console.log('Berhasil Update Request', response)
+          setResponseType(true)
+          setResponseMessage('Berhasil Update Request')
+          setModalResponseIsOpen(true)
+        }
+      })
+      .catch((error) => {
+        setIsLoading(false)
+        setModalResponseIsOpen(true)
+        setResponseType(false)
+        setResponseMessage(error.message)
+      })
+  }
+
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       setCurrentPage(1)
@@ -390,12 +432,21 @@ const Request = () => {
                         )}
                         {(item.status_request === 'Disetujui' ||
                           item.status_request === 'Ditolak') && (
-                          <CButton
-                            className="btn btn-primary btn-sm text-white"
-                            onClick={() => handleModal('Detail', item)}
-                          >
-                            Detail
-                          </CButton>
+                          <CCol>
+                            <CButton
+                              className="btn btn-danger btn-sm text-white"
+                              onClick={() => cancelRequest('Request', item)}
+                            >
+                              Cancel
+                            </CButton>
+                            <CButton
+                              style={{ marginLeft: '5px' }}
+                              className="btn btn-primary btn-sm text-white"
+                              onClick={() => handleModal('Detail', item)}
+                            >
+                              Detail
+                            </CButton>
+                          </CCol>
                         )}
                       </CTableDataCell>
                     )}
