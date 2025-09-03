@@ -26,7 +26,7 @@ import axios from 'axios'
 import { formatDateWIB } from '../../../utils/date'
 
 const SparepartHistoryTeknisi = () => {
-  const token = sessionStorage.getItem('token')
+  const token = localStorage.getItem('token')
   const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
 
   const [listSparepartHistory, setListSparepartHistory] = useState([])
@@ -39,7 +39,7 @@ const SparepartHistoryTeknisi = () => {
   const itemsPerPage = 10
   const maxVisiblePages = 3
 
-  const userID = sessionStorage.getItem('user')
+  const userID = localStorage.getItem('user')
 
   useEffect(() => {
     SearchSparepartHistory()

@@ -21,7 +21,7 @@ import ReactSelect from 'react-select'
 import axios from 'axios'
 
 const SparepartReturn = () => {
-  const token = sessionStorage.getItem('token')
+  const token = localStorage.getItem('token')
   const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
 
   const [listInventory, setListInventory] = useState([])
@@ -33,7 +33,7 @@ const SparepartReturn = () => {
   const [responseMessage, setResponseMessage] = useState('')
   const [responseType, setResponseType] = useState(false)
 
-  const userID = sessionStorage.getItem('user')
+  const userID = localStorage.getItem('user')
 
   useEffect(() => {
     fetchInventory()

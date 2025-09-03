@@ -17,7 +17,7 @@ const Dashboard = React.lazy(() => import('./views/pages/dashboard/Dashboard'))
 
 const App = () => {
   const storedTheme = useSelector((state) => state.theme)
-  const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true'
+  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search)

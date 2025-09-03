@@ -40,7 +40,7 @@ const Customer = () => {
   const [modalOpen, setModalOpen] = useState(false)
   const [modalEditIsOpen, setModalEditIsOpen] = useState(false)
   const [singleData, setSingleData] = useState('')
-  const userID = sessionStorage.getItem('user')
+  const userID = localStorage.getItem('user')
 
   const [isLoading, setIsLoading] = useState(false)
   const [modalResponseIsOpen, setModalResponseIsOpen] = useState(false)
@@ -52,7 +52,7 @@ const Customer = () => {
   const itemsPerPage = 5
   const maxVisiblePages = 3
 
-  const token = sessionStorage.getItem('token')
+  const token = localStorage.getItem('token')
 
   const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
 

@@ -24,7 +24,7 @@ import axios from 'axios'
 import { formatDateWIB } from '../../../utils/date'
 
 const AdminReturSparepart = () => {
-  const token = sessionStorage.getItem('token')
+  const token = localStorage.getItem('token')
   const [listRetur, setListRetur] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [selectedRetur, setSelectedRetur] = useState(null)

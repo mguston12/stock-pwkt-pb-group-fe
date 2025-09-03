@@ -26,7 +26,7 @@ import axios from 'axios'
 import { formatDateWIB } from '../../../utils/date'
 
 const SparepartHistory = () => {
-  const token = sessionStorage.getItem('token')
+  const token = localStorage.getItem('token')
   const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
 
   const [listSparepartHistory, setListSparepartHistory] = useState([])
@@ -214,12 +214,20 @@ const SparepartHistory = () => {
                     <CTableDataCell>{formatRibuan(item.counter)}</CTableDataCell>
                     <CTableDataCell>{formatDateWIB(item.updated_at)}</CTableDataCell>
                     <CTableDataCell>
-                      <Link
+                      {/* <Link
                         to={`/machine/detail/${item.id_machine}`}
                         className="btn btn-primary btn-sm text-white"
                       >
                         Detail
-                      </Link>
+                      </Link> */}
+                      <a
+                        href={`/machine/detail/${item.id_machine}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn btn-primary btn-sm text-white"
+                      >
+                        Detail
+                      </a>
                     </CTableDataCell>
                   </CTableRow>
                 ))}

@@ -22,7 +22,7 @@ import CIcon from '@coreui/icons-react'
 import ReactSelect from 'react-select'
 
 const SparepartUsage = () => {
-  const token = sessionStorage.getItem('token')
+  const token = localStorage.getItem('token')
   const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
 
   const [machineCode, setMachineCode] = useState('')
@@ -38,7 +38,7 @@ const SparepartUsage = () => {
   const [responseMessage, setResponseMessage] = useState('')
   const [responseType, setResponseType] = useState(false)
 
-  const userID = sessionStorage.getItem('user')
+  const userID = localStorage.getItem('user')
 
   useEffect(() => {
     if (machineDetail !== '' || machineDetail !== undefined) {

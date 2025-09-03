@@ -17,16 +17,16 @@ import {
 } from '@coreui/icons'
 import { CNavItem } from '@coreui/react'
 
-// function checkSessionStorage(name) {
-//   return sessionStorage.getItem(name)
+// function checklocalStorage(name) {
+//   return localStorage.getItem(name)
 // }
 
 // function isAdmin() {
-//   const userRole = checkSessionStorage('user')
+//   const userRole = checklocalStorage('user')
 //   return userRole === 'admin'
 // }
 function isAdmin() {
-  const role = sessionStorage.getItem('role')
+  const role = localStorage.getItem('role')
   return role === 'admin'
 }
 

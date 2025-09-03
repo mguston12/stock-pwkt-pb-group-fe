@@ -41,13 +41,13 @@ const Inventory = () => {
   const [inventoryID, setInventoryID] = useState('')
   const [inventoryName, setInventoryName] = useState('')
   const [quantity, setQuantity] = useState(0)
-  const userID = sessionStorage.getItem('user')
+  const userID = localStorage.getItem('user')
 
   const [modalResponseIsOpen, setModalResponseIsOpen] = useState(false)
   const [responseMessage, setResponseMessage] = useState('')
   const [responseType, setResponseType] = useState(false)
 
-  const token = sessionStorage.getItem('token')
+  const token = localStorage.getItem('token')
 
   const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
 

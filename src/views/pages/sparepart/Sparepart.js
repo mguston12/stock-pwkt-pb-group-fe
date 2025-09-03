@@ -32,7 +32,7 @@ import ReactSelect from 'react-select'
 
 const Sparepart = () => {
   const navigate = useNavigate()
-  const token = sessionStorage.getItem('token')
+  const token = localStorage.getItem('token')
   const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
 
   const [selectedSupplier, setSelectedSupplier] = useState('')

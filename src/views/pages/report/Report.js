@@ -20,7 +20,7 @@ import CIcon from '@coreui/icons-react'
 import ReactSelect from 'react-select'
 
 const Report = () => {
-  const token = sessionStorage.getItem('token')
+  const token = localStorage.getItem('token')
   const [isLoading, setIsLoading] = useState(false)
   const [modalResponseIsOpen, setModalResponseIsOpen] = useState(false)
   const [responseMessage, setResponseMessage] = useState('')

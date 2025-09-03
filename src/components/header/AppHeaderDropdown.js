@@ -26,7 +26,7 @@ import avatar10 from './../../assets/images/avatars/10.jpg'
 
 const AppHeaderDropdown = () => {
   function logOut() {
-    sessionStorage.clear()
+    localStorage.clear()
 
     window.location.href = '/login'
   }

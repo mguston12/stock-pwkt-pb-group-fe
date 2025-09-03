@@ -31,15 +31,15 @@ const Dashboard = () => {
   const [responseType, setResponseType] = useState(false)
 
   const OpenFeatures = () => {
-    sessionStorage.setItem('PT', JSON.stringify(selectedCompany))
+    localStorage.setItem('PT', JSON.stringify(selectedCompany))
     setResponseType(true)
     setResponseMessage('Berhasil Memilih PT')
     setModalResponseIsOpen(true)
   }
 
   useEffect(() => {
-    if (sessionStorage.getItem('PT')) {
-      setCompany(JSON.parse(decodeURIComponent(sessionStorage.getItem('PT'))))
+    if (localStorage.getItem('PT')) {
+      setCompany(JSON.parse(decodeURIComponent(localStorage.getItem('PT'))))
     }
   }, [])
 

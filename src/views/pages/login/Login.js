@@ -47,12 +47,12 @@ const Login = () => {
       }
 
       // Save JWT in localStorage
-      sessionStorage.setItem('token', data.data.token)
+      localStorage.setItem('token', data.data.token)
 
       const payload = JSON.parse(atob(data.data.token.split('.')[1])) // Decode JWT
-      sessionStorage.setItem('user', payload.username)
-      sessionStorage.setItem('role', payload.role)
-      sessionStorage.setItem('isLoggedIn', true)
+      localStorage.setItem('user', payload.username)
+      localStorage.setItem('role', payload.role)
+      localStorage.setItem('isLoggedIn', true)
       if (username === 'admin') {
         window.location.replace('/request')
       } else {
@@ -104,8 +104,8 @@ const Login = () => {
   //     })
   //   }
   // } else {
-  // sessionStorage.setItem('isLoggedIn', true)
-  // sessionStorage.setItem('user', username)
+  // localStorage.setItem('isLoggedIn', true)
+  // localStorage.setItem('user', username)
   // window.location.replace('/request') // Redirect to dashboard if login is successful
   // }
   //   } catch (error) {

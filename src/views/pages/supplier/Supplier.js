@@ -26,7 +26,7 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 
 const Supplier = () => {
-  const token = sessionStorage.getItem('token')
+  const token = localStorage.getItem('token')
   const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
 
   const [listSupplier, setListSupplier] = useState([])

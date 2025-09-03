@@ -9,7 +9,7 @@ const BarcodeScannerVisit = () => {
   const videoRef = useRef(null) // Reference for video element
   const [scanner, setScanner] = useState(null) // Barcode scanner instance
   const [isScanning, setIsScanning] = useState(false) // Flag to control scanning state
-  const token = sessionStorage.getItem('token')
+  const token = localStorage.getItem('token')
 
   // Handle successful scan
   const handleScan = (data) => {

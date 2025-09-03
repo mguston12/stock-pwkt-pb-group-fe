@@ -34,11 +34,11 @@ const CreateCustomer = () => {
   const [modalResponseIsOpen, setModalResponseIsOpen] = useState(false)
   const [responseMessage, setResponseMessage] = useState('')
   const [responseType, setResponseType] = useState(false)
-  const userID = sessionStorage.getItem('user')
-  const token = sessionStorage.getItem('token')
+  const userID = localStorage.getItem('user')
+  const token = localStorage.getItem('token')
 
   useEffect(() => {
-    setSelectedCompany(JSON.parse(decodeURIComponent(sessionStorage.getItem('PT'))))
+    setSelectedCompany(JSON.parse(decodeURIComponent(localStorage.getItem('PT'))))
   }, [])
 
   function createCustomer() {

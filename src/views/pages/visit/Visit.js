@@ -46,7 +46,7 @@ const Visit = () => {
   const [responseMessage, setResponseMessage] = useState('')
   const [responseType, setResponseType] = useState(false)
 
-  const userID = sessionStorage.getItem('user')
+  const userID = localStorage.getItem('user')
   const { id_machine } = useParams()
 
   useEffect(() => {

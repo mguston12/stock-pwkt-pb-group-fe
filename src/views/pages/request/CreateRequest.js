@@ -23,14 +23,14 @@ import ReactSelect from 'react-select'
 import { Link } from 'react-router-dom'
 
 const CreateRequest = () => {
-  const token = sessionStorage.getItem('token')
+  const token = localStorage.getItem('token')
   const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
 
   const [isLoading, setIsLoading] = useState(false)
   const [modalResponseIsOpen, setModalResponseIsOpen] = useState(false)
   const [responseMessage, setResponseMessage] = useState('')
   const [responseType, setResponseType] = useState(false)
-  const userID = sessionStorage.getItem('user')
+  const userID = localStorage.getItem('user')
   const [idTeknisi, setIdTeknisi] = useState('')
   const [idMesin, setIdMesin] = useState('')
   const [idSparepart, setIdSparepart] = useState('')

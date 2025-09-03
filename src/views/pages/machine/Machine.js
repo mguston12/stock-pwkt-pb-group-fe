@@ -53,8 +53,8 @@ const Machine = () => {
   const [selectedCustomer, setSelectedCustomer] = useState('')
   const [startDate, setStartDate] = useState('')
   const [singleData, setSingleData] = useState('')
-  const userID = sessionStorage.getItem('user')
-  const token = sessionStorage.getItem('token')
+  const userID = localStorage.getItem('user')
+  const token = localStorage.getItem('token')
 
   const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
 

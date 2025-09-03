@@ -29,7 +29,7 @@ import { formatDateWIB } from '../../../utils/date'
 import { Link, useParams } from 'react-router-dom'
 
 const HistoryPembelian = () => {
-  const token = sessionStorage.getItem('token')
+  const token = localStorage.getItem('token')
   const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
 
   const [isLoading, setIsLoading] = useState(false)

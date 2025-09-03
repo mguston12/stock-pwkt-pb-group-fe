@@ -23,7 +23,7 @@ import ReactSelect from 'react-select'
 import { useParams } from 'react-router-dom'
 
 const SparepartUsageAfterScan = () => {
-  const token = sessionStorage.getItem('token')
+  const token = localStorage.getItem('token')
   const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
 
   const [machineCode, setMachineCode] = useState('')
@@ -41,7 +41,7 @@ const SparepartUsageAfterScan = () => {
 
   const [usageList, setUsageList] = useState([])
 
-  const userID = sessionStorage.getItem('user')
+  const userID = localStorage.getItem('user')
   let { id_machine } = useParams()
 
   const [quantity, setQuantity] = useState(1)

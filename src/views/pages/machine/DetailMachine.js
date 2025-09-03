@@ -35,7 +35,7 @@ const DetailMachine = () => {
   const [listPemakaian, setListPemakaian] = useState([])
 
   let { id_machine } = useParams()
-  const token = sessionStorage.getItem('token')
+  const token = localStorage.getItem('token')
 
   const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
 

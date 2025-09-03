@@ -50,8 +50,8 @@ const AppHeader = () => {
 
 
   useEffect(() => {
-    if (sessionStorage.getItem('PT')) {
-      setSelectedCompany(JSON.parse(decodeURIComponent(sessionStorage.getItem('PT'))))
+    if (localStorage.getItem('PT')) {
+      setSelectedCompany(JSON.parse(decodeURIComponent(localStorage.getItem('PT'))))
     }
   }, [])
 

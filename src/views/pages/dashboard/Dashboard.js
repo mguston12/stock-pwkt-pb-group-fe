@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 const Dashboard = () => {
-  const userID = sessionStorage.getItem('user')
+  const userID = localStorage.getItem('user')
 
   const baseBoxStyle = {
     display: 'flex',
