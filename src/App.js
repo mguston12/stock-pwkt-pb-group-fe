@@ -2,6 +2,8 @@ import React, { Suspense, useEffect } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { CSpinner } from '@coreui/react'
+import AuthGuard from './components/AuthGuard'
+import { isTokenExpired } from '../src/utils/authUtils'
 import './scss/style.scss'
 
 // Containers
@@ -17,7 +19,8 @@ const Dashboard = React.lazy(() => import('./views/pages/dashboard/Dashboard'))
 
 const App = () => {
   const storedTheme = useSelector((state) => state.theme)
-  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'
+  const token = localStorage.getItem('token')
+  const isLoggedIn = token && !isTokenExpired(token)
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search)
@@ -32,20 +35,22 @@ const App = () => {
           </div>
         }
       >
-        <Routes>
-          {!isLoggedIn ? (
-            <>
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/set-password/:username" element={<SetPassword />} />
-              <Route path="*" element={<Navigate to="/login" />} />
-            </>
-          ) : (
-            <>
-              <Route path="/*" element={<DefaultLayout  />} />
-            </>
-          )}
-        </Routes>
+        <AuthGuard>
+          <Routes>
+            {!isLoggedIn ? (
+              <>
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/set-password/:username" element={<SetPassword />} />
+                <Route path="*" element={<Navigate to="/login" />} />
+              </>
+            ) : (
+              <>
+                <Route path="/*" element={<DefaultLayout />} />
+              </>
+            )}
+          </Routes>
+        </AuthGuard>
       </Suspense>
     </BrowserRouter>
   )
