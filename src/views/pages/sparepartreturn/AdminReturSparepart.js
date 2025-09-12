@@ -123,7 +123,7 @@ const AdminReturSparepart = () => {
                     <CTableDataCell>{item.nama_teknisi}</CTableDataCell>
                     <CTableDataCell>{item.nama_sparepart}</CTableDataCell>
                     <CTableDataCell>{item.quantity}</CTableDataCell>
-                    <CTableDataCell>{formatDateWIB(item.approved_at)}</CTableDataCell>
+                    <CTableDataCell>{item.approved_at ? formatDateWIB(item.approved_at) : "-"}</CTableDataCell>
                     <CTableDataCell>
                       <CButton
                         className="text-white"
