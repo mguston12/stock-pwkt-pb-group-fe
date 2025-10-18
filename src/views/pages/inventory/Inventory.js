@@ -49,7 +49,7 @@ const Inventory = () => {
 
   const token = localStorage.getItem('token')
 
-  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8082'
 
   useEffect(() => {
     if (userID !== 'admin') {

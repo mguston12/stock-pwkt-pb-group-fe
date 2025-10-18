@@ -31,7 +31,7 @@ import { cilCheckCircle, cilPencil, cilTrash, cilXCircle, cilPlus } from '@coreu
 import CIcon from '@coreui/icons-react'
 
 const Visit = () => {
-  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8082'
 
   const [machineCode, setMachineCode] = useState('')
   const [machineVisits, setMachineVisits] = useState([])

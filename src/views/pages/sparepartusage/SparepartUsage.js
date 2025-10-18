@@ -23,7 +23,7 @@ import ReactSelect from 'react-select'
 
 const SparepartUsage = () => {
   const token = localStorage.getItem('token')
-  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8082'
 
   const [machineCode, setMachineCode] = useState('')
   const [machineDetail, setMachineDetail] = useState('')

@@ -30,7 +30,7 @@ import { formatDateWIB } from '../../../utils/date'
 
 const DetailSupplier = () => {
   const token = localStorage.getItem('token')
-  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8082'
 
   const [isLoading, setIsLoading] = useState(false)
   const [supplierDetail, setSupplierDetail] = useState([])

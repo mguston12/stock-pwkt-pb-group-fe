@@ -32,7 +32,7 @@ const AdminReturSparepart = () => {
   const [modalResponse, setModalResponse] = useState(false)
   const [responseMessage, setResponseMessage] = useState('')
   const [responseType, setResponseType] = useState(false)
-  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8082'
 
   useEffect(() => {
     fetchRetur()
