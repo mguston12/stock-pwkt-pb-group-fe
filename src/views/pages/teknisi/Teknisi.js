@@ -27,7 +27,7 @@ import axios from 'axios'
 
 const Teknisi = () => {
   const token = localStorage.getItem('token')
-  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8082'
 
   const [listTeknisi, setListTeknisi] = useState([])
   const [isLoading, setIsLoading] = useState(false)

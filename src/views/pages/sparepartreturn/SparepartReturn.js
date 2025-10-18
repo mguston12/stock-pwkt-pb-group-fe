@@ -22,7 +22,7 @@ import axios from 'axios'
 
 const SparepartReturn = () => {
   const token = localStorage.getItem('token')
-  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8082'
 
   const [listInventory, setListInventory] = useState([])
   const [selectedInventory, setSelectedInventory] = useState('')

@@ -27,7 +27,7 @@ import { formatDateWIB } from '../../../utils/date'
 
 const SparepartHistory = () => {
   const token = localStorage.getItem('token')
-  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081'
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8082'
 
   const [listSparepartHistory, setListSparepartHistory] = useState([])
   const [isLoading, setIsLoading] = useState(false)
