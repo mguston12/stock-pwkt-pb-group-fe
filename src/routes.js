@@ -112,7 +112,7 @@ const routes = [
   { path: '/visit/:id_machine', name: 'Visit', element: Visit, exact: true },
 
   {
-    path: '/setpassword/:usernames',
+    path: '/set-password/:username',
     element: SetPassword,
     exact: true,
   },

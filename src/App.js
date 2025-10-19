@@ -35,22 +35,25 @@ const App = () => {
           </div>
         }
       >
-        <AuthGuard>
-          <Routes>
-            {!isLoggedIn ? (
-              <>
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/set-password/:username" element={<SetPassword />} />
-                <Route path="*" element={<Navigate to="/login" />} />
-              </>
-            ) : (
-              <>
-                <Route path="/*" element={<DefaultLayout />} />
-              </>
-            )}
-          </Routes>
-        </AuthGuard>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/set-password/:username" element={<SetPassword />} />
+
+          {/* Protected Routes */}
+          <Route
+            path="/*"
+            element={
+              <AuthGuard>
+                <DefaultLayout />
+              </AuthGuard>
+            }
+          />
+
+          {/* 404 fallback */}
+          <Route path="*" element={<Navigate to="/login" />} />
+        </Routes>
       </Suspense>
     </BrowserRouter>
   )

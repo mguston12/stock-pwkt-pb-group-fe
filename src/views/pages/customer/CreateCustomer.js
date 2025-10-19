@@ -53,7 +53,7 @@ const CreateCustomer = () => {
       no_telp: nomorTelepon,
       updated_by: userID,
     }
-    var url = `http://localhost:8080/customers/create`
+    var url = import.meta.env.VITE_API_URL || 'http://localhost:8082'
 
     axios
       .post(url, obj, {

@@ -55,7 +55,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     setIsLoading(true)
-    const url = `http://localhost:8080/companies`
+    const url = import.meta.env.VITE_API_URL || 'http://localhost:8082'
 
     axios
       .get(url, {
