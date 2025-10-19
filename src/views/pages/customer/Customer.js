@@ -32,9 +32,7 @@ import ReactSelect from 'react-select'
 const Customer = () => {
   const [listCustomer, setListCustomer] = useState([])
   const [listCompany, setListCompany] = useState([
-    { id_company: 1, nama_company: 'PT. Purnama Bayu' },
-    { id_company: 2, nama_company: 'PT. Purnama Bayu Max' },
-    { id_company: 3, nama_company: 'PT. Mars Max Utama' },
+    { id_company: 4, nama_company: 'PT. Mars Max Utama - Purwokerto' },
   ])
   const [inputSearch, setInputSearch] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
